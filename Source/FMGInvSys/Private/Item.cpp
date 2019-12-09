@@ -3,25 +3,31 @@
 
 #include "Item.h"
 
+#include "ItemCore.h"
+#include "ItemWidget.h"
+
 // Sets default values
-AItem::AItem()
+AItem::AItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Replicate?
 }
 
-// Called when the game starts or when spawned
-void AItem::BeginPlay()
+UItemCore* AItem::GetItemCore()
 {
-	Super::BeginPlay();
-	
+	return ItemCore;
 }
 
-// Called every frame
-void AItem::Tick(float DeltaTime)
+void AItem::SetItemCore( UItemCore* InItemCore )
 {
-	Super::Tick(DeltaTime);
-
+	if ( !ItemCore )
+	{
+		ItemCore = InItemCore;
+	}
+	else
+	{
+		//UDevUtilities::PrintError( "This AItem already has a UItemInfo!" );
+		return;
+	}
 }
-

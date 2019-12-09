@@ -35,7 +35,7 @@ AItem* UItemCore::SpawnItem( const FTransform& SpawnTransform )
 
 		//this->Rename( nullptr, Item );
 
-		//Item->SetItemInfo( this );
+		Item->SetItemCore( this );
 	}
 	else
 	{

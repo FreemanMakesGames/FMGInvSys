@@ -2,25 +2,38 @@
 
 #pragma once
 
+#include "ItemUsage.h"
+
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Item.generated.h"
 
-UCLASS()
+class UItemCore;
+
+UCLASS( Blueprintable, BlueprintType )
 class FMGINVSYS_API AItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	AItem();
+
+	AItem( const FObjectInitializer& ObjectInitializer );
+
+public:
+
+	UFUNCTION( BlueprintCallable )
+	UItemCore* GetItemCore();
+
+	UFUNCTION( BlueprintCallable )
+	void SetItemCore( UItemCore* InItemCore );
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+
+	UPROPERTY( BlueprintReadOnly )
+	UItemCore* ItemCore;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
+	// Replicate Subobject?
 
 };
