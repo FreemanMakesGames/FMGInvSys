@@ -17,10 +17,6 @@ class FMGINVSYS_API UInventory : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:
-
-	UInventory( const FObjectInitializer& ObjectInitializer );
-
 protected:
 
 	virtual void BeginPlay() override;

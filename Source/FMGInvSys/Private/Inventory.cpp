@@ -12,11 +12,6 @@
 #include "Engine/World.h"
 #include "Net/UnrealNetwork.h"
 
-UInventory::UInventory( const FObjectInitializer& ObjectInitializer )
-{
-
-}
-
 void UInventory::BeginPlay()
 {
 	Super::BeginPlay();
