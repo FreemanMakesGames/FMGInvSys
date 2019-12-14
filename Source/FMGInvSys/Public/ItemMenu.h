@@ -2,15 +2,17 @@
 
 #pragma once
 
+#include "ItemUsage.h"
+
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "ItemMenu.generated.h"
 
 class UVerticalBox;
-// class UItemUsageButton;
+class UItemUsageButton;
 class UItemCore;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnItemUsageButtonClicked, UItemCore*, ItemCore );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FOnItemUsageButtonClicked, EItemUsage, ItemUsage, UItemCore*, ItemCore );
 
 /**
  * 
@@ -21,6 +23,10 @@ class FMGINVSYS_API UItemMenu : public UUserWidget
 	GENERATED_BODY()
 
 public:
+
+	UItemMenu( const FObjectInitializer& ObjectInitializer );
+
+protected:
 
 	virtual void NativeOnInitialized() override;
 
@@ -34,7 +40,7 @@ protected:
 	UPROPERTY( meta = ( BindWidget ) )
 	UVerticalBox* VerticalBox_Buttons;
 
-	//ItemUsageButtons
+	TMap<EItemUsage, UItemUsageButton*> AllItemUsagesToButtons;
 
 	UPROPERTY( VisibleAnywhere )
 	UItemCore* CurrentItemCore;
@@ -46,7 +52,11 @@ public:
 
 protected:
 
-// 	UFUNCTION()
-// 	void HandleOnItemUsageButtonClicked();
+	UFUNCTION()
+	void HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton );
+
+protected:
+
+	UItemUsageButton* InitItemUsageButton( EItemUsage ItemUsage );
 
 };
