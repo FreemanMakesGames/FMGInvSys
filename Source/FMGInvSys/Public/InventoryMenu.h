@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "ItemUsage.h"
+
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "InventoryMenu.generated.h"
@@ -12,6 +14,7 @@ class UItemWidget;
 class UItemCore;
 
 class UWrapBox;
+class UVerticalBox;
 class UButton;
 class UItemMenu;
 
@@ -33,16 +36,13 @@ protected:
 	TSubclassOf<UItemClicker> ItemClickerClass;
 
 	UPROPERTY( meta = ( BindWidget ) )
-	UItemMenu* ItemMenu;
-
-	UPROPERTY( meta = ( BindWidget ) )
 	UWrapBox* WrapBox_ItemClickers;
 
 	UPROPERTY( meta = ( BindWidget ) )
-	UButton* Button_Hide;
+	UVerticalBox* VerticalBox_ItemUsageButtons;
 
-	UPROPERTY()
-	UInventory* Inventory;
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* Button_Hide;
 
 public:
 
@@ -57,12 +57,21 @@ public:
 
 protected:
 
+	void SetupItemMenu();
+
+	UItemUsageButton* InitItemUsageButton( EItemUsage ItemUsage );
+
 	UItemClicker* AddNewItemClicker( UItemCore* ItemCore );
+
+	void DisplayItemMenu( UItemCore* ItemCore );
 
 public:
 
 	UFUNCTION()
 	virtual void HandleOnItemClickerClicked( UItemClicker* Clicked );
+
+	UFUNCTION()
+	void HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton );
 
 	UFUNCTION()
 	void HandleOnButtonHideClicked();
@@ -75,8 +84,13 @@ public:
 
 protected:
 
+	UPROPERTY()
+	UInventory* Inventory;
+
 	UPROPERTY( BlueprintReadOnly )
 	TMap<UItemCore*, UItemClicker*> ItemToClicker;
+
+	TMap<EItemUsage, UItemUsageButton*> AllItemUsagesToButtons;
 
 	UPROPERTY( VisibleAnywhere )
 	UItemCore* FirstItemForCombination;

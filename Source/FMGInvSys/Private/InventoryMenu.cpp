@@ -4,12 +4,14 @@
 #include "InventoryMenu.h"
 
 #include "ItemClicker.h"
-#include "ItemMenu.h"
+#include "ItemUsageButton.h"
 #include "Inventory.h"
-#include "Item.h"
+#include "ItemCore.h"
 #include "ItemWidget.h"
+#include "Item.h"
 
 #include "Components/WrapBox.h"
+#include "Components/VerticalBox.h"
 #include "Components/Button.h"
 #include "Components/NamedSlot.h"
 
@@ -23,6 +25,8 @@ void UInventoryMenu::NativeOnInitialized()
 		UE_LOG( LogTemp, Error, TEXT( "InventoryMenu's ItemClickerClass isn't assigned!" ) );
 		return;
 	}
+
+	SetupItemMenu();
 
 	Button_Hide->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonHideClicked );
 }
@@ -59,12 +63,33 @@ void UInventoryMenu::Hide()
 {
 	IsCombining = false;
 
-	if ( ItemMenu->IsInViewport() )
+	RemoveFromParent();
+}
+
+void UInventoryMenu::SetupItemMenu()
+{
+	EItemUsage AllItemUsages[] = { EItemUsage::Drop, EItemUsage::Destroy };
+
+	// Create one button for each item usage. They should always be reused and never be destroyed.
+	for ( EItemUsage ItemUsage : AllItemUsages )
 	{
-		ItemMenu->RemoveFromParent();
+		UItemUsageButton* ItemUsageButton = InitItemUsageButton( ItemUsage );
+
+		ItemUsageButton->OnClickedExt.AddDynamic( this, &UInventoryMenu::HandleOnItemUsageButtonClicked );
+
+		AllItemUsagesToButtons.Add( ItemUsage, ItemUsageButton );
 	}
 
-	RemoveFromParent();
+	VerticalBox_ItemUsageButtons->ClearChildren();
+}
+
+UItemUsageButton* UInventoryMenu::InitItemUsageButton( EItemUsage ItemUsage )
+{
+	UItemUsageButton* ItemUsageButton = NewObject<UItemUsageButton>( this );
+
+	ItemUsageButton->SetItemUsage( ItemUsage );
+
+	return ItemUsageButton;
 }
 
 UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
@@ -74,7 +99,7 @@ UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
 	ItemClicker->SetItemCore( ItemCore );
 
 	ItemClicker->OnButtonClicked.AddDynamic( this, &UInventoryMenu::HandleOnItemClickerClicked );
-	
+
 	WrapBox_ItemClickers->AddChildWrapBox( ItemClicker );
 
 	ItemToClicker.Add( ItemCore, ItemClicker );
@@ -82,7 +107,29 @@ UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
 	return ItemClicker;
 }
 
+void UInventoryMenu::DisplayItemMenu( UItemCore* ItemCore )
+{
+	VerticalBox_ItemUsageButtons->ClearChildren();
+
+	for ( EItemUsage ItemUsage : ItemCore->GetItemUsages() )
+	{
+		if ( UItemUsageButton * *pItemUsageButton = AllItemUsagesToButtons.Find( ItemUsage ) )
+		{
+			VerticalBox_ItemUsageButtons->AddChildToVerticalBox( *pItemUsageButton );
+		}
+		else
+		{
+			UE_LOG( LogTemp, Error, TEXT( "UInventoryMenu found an EItemUsage from a UItemCore, that doesn't match any UItemUsageButton in the TMap." ) );
+		}
+	}
+}
+
 void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
+{
+
+}
+
+void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton )
 {
 
 }
