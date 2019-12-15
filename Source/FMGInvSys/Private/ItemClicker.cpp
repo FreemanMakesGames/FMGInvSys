@@ -11,7 +11,7 @@
 
 void UItemClicker::NativeOnInitialized()
 {
-	Button->OnClicked.AddDynamic( this, &UItemClicker::HandleOnButtonClicked );
+	Clicker->OnClicked.AddDynamic( this, &UItemClicker::HandleOnButtonClicked );
 }
 
 UItemCore* UItemClicker::GetItemCore()

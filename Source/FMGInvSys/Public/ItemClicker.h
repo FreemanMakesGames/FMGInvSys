@@ -41,7 +41,7 @@ public:
 protected:
 
 	UPROPERTY( meta = ( BindWidget ), BlueprintReadOnly )
-	UButton* Button;
+	UButton* Clicker;
 
 	UPROPERTY( meta = ( BindWidget ) )
 	UNamedSlot* ItemWidgetSlot;
