@@ -6,12 +6,21 @@
 #include "ItemCore.h"
 #include "ItemWidget.h"
 
-// Sets default values
 AItem::AItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Replicate?
+}
+
+void AItem::BeginPlay()
+{
+	ensureAlways( ItemCoreClass );
+
+	// This is for cases like when a level designer placed an AItem into the level manually.
+	if ( !ItemCore )
+	{
+		ItemCore = NewObject<UItemCore>( this, ItemCoreClass );
+	}
 }
 
 UItemCore* AItem::GetItemCore()

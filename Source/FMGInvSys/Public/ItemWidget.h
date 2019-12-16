@@ -21,6 +21,6 @@ public:
 
 	/** Initialize ItemWidget with ItemCore here. */
 	UFUNCTION( BlueprintCallable )
-	virtual void SetItemCore( UItemCore* InItemCore ) PURE_VIRTUAL( , );
+	virtual void SetItemCore( UItemCore* InItemCore );
 
 };

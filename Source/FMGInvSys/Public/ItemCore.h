@@ -14,7 +14,7 @@ class UItemWidget;
 /**
  * 
  */
-UCLASS( BlueprintType )
+UCLASS( Blueprintable, BlueprintType )
 class FMGINVSYS_API UItemCore : public UObject
 {
 	GENERATED_BODY()
@@ -35,10 +35,10 @@ public:
 
 protected:
 
-	UPROPERTY( VisibleAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly )
 	TSubclassOf<AItem> ItemClass;
 
-	UPROPERTY( VisibleAnywhere, BlueprintReadOnly )
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly )
 	TSubclassOf<UItemWidget> ItemWidgetClass;
 
 	int ItemTypeId;

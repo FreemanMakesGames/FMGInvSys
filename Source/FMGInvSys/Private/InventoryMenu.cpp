@@ -20,11 +20,7 @@ void UInventoryMenu::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	if ( !ItemClickerClass )
-	{
-		UE_LOG( LogTemp, Error, TEXT( "InventoryMenu's ItemClickerClass isn't assigned!" ) );
-		return;
-	}
+	ensureAlways( ItemClickerClass );
 
 	SetupItemMenu();
 

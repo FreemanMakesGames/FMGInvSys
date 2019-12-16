@@ -19,6 +19,15 @@ public:
 
 	AItem( const FObjectInitializer& ObjectInitializer );
 
+protected:
+
+	virtual void BeginPlay() override;
+
+protected:
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> ItemCoreClass;
+
 public:
 
 	UFUNCTION( BlueprintCallable )

@@ -2,3 +2,8 @@
 
 
 #include "ItemWidget.h"
+
+void UItemWidget::SetItemCore( UItemCore* InItemCore )
+{
+	// TODO: ItemWidget: Find out if UItemWidget needs to know an UItemCore.
+}
