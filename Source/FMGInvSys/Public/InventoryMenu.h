@@ -32,8 +32,11 @@ protected:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly )
+	UPROPERTY( EditDefaultsOnly )
 	TSubclassOf<UItemClicker> ItemClickerClass;
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemUsageButton> ItemUsageButtonClass;
 
 	UPROPERTY( meta = ( BindWidget ) )
 	UWrapBox* WrapBox_ItemClickers;

@@ -21,6 +21,7 @@ void UInventoryMenu::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	ensureAlways( ItemClickerClass );
+	ensureAlways( ItemUsageButtonClass );
 
 	SetupItemMenu();
 
@@ -81,7 +82,7 @@ void UInventoryMenu::SetupItemMenu()
 
 UItemUsageButton* UInventoryMenu::InitItemUsageButton( EItemUsage ItemUsage )
 {
-	UItemUsageButton* ItemUsageButton = NewObject<UItemUsageButton>( this );
+	UItemUsageButton* ItemUsageButton = CreateWidget<UItemUsageButton>( this, ItemUsageButtonClass );
 
 	ItemUsageButton->SetItemUsage( ItemUsage );
 
@@ -109,7 +110,7 @@ void UInventoryMenu::DisplayItemMenu( UItemCore* ItemCore )
 
 	for ( EItemUsage ItemUsage : ItemCore->GetItemUsages() )
 	{
-		if ( UItemUsageButton * *pItemUsageButton = AllItemUsagesToButtons.Find( ItemUsage ) )
+		if ( UItemUsageButton** pItemUsageButton = AllItemUsagesToButtons.Find( ItemUsage ) )
 		{
 			VerticalBox_ItemUsageButtons->AddChildToVerticalBox( *pItemUsageButton );
 		}

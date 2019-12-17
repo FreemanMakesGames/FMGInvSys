@@ -3,9 +3,12 @@
 
 #include "ItemUsageButton.h"
 
-UItemUsageButton::UItemUsageButton( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
+#include "Components/Button.h"
+#include "Components/TextBlock.h"
+
+void UItemUsageButton::NativeOnInitialized()
 {
-	OnClicked.AddDynamic( this, &UItemUsageButton::HandleOnClicked );
+	Button_ItemUsage->OnClicked.AddDynamic( this, &UItemUsageButton::HandleOnClicked );
 }
 
 EItemUsage UItemUsageButton::GetItemUsage()
@@ -18,7 +21,7 @@ void UItemUsageButton::SetItemUsage( EItemUsage InItemUsage )
 	ItemUsage = InItemUsage;
 
 	FText ItemUsageName = StaticEnum<EItemUsage>()->GetDisplayNameTextByIndex( ( int32 )ItemUsage );
-	UE_LOG( LogTemp, Warning, TEXT( "%s" ), *ItemUsageName.ToString() );
+	TextBlock_ItemUsage->SetText( ItemUsageName );
 }
 
 void UItemUsageButton::HandleOnClicked()

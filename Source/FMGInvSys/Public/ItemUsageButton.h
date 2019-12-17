@@ -8,23 +8,34 @@
 #include "Components/Button.h"
 #include "ItemUsageButton.generated.h"
 
+class UButton;
+class UTextBlock;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnClickedExt, UItemUsageButton*, ItemUsageButton );
 
 /**
  * 
  */
 UCLASS()
-class FMGINVSYS_API UItemUsageButton : public UButton
+class FMGINVSYS_API UItemUsageButton : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
+protected:
 
-	UItemUsageButton( const FObjectInitializer& ObjectInitializer );
+	virtual void NativeOnInitialized() override;
 	
 public:
 
 	FOnClickedExt OnClickedExt;
+
+protected:
+
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* Button_ItemUsage;
+
+	UPROPERTY( meta = ( BindWidget ) )
+	UTextBlock* TextBlock_ItemUsage;
 
 public:
 
