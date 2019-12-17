@@ -96,7 +96,7 @@ UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
 
 	ItemClicker->OnButtonClicked.AddDynamic( this, &UInventoryMenu::HandleOnItemClickerClicked );
 
-	WrapBox_ItemClickers->AddChildWrapBox( ItemClicker );
+	WrapBox_ItemClickers->AddChildToWrapBox( ItemClicker );
 
 	ItemToClicker.Add( ItemCore, ItemClicker );
 

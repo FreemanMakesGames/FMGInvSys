@@ -16,6 +16,9 @@ EItemUsage UItemUsageButton::GetItemUsage()
 void UItemUsageButton::SetItemUsage( EItemUsage InItemUsage )
 {
 	ItemUsage = InItemUsage;
+
+	FText ItemUsageName = StaticEnum<EItemUsage>()->GetDisplayNameTextByIndex( ( int32 )ItemUsage );
+	UE_LOG( LogTemp, Warning, TEXT( "%s" ), *ItemUsageName.ToString() );
 }
 
 void UItemUsageButton::HandleOnClicked()
