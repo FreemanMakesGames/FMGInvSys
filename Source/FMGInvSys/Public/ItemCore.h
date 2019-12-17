@@ -43,7 +43,7 @@ protected:
 
 	int ItemTypeId;
 
-	UPROPERTY()
+	UPROPERTY( EditDefaultsOnly )
 	TArray<EItemUsage> ItemUsages;
 
 public:

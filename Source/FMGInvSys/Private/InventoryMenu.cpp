@@ -122,7 +122,22 @@ void UInventoryMenu::DisplayItemMenu( UItemCore* ItemCore )
 
 void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 {
+	UItemCore* ItemCore = Clicked->GetItemCore();
 
+	// TODO: InventoryMenu: Display item description, if not combining.
+
+	if ( IsCombining )
+	{
+
+	}
+	else
+	{
+		DisplayItemMenu( ItemCore );
+
+		FirstItemForCombination = ItemCore;
+	}
+
+	//LastClicked = Clicked;
 }
 
 void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton )
