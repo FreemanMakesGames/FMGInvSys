@@ -173,6 +173,12 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 	{
 	case EItemUsage::Drop:
 
+		Inventory->DropItem( LatestClicked->GetItemCore() );
+
+		// TODO: This code duplicates below in Destroy.
+		ItemMenu->ClearChildren();
+		LatestClicked = nullptr;
+
 		break;
 
 	case EItemUsage::Destroy:
@@ -180,10 +186,13 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 		Inventory->RemoveItem( LatestClicked->GetItemCore() );
 
 		ItemMenu->ClearChildren();
-
 		LatestClicked = nullptr;
 
 		break;
+
+	default:
+
+		ensureAlways( false );
 
 	}
 }

@@ -3,14 +3,7 @@
 
 #include "Inventory.h"
 
-// #include "ItemCombiner.h"
-// #include "DropItemComponent.h"
-// #include "BasicCharacter.h"
-// #include "BasicPlayerController.h"
-// #include "DevUtilities.h"
-
-#include "Engine/World.h"
-#include "Net/UnrealNetwork.h"
+#include "ItemDrop.h"
 
 void UInventory::BeginPlay()
 {
@@ -48,15 +41,15 @@ void UInventory::RemoveItem( UItemCore* ItemToRemove )
 
 void UInventory::DropItem( UItemCore* ItemToDrop )
 {
-// 	if ( UDropItemComponent* DropItemComponent = GetOwner()->FindComponentByClass<UDropItemComponent>() )
-// 	{
-// 		DropItemComponent->DropItem( ItemToDrop );
-// 	}
-// 	else
-// 	{
-// 		ensureAlwaysMsgf( false, TEXT( "The owner of this UInventory doesn't have a UDropItemComponent! Aborted." ) );
-// 		return;
-// 	}
-// 
-// 	RemoveItem( ItemToDrop );
+	if ( UItemDrop* ItemDrop = GetOwner()->FindComponentByClass<UItemDrop>() )
+	{
+		ItemDrop->DropItem( ItemToDrop );
+	}
+	else
+	{
+		ensureAlways( false );
+		return;
+	}
+
+	RemoveItem( ItemToDrop );
 }
