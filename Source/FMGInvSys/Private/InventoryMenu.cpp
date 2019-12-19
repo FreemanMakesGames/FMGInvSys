@@ -77,7 +77,7 @@ void UInventoryMenu::SetupItemMenu()
 		AllItemUsagesToButtons.Add( ItemUsage, ItemUsageButton );
 	}
 
-	VerticalBox_ItemUsageButtons->ClearChildren();
+	ItemMenu->ClearChildren();
 }
 
 UItemUsageButton* UInventoryMenu::InitItemUsageButton( EItemUsage ItemUsage )
@@ -106,19 +106,35 @@ UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
 
 void UInventoryMenu::DisplayItemMenu( UItemCore* ItemCore )
 {
-	VerticalBox_ItemUsageButtons->ClearChildren();
+	ItemMenu->ClearChildren();
 
 	for ( EItemUsage ItemUsage : ItemCore->GetItemUsages() )
 	{
 		if ( UItemUsageButton** pItemUsageButton = AllItemUsagesToButtons.Find( ItemUsage ) )
 		{
-			VerticalBox_ItemUsageButtons->AddChildToVerticalBox( *pItemUsageButton );
+			ItemMenu->AddChildToVerticalBox( *pItemUsageButton );
 		}
 		else
 		{
 			UE_LOG( LogTemp, Error, TEXT( "UInventoryMenu found an EItemUsage from a UItemCore, that doesn't match any UItemUsageButton in the TMap." ) );
 		}
 	}
+}
+
+void UInventoryMenu::RemoveItemClicker( UItemCore* ItemCore )
+{
+	UItemClicker** pItemClicker = ItemToClicker.Find( ItemCore );
+
+	if ( pItemClicker )
+	{
+		( *pItemClicker )->RemoveFromParent();
+	}
+	else
+	{
+		ensureAlways( false );
+	}
+
+	// FIXME: Does ItemToItemClicker need to remove the ItemClicker?
 }
 
 void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
@@ -138,12 +154,38 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 		FirstItemForCombination = ItemCore;
 	}
 
-	//LastClicked = Clicked;
+	LatestClicked = Clicked;
 }
 
+/**
+ * Be careful. Calling an item removal from the inventory here will cause
+ * HandleOnItemRemoval to be invoked by the inventory.
+ */
 void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton )
 {
+	if ( !LatestClicked || !LatestClicked->GetItemCore() )
+	{
+		ensureAlwaysMsgf( false, TEXT( "Item usage buttons may not have been properly hidden after an item usage like Destroy." ) );
+		return;
+	}
 
+	switch ( ItemUsageButton->GetItemUsage() )
+	{
+	case EItemUsage::Drop:
+
+		break;
+
+	case EItemUsage::Destroy:
+
+		Inventory->RemoveItem( LatestClicked->GetItemCore() );
+
+		ItemMenu->ClearChildren();
+
+		LatestClicked = nullptr;
+
+		break;
+
+	}
 }
 
 void UInventoryMenu::HandleOnButtonHideClicked()
@@ -151,24 +193,19 @@ void UInventoryMenu::HandleOnButtonHideClicked()
 	Hide();
 }
 
+/**
+ * This can be invoked without inventory menu in view.
+ */
 void UInventoryMenu::HandleOnItemAdded( UItemCore* ItemAdded )
 {
 	UItemClicker* NewItemClicker = AddNewItemClicker( ItemAdded );
 }
 
+/**
+ * This can be invoked without inventory menu in view.
+ */
 void UInventoryMenu::HandleOnItemRemoved( UItemCore* ItemRemoved )
 {
-	UItemClicker** pItemClicker = ItemToClicker.Find( ItemRemoved );
-
-	if ( pItemClicker )
-	{
-		( *pItemClicker )->RemoveFromParent();
-	}
-	else
-	{
-		ensureAlwaysMsgf( false, TEXT( "UInventoryMenu hears an item removal event, but no UItemClicker matches the removed item!" ) );
-	}
-
-	// FIXME: Does ItemToItemClicker need to remove the ItemClicker?
+	RemoveItemClicker( ItemRemoved );
 }
 

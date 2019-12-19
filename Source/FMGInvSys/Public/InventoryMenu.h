@@ -42,7 +42,7 @@ protected:
 	UWrapBox* WrapBox_ItemClickers;
 
 	UPROPERTY( meta = ( BindWidget ) )
-	UVerticalBox* VerticalBox_ItemUsageButtons;
+	UVerticalBox* ItemMenu;
 
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* Button_Hide;
@@ -68,6 +68,8 @@ protected:
 
 	void DisplayItemMenu( UItemCore* ItemCore );
 
+	void RemoveItemClicker( UItemCore* ItemCore );
+
 public:
 
 	UFUNCTION()
@@ -85,6 +87,7 @@ public:
 	UFUNCTION()
 	void HandleOnItemRemoved( UItemCore* ItemRemoved );
 
+// Global variables for tracking
 protected:
 
 	UPROPERTY()
@@ -102,6 +105,6 @@ protected:
 	bool IsCombining;
 
 	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
-	UItemClicker* LastClicked;
+	UItemClicker* LatestClicked;
 
 };
