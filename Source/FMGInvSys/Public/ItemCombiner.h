@@ -9,31 +9,31 @@
 class UItemCore;
 
 USTRUCT()
-struct FItemCoreClassSet
+struct FArrayOfItemCoreClassArrays
 {
 	GENERATED_BODY()
 
 public:
 
-	FItemCoreClassSet() {}
+	FArrayOfItemCoreClassArrays() {}
 
-	FItemCoreClassSet( TSet<TSubclassOf<UItemCore>> InItemCoreClasses )
+	FArrayOfItemCoreClassArrays( TArray<TSubclassOf<UItemCore>> InItemCoreClasses )
 	{
 		ItemCoreClasses = InItemCoreClasses;
 	}
 
-	TSet<TSubclassOf<UItemCore>> ItemCoreClasses;
+	TArray<TSubclassOf<UItemCore>> ItemCoreClasses;
 
-	bool operator==( const FItemCoreClassSet& Other ) const
+	bool operator==( const FArrayOfItemCoreClassArrays& Other ) const
 	{
-		return ItemCoreClasses.Difference( Other.ItemCoreClasses ).Num() == 0 && Other.ItemCoreClasses.Difference( ItemCoreClasses ).Num() == 0;
+		return ItemCoreClasses == Other.ItemCoreClasses;
 	}
 
 };
 
-FORCEINLINE uint32 GetTypeHash( const FItemCoreClassSet& ItemCoreClassSet )
+FORCEINLINE uint32 GetTypeHash( const FArrayOfItemCoreClassArrays& ArrayOfItemCoreClasses )
 {
-	return FCrc::MemCrc_DEPRECATED( &ItemCoreClassSet, sizeof( FItemCoreClassSet ) );
+	return FCrc::MemCrc_DEPRECATED( &ArrayOfItemCoreClasses, sizeof( FArrayOfItemCoreClassArrays ) );
 }
 
 
@@ -76,7 +76,7 @@ public:
 
 protected:
 
-	TMap<FItemCoreClassSet, FCombineFunction> FunctionMap;
+	TMap<FArrayOfItemCoreClassArrays, FCombineFunction> FunctionMap;
 
 	//TMap<TSubclassOf<UItemCore>, FCombineFunction> FunctionMap_WildCards;
 
