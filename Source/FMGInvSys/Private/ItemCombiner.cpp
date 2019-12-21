@@ -16,22 +16,22 @@ FItemCombinationResult UItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 {
 	FItemCombinationResult Result;
 
-	if ( Directional && SourceItems.Num() > 2 )
-	{
-		ensureAlwaysMsgf( false, TEXT( "Directional combine is to click an item, click a usage button, then click a secondary item." ) );
-		return Result;
-	}
+// 	if ( Directional && SourceItems.Num() > 2 )
+// 	{
+// 		ensureAlwaysMsgf( false, TEXT( "Directional combine is to click an item, click a usage button, then click a secondary item." ) );
+// 		return Result;
+// 	}
 
 	// TODO: Prevent combining with an item itself.
 
 	// Gather UItemCore classes.
-	FArrayOfItemCoreClassArrays SourceItemClassArrays;
+	FItemCoreClassSet SourceItemClasses;
 	for ( int i = 0; i < SourceItems.Num(); i++ )
 	{
-		SourceItemClassArrays.ItemCoreClasses.Add( SourceItems[i]->GetClass() );
+		SourceItemClasses.ItemCoreClasses.Add( SourceItems[i]->GetClass() );
 	}
 
-	FCombineFunction* pCombineFunction = FunctionMap.Find( SourceItemClassArrays );
+	FCombineFunction* pCombineFunction = FunctionMap.Find( SourceItemClasses );
 
 // 	if ( !pCombineFunction )
 // 	{
