@@ -10,9 +10,9 @@ UItemCombiner::UItemCombiner()
 	/* All possible combination among different classes of item cores. */
 
 	FItemCoreClassArray WhiteGemRecipe;
-	WhiteGemRecipe.ItemCoreClasses.Add( "BP_RedGem_C" );
-	WhiteGemRecipe.ItemCoreClasses.Add( "BP_GreenGem_C" );
-	WhiteGemRecipe.ItemCoreClasses.Add( "BP_BlueGem_C" );
+	WhiteGemRecipe.ItemCoreClasses.Add( "BP_RedGemCore_C" );
+	WhiteGemRecipe.ItemCoreClasses.Add( "BP_GreenGemCore_C" );
+	WhiteGemRecipe.ItemCoreClasses.Add( "BP_BlueGemCore_C" );
 	FunctionMap.Add( WhiteGemRecipe, &UItemCombiner::MakeWhiteGem );
 }
 

@@ -7,7 +7,7 @@
 #include "Inventory.generated.h"
 
 class UItemCore;
-//class UItemCombiner;
+class UItemCombiner;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnItemAdded, UItemCore*, ItemCore );
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnItemRemoved, UItemCore*, ItemCore );
@@ -39,8 +39,8 @@ protected:
 	UPROPERTY( VisibleInstanceOnly )
 	TArray<UItemCore*> ItemCores;
 
-// 	UPROPERTY()
-// 	UItemCombiner* ItemCombiner;
+	UPROPERTY()
+	UItemCombiner* ItemCombiner;
 
 public:
 
@@ -56,8 +56,8 @@ public:
 	UFUNCTION( BlueprintCallable )
 	void DropItem( UItemCore* ItemToDrop );
 
-// 	UFUNCTION( BlueprintCallable )
-// 	void CombineItems( TArray<UItemCore*> SourceItems );
+	UFUNCTION( BlueprintCallable )
+	void CombineItems( TArray<UItemCore*> SourceItems );
 
 		
 };

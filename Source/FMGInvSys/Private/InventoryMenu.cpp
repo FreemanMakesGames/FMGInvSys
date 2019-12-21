@@ -15,7 +15,6 @@
 #include "Components/Button.h"
 #include "Components/NamedSlot.h"
 
-
 void UInventoryMenu::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -25,6 +24,7 @@ void UInventoryMenu::NativeOnInitialized()
 
 	SetupItemMenu();
 
+	Button_Combine->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonCombineClicked );
 	Button_Hide->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonHideClicked );
 }
 
@@ -57,7 +57,7 @@ void UInventoryMenu::Show()
 
 void UInventoryMenu::Hide()
 {
-	IsCombining = false;
+
 
 	RemoveFromParent();
 }
@@ -140,18 +140,16 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 {
 	UItemCore* ItemCore = Clicked->GetItemCore();
 
-	// TODO: InventoryMenu: Display item description, if not combining.
-
-	if ( IsCombining )
+	if ( GetWorld()->GetFirstPlayerController()->IsInputKeyDown( EKeys::LeftShift ) )  // TODO: This input is hardcoded.
 	{
-
+		ClickersOfCombiningItems.Add( Clicked );
 	}
 	else
 	{
-		DisplayItemMenu( ItemCore );
-
-		FirstItemForCombination = ItemCore;
+		ClickersOfCombiningItems.Empty();
 	}
+
+	DisplayItemMenu( ItemCore );
 
 	LatestClicked = Clicked;
 }
@@ -193,6 +191,21 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 
 		ensureAlways( false );
 
+	}
+}
+
+void UInventoryMenu::HandleOnButtonCombineClicked()
+{
+	if ( ClickersOfCombiningItems.Num() >= 2 )
+	{
+		TArray<UItemCore*> SourceItems;
+
+		for ( UItemClicker* ItemClicker : ClickersOfCombiningItems )
+		{
+			SourceItems.Add( ItemClicker->GetItemCore() );
+		}
+
+		Inventory->CombineItems( SourceItems );
 	}
 }
 

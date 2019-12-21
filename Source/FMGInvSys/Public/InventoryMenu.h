@@ -44,6 +44,12 @@ protected:
 	UPROPERTY( meta = ( BindWidget ) )
 	UVerticalBox* ItemMenu;
 
+// 	UPROPERTY( meta = ( BindWidget ) )
+// 	UWrapBox* WrapBox_ClickersOfCombiningItems;
+
+	UPROPERTY( meta = ( BindWidget ) )
+	UButton* Button_Combine;
+
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* Button_Hide;
 
@@ -79,6 +85,9 @@ public:
 	void HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton );
 
 	UFUNCTION()
+	void HandleOnButtonCombineClicked();
+
+	UFUNCTION()
 	void HandleOnButtonHideClicked();
 
 	UFUNCTION()
@@ -99,10 +108,7 @@ protected:
 	TMap<EItemUsage, UItemUsageButton*> AllItemUsagesToButtons;
 
 	UPROPERTY( VisibleAnywhere )
-	UItemCore* FirstItemForCombination;
-
-	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
-	bool IsCombining;
+	TArray<UItemClicker*> ClickersOfCombiningItems;
 
 	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
 	UItemClicker* LatestClicked;

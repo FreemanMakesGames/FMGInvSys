@@ -4,13 +4,13 @@
 #include "Inventory.h"
 
 #include "ItemDrop.h"
+#include "ItemCombiner.h"
 
 void UInventory::BeginPlay()
 {
 	Super::BeginPlay();
 
-// 	ItemCombiner = NewObject<UItemCombiner>();
-// 	ItemCombiner->SetPlayerController( Cast<ABasicPlayerController>( GetWorld()->GetFirstPlayerController() ) );
+	ItemCombiner = NewObject<UItemCombiner>();
 }
 
 TArray<UItemCore*> UInventory::GetItemCores()
@@ -52,4 +52,21 @@ void UInventory::DropItem( UItemCore* ItemToDrop )
 	}
 
 	RemoveItem( ItemToDrop );
+}
+
+void UInventory::CombineItems( TArray<UItemCore*> SourceItems )
+{
+	FItemCombinationResult Result = ItemCombiner->CombineItems( SourceItems, false );
+
+	if ( !Result.Successful ) { return; }
+
+	for ( UItemCore* Item : SourceItems )
+	{
+		RemoveItem( Item );
+	}
+
+	for ( UItemCore* Item : Result.ResultItems )
+	{
+		AddItem( Item );
+	}
 }
