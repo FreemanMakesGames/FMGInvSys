@@ -24,6 +24,8 @@ void UInventoryMenu::NativeOnInitialized()
 
 	SetupItemMenu();
 
+	Button_AddToCombination->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonAddToCombinationClicked );
+	Button_RemoveFromCombination->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked );
 	Button_Combine->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonCombineClicked );
 	Button_Hide->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonHideClicked );
 }
@@ -140,15 +142,6 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 {
 	UItemCore* ItemCore = Clicked->GetItemCore();
 
-	if ( GetWorld()->GetFirstPlayerController()->IsInputKeyDown( EKeys::LeftShift ) )  // TODO: This input is hardcoded.
-	{
-		ClickersOfCombiningItems.Add( Clicked );
-	}
-	else
-	{
-		ClickersOfCombiningItems.Empty();
-	}
-
 	DisplayItemMenu( ItemCore );
 
 	LatestClicked = Clicked;
@@ -194,14 +187,36 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 	}
 }
 
+void UInventoryMenu::HandleOnButtonAddToCombinationClicked()
+{
+	if ( LatestClicked )
+	{
+		WrapBox_ItemClickers->RemoveChild( LatestClicked );
+		WrapBox_ClickersOfCombiningItems->AddChildToWrapBox( LatestClicked );
+	}
+}
+
+void UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
+{
+	if ( LatestClicked )
+	{
+		WrapBox_ClickersOfCombiningItems->RemoveChild( LatestClicked );
+		WrapBox_ItemClickers->AddChildToWrapBox( LatestClicked );
+	}
+}
+
 void UInventoryMenu::HandleOnButtonCombineClicked()
 {
-	if ( ClickersOfCombiningItems.Num() >= 2 )
+	if ( WrapBox_ClickersOfCombiningItems->GetChildrenCount() >= 2 )
 	{
 		TArray<UItemCore*> SourceItems;
 
-		for ( UItemClicker* ItemClicker : ClickersOfCombiningItems )
+		for ( UWidget* Widget : WrapBox_ClickersOfCombiningItems->GetAllChildren() )
 		{
+			UItemClicker* ItemClicker = Cast<UItemClicker>( Widget );
+
+			if ( !ItemClicker ) { ensureAlways( false ); return; }
+
 			SourceItems.Add( ItemClicker->GetItemCore() );
 		}
 
