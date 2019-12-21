@@ -5,6 +5,13 @@
 #include "Item.h"
 #include "ItemWidget.h"
 
+UItemCore::UItemCore()
+{
+	// Add some common default EItemUsage, so the item designer doesn't have to add them manually for all kinds of UItemCore.
+	ItemUsages.Add( EItemUsage::Drop );
+	ItemUsages.Add( EItemUsage::Destroy );
+}
+
 TSubclassOf<AItem> UItemCore::GetItemClass()
 {
 	return ItemClass;

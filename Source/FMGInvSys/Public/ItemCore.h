@@ -21,6 +21,10 @@ class FMGINVSYS_API UItemCore : public UObject
 
 public:
 
+	UItemCore();
+
+public:
+
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<AItem> GetItemClass();
 
