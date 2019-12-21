@@ -8,32 +8,46 @@
 
 class UItemCore;
 
-USTRUCT()
-struct FArrayOfItemCoreClassArrays
+/**
+ * It's actually an array of FName, which are names of the classes.
+ */
+USTRUCT( BlueprintType )
+struct FItemCoreClassArray
 {
 	GENERATED_BODY()
 
 public:
 
-	FArrayOfItemCoreClassArrays() {}
+	FItemCoreClassArray() {}
 
-	FArrayOfItemCoreClassArrays( TArray<TSubclassOf<UItemCore>> InItemCoreClasses )
+	FItemCoreClassArray( TArray<FName> InItemCoreClasses )
 	{
 		ItemCoreClasses = InItemCoreClasses;
 	}
 
-	TArray<TSubclassOf<UItemCore>> ItemCoreClasses;
+	UPROPERTY( BlueprintReadOnly )
+	TArray<FName> ItemCoreClasses;
 
-	bool operator==( const FArrayOfItemCoreClassArrays& Other ) const
+	// Equivalence means having the same elements, regardless of the order.
+	bool operator==( const FItemCoreClassArray& Other ) const
 	{
-		return ItemCoreClasses == Other.ItemCoreClasses;
-	}
+		for ( FName ItemCoreClass : ItemCoreClasses )
+		{
+			if ( !Other.ItemCoreClasses.Contains( ItemCoreClass ) ) { return false; }
+		}
 
+		for ( FName ItemCoreClass : Other.ItemCoreClasses )
+		{
+			if ( !ItemCoreClasses.Contains( ItemCoreClass ) ) { return false; }
+		}
+
+		return true;
+	}
 };
 
-FORCEINLINE uint32 GetTypeHash( const FArrayOfItemCoreClassArrays& ArrayOfItemCoreClasses )
+FORCEINLINE uint32 GetTypeHash( const FItemCoreClassArray& ArrayOfItemCoreClasses )
 {
-	return FCrc::MemCrc_DEPRECATED( &ArrayOfItemCoreClasses, sizeof( FArrayOfItemCoreClassArrays ) );
+	return FCrc::MemCrc_DEPRECATED( &ArrayOfItemCoreClasses, sizeof( FItemCoreClassArray ) );
 }
 
 
@@ -61,7 +75,7 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS( Blueprintable, BlueprintType )
 class FMGINVSYS_API UItemCombiner : public UObject
 {
 	GENERATED_BODY()
@@ -76,12 +90,16 @@ public:
 
 protected:
 
-	TMap<FArrayOfItemCoreClassArrays, FCombineFunction> FunctionMap;
+	TMap<FItemCoreClassArray, FCombineFunction> FunctionMap;
 
 	//TMap<TSubclassOf<UItemCore>, FCombineFunction> FunctionMap_WildCards;
 
 public:
 
 	FItemCombinationResult CombineItems( TArray<UItemCore*> SourceItems, bool Directional );
+
+protected:
+
+	FItemCombinationResult MakeWhiteGem( TArray<UItemCore*> SourceItems );
 	
 };
