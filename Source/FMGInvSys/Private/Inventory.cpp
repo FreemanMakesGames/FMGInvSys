@@ -59,7 +59,8 @@ void UInventory::CombineItems( TArray<UItemCore*> SourceItems )
 
 	// TODO FMGInvSys:
 
-	// As the author I provided an ABasicGameMode, which holds an AItemCombiner,
+	// As the author I'm not creating one AItemCombiner per inventory, simply because it's unnecessary.
+	// I provided an ABasicGameMode, which holds an AItemCombiner,
 	// So it can be easily found and referenced from other classes, like the sample code below.
 
 	// But this may contradict with your game, or you may want to do it in other ways.

@@ -108,8 +108,21 @@ protected:
 
 protected:
 
+	/**
+	 * A map of simple combinations like A + B + C --> D
+	 */ 
 	TMap<FItemCoreClassArray, TSubclassOf<UItemCore>> ClassMap;
 
+	/**
+	 * A map of combinations like A + B + C --> D + E + ...
+	 */
+	TMap<FItemCoreClassArray, FItemCoreClassArray> ClassMap_Multiple;
+
+	/**
+	 * A map that defines combination with functions.
+	 * Those functions yield result items,
+	 * And perform extra logic after the combination.
+	 */ 
 	TMap<FItemCoreClassArray, FCombineFunction> FunctionMap;
 
 	//TMap<TSubclassOf<UItemCore>, FCombineFunction> FunctionMap_WildCards;

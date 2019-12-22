@@ -16,7 +16,6 @@ void AItemCombiner::BeginPlay()
 	WhiteGemRecipe.ItemCoreClasses.Add( GreenGemClass );
 	WhiteGemRecipe.ItemCoreClasses.Add( BlueGemClass );
 	ClassMap.Add( WhiteGemRecipe, WhiteGemClass );
-	FunctionMap.Add( WhiteGemRecipe, &AItemCombiner::MakeWhiteGem );
 }
 
 FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceItems, bool Directional )
@@ -29,7 +28,7 @@ FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 // 		return Result;
 // 	}
 
-	// TODO: Prevent combining with an item itself.
+	// TODO: FMGInvSys: Prevent combining with an item itself.
 
 	// Gather UItemCore classes.
 	FItemCoreClassArray SourceItemClassArray;
@@ -38,13 +37,36 @@ FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 		SourceItemClassArray.ItemCoreClasses.Add( Item->GetClass() );
 	}
 
+	// Search in ClassMap
+	TSubclassOf<UItemCore>* pOutputClass = ClassMap.Find( SourceItemClassArray );
+	if ( pOutputClass )
+	{
+		UItemCore* Output = NewObject<UItemCore>( this, *pOutputClass );
+
+		Result.ResultItems.Add( Output );
+		Result.Successful = true;
+
+		return Result;
+	}
+
+	// Search in ClassMap_Multiple
+	FItemCoreClassArray* pOutputClassArray = ClassMap_Multiple.Find( SourceItemClassArray );
+	if ( pOutputClassArray )
+	{
+		for ( TSubclassOf<UItemCore> OutputClass : ( *pOutputClassArray ).ItemCoreClasses )
+		{
+			UItemCore* Output = NewObject<UItemCore>( this, OutputClass );
+
+			Result.ResultItems.Add( Output );
+		}
+
+		Result.Successful = true;
+
+		return Result;
+	}
+
+	// Search in FunctionMap
 	FCombineFunction* pCombineFunction = FunctionMap.Find( SourceItemClassArray );
-
-// 	if ( !pCombineFunction )
-// 	{
-// 		pCombineFunction = FunctionMap_WildCards.Find( SourceItemClassArrays)
-// 	}
-
 	if ( pCombineFunction )
 	{
 		FCombineFunction CombineFunction = *pCombineFunction;
@@ -57,6 +79,11 @@ FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 	{
 		return Result; // Empty unsuccessful result.
 	}
+
+// 	if ( !pCombineFunction )
+// 	{
+// 		pCombineFunction = FunctionMap_WildCards.Find( SourceItemClassArrays)
+// 	}
 }
 
 FItemCombinationResult AItemCombiner::MakeWhiteGem( TArray<UItemCore*> SourceItems )
