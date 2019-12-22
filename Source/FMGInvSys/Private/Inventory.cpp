@@ -5,12 +5,11 @@
 
 #include "ItemDrop.h"
 #include "ItemCombiner.h"
+#include "BasicGameMode.h"
 
 void UInventory::BeginPlay()
 {
 	Super::BeginPlay();
-
-	ensureAlways( ItemCombiner );
 }
 
 TArray<UItemCore*> UInventory::GetItemCores()
@@ -56,6 +55,27 @@ void UInventory::DropItem( UItemCore* ItemToDrop )
 
 void UInventory::CombineItems( TArray<UItemCore*> SourceItems )
 {
+	///////////////////
+
+	// TODO FMGInvSys:
+
+	// As the author I provided an ABasicGameMode, which holds an AItemCombiner,
+	// So it can be easily found and referenced from other classes, like the sample code below.
+
+	// But this may contradict with your game, or you may want to do it in other ways.
+	// You likely need to write your own code here to find the AItemCombiner in the game.
+
+	// Note that you can have more than one AItemCombiner. For example,
+	// The game mode can give a normal AItemCombiner most of the time,
+	// And give a "blessed" AItemCombiner if the player has acquired a skill,
+	// Or has entered a special area.
+
+	AItemCombiner* ItemCombiner = GetWorld()->GetAuthGameMode<ABasicGameMode>()->GetItemCombiner();
+
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
+	if ( !ItemCombiner ) { ensureAlways( false ); return; }
+
 	FItemCombinationResult Result = ItemCombiner->CombineItems( SourceItems, false );
 
 	if ( !Result.Successful ) { return; }

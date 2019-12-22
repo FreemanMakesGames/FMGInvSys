@@ -39,9 +39,6 @@ protected:
 	UPROPERTY( VisibleInstanceOnly )
 	TArray<UItemCore*> ItemCores;
 
-	UPROPERTY( EditAnywhere )
-	AItemCombiner* ItemCombiner;
-
 public:
 
 	UFUNCTION( BlueprintCallable )
