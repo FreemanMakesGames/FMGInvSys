@@ -130,14 +130,28 @@ void UInventoryMenu::RemoveItemClicker( UItemCore* ItemCore )
 
 	if ( pItemClicker )
 	{
+		if ( LatestClicked == *pItemClicker )
+		{
+			ResetLatestClicked();
+		}
+
 		( *pItemClicker )->RemoveFromParent();
+
+		ItemToClicker.Remove( ItemCore );
 	}
 	else
 	{
 		ensureAlways( false );
 	}
+}
 
-	// FIXME: Does ItemToItemClicker need to remove the ItemClicker?
+void UInventoryMenu::ResetLatestClicked()
+{
+	// TODO: FMGInvSys: Clear description.
+
+	ItemMenu->ClearChildren();
+
+	LatestClicked = nullptr;
 }
 
 void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
@@ -145,6 +159,8 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 	UItemCore* ItemCore = Clicked->GetItemCore();
 
 	DisplayItemMenu( ItemCore );
+
+	// TODO: FMGInvSys: Enable/disable buttons that move clickers to/from combination WrapBox.
 
 	LatestClicked = Clicked;
 }
@@ -157,7 +173,7 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 {
 	if ( !LatestClicked || !LatestClicked->GetItemCore() )
 	{
-		ensureAlwaysMsgf( false, TEXT( "Item usage buttons may not have been properly hidden after an item usage like Destroy." ) );
+		ensureAlwaysMsgf( false, TEXT( "Item menu may not have been properly hidden after an item usage like Destroy." ) );
 		return;
 	}
 
@@ -167,9 +183,7 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 
 		Inventory->DropItem( LatestClicked->GetItemCore() );
 
-		// TODO: This code duplicates below in Destroy.
-		ItemMenu->ClearChildren();
-		LatestClicked = nullptr;
+		ResetLatestClicked();
 
 		break;
 
@@ -177,8 +191,7 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 
 		Inventory->RemoveItem( LatestClicked->GetItemCore() );
 
-		ItemMenu->ClearChildren();
-		LatestClicked = nullptr;
+		ResetLatestClicked();
 
 		break;
 
@@ -196,6 +209,8 @@ void UInventoryMenu::HandleOnButtonAddToCombinationClicked()
 		WrapBox_ItemClickers->RemoveChild( LatestClicked );
 		WrapBox_ClickersOfCombiningItems->AddChildToWrapBox( LatestClicked );
 	}
+
+	ResetLatestClicked();
 }
 
 void UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
@@ -205,10 +220,14 @@ void UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
 		WrapBox_ClickersOfCombiningItems->RemoveChild( LatestClicked );
 		WrapBox_ItemClickers->AddChildToWrapBox( LatestClicked );
 	}
+
+	ResetLatestClicked();
 }
 
 void UInventoryMenu::HandleOnButtonCombineClicked()
 {
+	// LatestClicked = nullptr;
+
 	if ( WrapBox_ClickersOfCombiningItems->GetChildrenCount() >= 2 )
 	{
 		TArray<UItemCore*> SourceItems;

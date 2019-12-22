@@ -82,6 +82,8 @@ protected:
 
 	void RemoveItemClicker( UItemCore* ItemCore );
 
+	void ResetLatestClicked();
+
 public:
 
 	UFUNCTION()
