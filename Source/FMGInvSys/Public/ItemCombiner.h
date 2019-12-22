@@ -20,23 +20,23 @@ public:
 
 	FItemCoreClassArray() {}
 
-	FItemCoreClassArray( TArray<FName> InItemCoreClasses )
+	FItemCoreClassArray( TArray<TSubclassOf<UItemCore>> InItemCoreClasses )
 	{
 		ItemCoreClasses = InItemCoreClasses;
 	}
 
 	UPROPERTY( BlueprintReadOnly )
-	TArray<FName> ItemCoreClasses;
+	TArray<TSubclassOf<UItemCore>> ItemCoreClasses;
 
 	// Equivalence means having the same elements, regardless of the order.
 	bool operator==( const FItemCoreClassArray& Other ) const
 	{
-		for ( FName ItemCoreClass : ItemCoreClasses )
+		for ( TSubclassOf<UItemCore> ItemCoreClass : ItemCoreClasses )
 		{
 			if ( !Other.ItemCoreClasses.Contains( ItemCoreClass ) ) { return false; }
 		}
 
-		for ( FName ItemCoreClass : Other.ItemCoreClasses )
+		for ( TSubclassOf<UItemCore> ItemCoreClass : Other.ItemCoreClasses )
 		{
 			if ( !ItemCoreClasses.Contains( ItemCoreClass ) ) { return false; }
 		}
@@ -76,28 +76,45 @@ public:
  * 
  */
 UCLASS( Blueprintable, BlueprintType )
-class FMGINVSYS_API UItemCombiner : public UObject
+class FMGINVSYS_API AItemCombiner : public AActor
 {
 	GENERATED_BODY()
 
 public:
 
-	typedef FItemCombinationResult( UItemCombiner::*FCombineFunction )( TArray<UItemCore*> );
-
-public:
-
-	UItemCombiner();
+	typedef FItemCombinationResult( AItemCombiner::*FCombineFunction )( TArray<UItemCore*> );
 
 protected:
 
-	TMap<FItemCoreClassArray, FCombineFunction> FunctionMap;
-
-	//TMap<TSubclassOf<UItemCore>, FCombineFunction> FunctionMap_WildCards;
+	virtual void BeginPlay() override;
 
 public:
 
 	FItemCombinationResult CombineItems( TArray<UItemCore*> SourceItems, bool Directional );
 
+protected:
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> RedGemClass;
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> GreenGemClass;
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> BlueGemClass;
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> WhiteGemClass;
+
+protected:
+
+	TMap<FItemCoreClassArray, TSubclassOf<UItemCore>> ClassMap;
+
+	TMap<FItemCoreClassArray, FCombineFunction> FunctionMap;
+
+	//TMap<TSubclassOf<UItemCore>, FCombineFunction> FunctionMap_WildCards;
+
+// Combination functions
 protected:
 
 	FItemCombinationResult MakeWhiteGem( TArray<UItemCore*> SourceItems );

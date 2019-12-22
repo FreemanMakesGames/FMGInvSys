@@ -10,7 +10,7 @@ void UInventory::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ItemCombiner = NewObject<UItemCombiner>();
+	ensureAlways( ItemCombiner );
 }
 
 TArray<UItemCore*> UInventory::GetItemCores()

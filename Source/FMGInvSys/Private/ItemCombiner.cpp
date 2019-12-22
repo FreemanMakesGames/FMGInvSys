@@ -5,18 +5,21 @@
 
 #include "ItemCore.h"
 
-UItemCombiner::UItemCombiner()
+void AItemCombiner::BeginPlay()
 {
+	Super::BeginPlay();
+
 	/* All possible combination among different classes of item cores. */
 
 	FItemCoreClassArray WhiteGemRecipe;
-	WhiteGemRecipe.ItemCoreClasses.Add( "BP_RedGemCore_C" );
-	WhiteGemRecipe.ItemCoreClasses.Add( "BP_GreenGemCore_C" );
-	WhiteGemRecipe.ItemCoreClasses.Add( "BP_BlueGemCore_C" );
-	FunctionMap.Add( WhiteGemRecipe, &UItemCombiner::MakeWhiteGem );
+	WhiteGemRecipe.ItemCoreClasses.Add( RedGemClass );
+	WhiteGemRecipe.ItemCoreClasses.Add( GreenGemClass );
+	WhiteGemRecipe.ItemCoreClasses.Add( BlueGemClass );
+	ClassMap.Add( WhiteGemRecipe, WhiteGemClass );
+	FunctionMap.Add( WhiteGemRecipe, &AItemCombiner::MakeWhiteGem );
 }
 
-FItemCombinationResult UItemCombiner::CombineItems( TArray<UItemCore*> SourceItems, bool Directional )
+FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceItems, bool Directional )
 {
 	FItemCombinationResult Result;
 
@@ -30,9 +33,9 @@ FItemCombinationResult UItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 
 	// Gather UItemCore classes.
 	FItemCoreClassArray SourceItemClassArray;
-	for ( int i = 0; i < SourceItems.Num(); i++ )
+	for ( UItemCore* Item : SourceItems )
 	{
-		SourceItemClassArray.ItemCoreClasses.Add( SourceItems[i]->GetClass()->GetFName() );
+		SourceItemClassArray.ItemCoreClasses.Add( Item->GetClass() );
 	}
 
 	FCombineFunction* pCombineFunction = FunctionMap.Find( SourceItemClassArray );
@@ -56,7 +59,7 @@ FItemCombinationResult UItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 	}
 }
 
-FItemCombinationResult UItemCombiner::MakeWhiteGem( TArray<UItemCore*> SourceItems )
+FItemCombinationResult AItemCombiner::MakeWhiteGem( TArray<UItemCore*> SourceItems )
 {
 	FItemCombinationResult Result;
 
