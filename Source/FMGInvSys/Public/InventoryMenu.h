@@ -39,13 +39,13 @@ protected:
 	TSubclassOf<UItemUsageButton> ItemUsageButtonClass;
 
 	UPROPERTY( meta = ( BindWidget ) )
-	UWrapBox* WrapBox_ItemClickers;
+	UWrapBox* WrapBox_Clickers;
 
 	UPROPERTY( meta = ( BindWidget ) )
 	UVerticalBox* ItemMenu;
 
 	UPROPERTY( meta = ( BindWidget ) )
-	UWrapBox* WrapBox_ClickersOfCombiningItems;
+	UWrapBox* WrapBox_Clickers_Combining;
 
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* Button_AddToCombination;

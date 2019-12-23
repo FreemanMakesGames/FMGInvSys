@@ -16,7 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnButtonClicked, UItemClicker*, Cl
 /**
  * 
  */
-UCLASS()
+UCLASS( Blueprintable )
 class FMGINVSYS_API UItemClicker : public UUserWidget
 {
 	GENERATED_BODY()
@@ -48,6 +48,11 @@ protected:
 
 	UPROPERTY()
 	UItemCore* ItemCore;
+
+public:
+
+	UFUNCTION( BlueprintImplementableEvent )
+	void HighlightForClicking();
 
 protected:
 

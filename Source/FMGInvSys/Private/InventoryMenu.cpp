@@ -39,7 +39,7 @@ void UInventoryMenu::Setup( UInventory* InInventory )
 	Inventory->OnItemAdded.AddDynamic( this, &UInventoryMenu::HandleOnItemAdded );
 	Inventory->OnItemRemoved.AddDynamic( this, &UInventoryMenu::HandleOnItemRemoved );
 
-	ensureAlwaysMsgf( !WrapBox_ItemClickers->HasAnyChildren(), TEXT( "Somehow the wrap box already has children?" ) );
+	ensureAlwaysMsgf( !WrapBox_Clickers->HasAnyChildren(), TEXT( "Somehow the wrap box already has children?" ) );
 
 	TArray<UItemCore*> Items = Inventory->GetItemCores();
 
@@ -55,11 +55,13 @@ void UInventoryMenu::Setup( UInventory* InInventory )
 void UInventoryMenu::Show()
 {
 	AddToViewport();
+
+	ResetLatestClicked();
 }
 
 void UInventoryMenu::Hide()
 {
-
+	ResetLatestClicked();
 
 	RemoveFromParent();
 }
@@ -98,7 +100,7 @@ UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
 
 	ItemClicker->OnButtonClicked.AddDynamic( this, &UInventoryMenu::HandleOnItemClickerClicked );
 
-	WrapBox_ItemClickers->AddChildToWrapBox( ItemClicker );
+	WrapBox_Clickers->AddChildToWrapBox( ItemClicker );
 
 	ItemToClicker.Add( ItemCore, ItemClicker );
 
@@ -151,6 +153,9 @@ void UInventoryMenu::ResetLatestClicked()
 
 	ItemMenu->ClearChildren();
 
+	Button_AddToCombination->SetIsEnabled( false );
+	Button_RemoveFromCombination->SetIsEnabled( false );
+
 	LatestClicked = nullptr;
 }
 
@@ -160,7 +165,18 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 
 	DisplayItemMenu( ItemCore );
 
-	// TODO: FMGInvSys: Enable/disable buttons that move clickers to/from combination WrapBox.
+	Clicked->HighlightForClicking();
+
+	if ( WrapBox_Clickers->GetAllChildren().Contains( Clicked ) )
+	{
+		Button_AddToCombination->SetIsEnabled( true );
+		Button_RemoveFromCombination->SetIsEnabled( false );
+	}
+	else // It must be in the combining WrapBox.
+	{
+		Button_AddToCombination->SetIsEnabled( false );
+		Button_RemoveFromCombination->SetIsEnabled( true );
+	}
 
 	LatestClicked = Clicked;
 }
@@ -206,8 +222,8 @@ void UInventoryMenu::HandleOnButtonAddToCombinationClicked()
 {
 	if ( LatestClicked )
 	{
-		WrapBox_ItemClickers->RemoveChild( LatestClicked );
-		WrapBox_ClickersOfCombiningItems->AddChildToWrapBox( LatestClicked );
+		WrapBox_Clickers->RemoveChild( LatestClicked );
+		WrapBox_Clickers_Combining->AddChildToWrapBox( LatestClicked );
 	}
 
 	ResetLatestClicked();
@@ -217,8 +233,8 @@ void UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
 {
 	if ( LatestClicked )
 	{
-		WrapBox_ClickersOfCombiningItems->RemoveChild( LatestClicked );
-		WrapBox_ItemClickers->AddChildToWrapBox( LatestClicked );
+		WrapBox_Clickers_Combining->RemoveChild( LatestClicked );
+		WrapBox_Clickers->AddChildToWrapBox( LatestClicked );
 	}
 
 	ResetLatestClicked();
@@ -228,11 +244,11 @@ void UInventoryMenu::HandleOnButtonCombineClicked()
 {
 	// LatestClicked = nullptr;
 
-	if ( WrapBox_ClickersOfCombiningItems->GetChildrenCount() >= 2 )
+	if ( WrapBox_Clickers_Combining->GetChildrenCount() >= 2 )
 	{
 		TArray<UItemCore*> SourceItems;
 
-		for ( UWidget* Widget : WrapBox_ClickersOfCombiningItems->GetAllChildren() )
+		for ( UWidget* Widget : WrapBox_Clickers_Combining->GetAllChildren() )
 		{
 			UItemClicker* ItemClicker = Cast<UItemClicker>( Widget );
 
