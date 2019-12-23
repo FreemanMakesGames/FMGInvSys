@@ -106,6 +106,15 @@ protected:
 	UPROPERTY( EditDefaultsOnly )
 	TSubclassOf<UItemCore> WhiteGemClass;
 
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> SilverCoinClass;
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> GoldCoinClass;
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> GoldBarClass;
+
 protected:
 
 	/**

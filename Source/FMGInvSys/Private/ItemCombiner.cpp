@@ -16,6 +16,11 @@ void AItemCombiner::BeginPlay()
 	WhiteGemRecipe.ItemCoreClasses.Add( GreenGemClass );
 	WhiteGemRecipe.ItemCoreClasses.Add( BlueGemClass );
 	ClassMap.Add( WhiteGemRecipe, WhiteGemClass );
+
+	FItemCoreClassArray GoldBarRecipe;
+	GoldBarRecipe.ItemCoreClasses.Add( GoldCoinClass );
+	GoldBarRecipe.ItemCoreClasses.Add( GoldCoinClass );
+	ClassMap.Add( GoldBarRecipe, GoldBarClass );
 }
 
 FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceItems, bool Directional )
