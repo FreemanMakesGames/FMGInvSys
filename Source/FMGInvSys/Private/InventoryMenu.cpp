@@ -156,7 +156,12 @@ void UInventoryMenu::ResetLatestClicked()
 	Button_AddToCombination->SetIsEnabled( false );
 	Button_RemoveFromCombination->SetIsEnabled( false );
 
-	LatestClicked = nullptr;
+	if ( LatestClicked )
+	{
+		LatestClicked->Unhighlight();
+
+		LatestClicked = nullptr;
+	}
 }
 
 void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
@@ -165,6 +170,7 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 
 	DisplayItemMenu( ItemCore );
 
+	if ( LatestClicked ) { LatestClicked->Unhighlight(); }
 	Clicked->HighlightForClicking();
 
 	if ( WrapBox_Clickers->GetAllChildren().Contains( Clicked ) )
