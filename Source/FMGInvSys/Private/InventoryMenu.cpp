@@ -169,8 +169,12 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 	UItemCore* ItemCore = Clicked->GetItemCore();
 
 	DisplayItemMenu( ItemCore );
-
-	if ( LatestClicked ) { LatestClicked->Unhighlight(); }
+	
+	if ( LatestClicked )
+	{
+		LatestClicked->Unhighlight();
+	}
+	Clicked->StopAllAnimations();
 	Clicked->HighlightForClicking();
 
 	if ( WrapBox_Clickers->GetAllChildren().Contains( Clicked ) )
