@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Algo/Count.h"
+
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "ItemCombiner.generated.h"
@@ -28,21 +30,28 @@ public:
 	UPROPERTY( BlueprintReadOnly )
 	TArray<TSubclassOf<UItemCore>> ItemCoreClasses;
 
-	// Equivalence means having the same elements, regardless of the order.
+	// Equivalence means having the same number of each element, regardless of the order.
 	bool operator==( const FItemCoreClassArray& Other ) const
 	{
 		for ( TSubclassOf<UItemCore> ItemCoreClass : ItemCoreClasses )
 		{
-			if ( !Other.ItemCoreClasses.Contains( ItemCoreClass ) ) { return false; }
+			if ( Algo::Count( ItemCoreClasses, ItemCoreClass ) != Algo::Count( Other.ItemCoreClasses, ItemCoreClass ) )
+			{
+				return false;
+			}
 		}
 
 		for ( TSubclassOf<UItemCore> ItemCoreClass : Other.ItemCoreClasses )
 		{
-			if ( !ItemCoreClasses.Contains( ItemCoreClass ) ) { return false; }
+			if ( Algo::Count( ItemCoreClasses, ItemCoreClass ) != Algo::Count( Other.ItemCoreClasses, ItemCoreClass ) )
+			{
+				return false;
+			}
 		}
 
 		return true;
 	}
+
 };
 
 FORCEINLINE uint32 GetTypeHash( const FItemCoreClassArray& ArrayOfItemCoreClasses )

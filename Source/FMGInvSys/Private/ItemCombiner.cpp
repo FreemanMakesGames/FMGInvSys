@@ -18,8 +18,10 @@ void AItemCombiner::BeginPlay()
 	ClassMap.Add( WhiteGemRecipe, WhiteGemClass );
 
 	FItemCoreClassArray GoldBarRecipe;
-	GoldBarRecipe.ItemCoreClasses.Add( GoldCoinClass );
-	GoldBarRecipe.ItemCoreClasses.Add( GoldCoinClass );
+	for ( int i = 1; i <= 3; i++ )
+	{
+		GoldBarRecipe.ItemCoreClasses.Add( GoldCoinClass );
+	}
 	ClassMap.Add( GoldBarRecipe, GoldBarClass );
 
 	FItemCoreClassArray GoldBarAndMediumChinaUrn;
