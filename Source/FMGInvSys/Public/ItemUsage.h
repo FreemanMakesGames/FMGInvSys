@@ -7,6 +7,14 @@
 UENUM( BlueprintType )
 enum class EItemUsage : uint8
 {
-	Destroy		UMETA( DisplayName = "Destroy" ),
-	Drop		UMETA( DisplayName = "Drop" )
+	Use			UMETA( DisplayName = "Use" ),
+
+	Eat			UMETA( DisplayName = "Eat" ),
+	Drink		UMETA( DisplayName = "Drink" ),
+
+	Equip		UMETA( DisplayName = "Equip" ),
+
+	Dismantle	UMETA( DisplayName = "Dismantle" ),
+	Drop		UMETA( DisplayName = "Drop" ),
+	Destroy		UMETA( DisplayName = "Destroy" )
 };
