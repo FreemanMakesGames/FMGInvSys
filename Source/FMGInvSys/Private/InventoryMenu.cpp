@@ -278,6 +278,8 @@ void UInventoryMenu::HandleOnButtonHideClicked()
 void UInventoryMenu::HandleOnItemAdded( UItemCore* ItemAdded )
 {
 	UItemClicker* NewItemClicker = AddNewItemClicker( ItemAdded );
+
+	NewItemClicker->HighlightForAddition();
 }
 
 /**

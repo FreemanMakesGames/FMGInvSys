@@ -55,6 +55,9 @@ public:
 	void HighlightForClicking();
 
 	UFUNCTION( BlueprintImplementableEvent )
+	void HighlightForAddition();
+
+	UFUNCTION( BlueprintImplementableEvent )
 	void Unhighlight();
 
 protected:
