@@ -21,6 +21,14 @@ void AItemCombiner::BeginPlay()
 	GoldBarRecipe.ItemCoreClasses.Add( GoldCoinClass );
 	GoldBarRecipe.ItemCoreClasses.Add( GoldCoinClass );
 	ClassMap.Add( GoldBarRecipe, GoldBarClass );
+
+	FItemCoreClassArray GoldBarAndMediumChinaUrn;
+	GoldBarAndMediumChinaUrn.ItemCoreClasses.Add( GoldBarClass );
+	GoldBarAndMediumChinaUrn.ItemCoreClasses.Add( MediumChinaUrnClass );
+	FItemCoreClassArray FatGoldUrnAndPearlBracelet;
+	FatGoldUrnAndPearlBracelet.ItemCoreClasses.Add( FatGoldUrnClass );
+	FatGoldUrnAndPearlBracelet.ItemCoreClasses.Add( PearlBraceletClass );
+	ClassMap_Multiple.Add( GoldBarAndMediumChinaUrn, FatGoldUrnAndPearlBracelet );
 }
 
 FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceItems, bool Directional )

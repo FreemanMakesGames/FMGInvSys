@@ -115,6 +115,15 @@ protected:
 	UPROPERTY( EditDefaultsOnly )
 	TSubclassOf<UItemCore> GoldBarClass;
 
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> MediumChinaUrnClass;
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> FatGoldUrnClass;
+
+	UPROPERTY( EditDefaultsOnly )
+	TSubclassOf<UItemCore> PearlBraceletClass;
+
 protected:
 
 	/**
