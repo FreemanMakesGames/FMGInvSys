@@ -197,35 +197,13 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
  */
 void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton )
 {
-	if ( !LatestClicked || !LatestClicked->GetItemCore() )
+	if ( !LatestClicked )
 	{
 		ensureAlwaysMsgf( false, TEXT( "Item menu may not have been properly hidden after an item usage like Destroy." ) );
 		return;
 	}
 
-	switch ( ItemUsageButton->GetItemUsage() )
-	{
-	case EItemUsage::Drop:
-
-		Inventory->DropItem( LatestClicked->GetItemCore() );
-
-		ResetLatestClicked();
-
-		break;
-
-	case EItemUsage::Destroy:
-
-		Inventory->RemoveItem( LatestClicked->GetItemCore() );
-
-		ResetLatestClicked();
-
-		break;
-
-	default:
-
-		ensureAlways( false );
-
-	}
+	Inventory->ApplyItemUsage( LatestClicked->GetItemCore(), ItemUsageButton->GetItemUsage() );
 }
 
 void UInventoryMenu::HandleOnButtonAddToCombinationClicked()

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "ItemUsage.h"
+
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Inventory.generated.h"
@@ -41,7 +43,6 @@ protected:
 
 public:
 
-	UFUNCTION( BlueprintCallable )
 	int CountItems();
 
 	UFUNCTION( BlueprintCallable )
@@ -50,11 +51,12 @@ public:
 	UFUNCTION( BlueprintCallable )
 	void RemoveItem( UItemCore* ItemToRemove );
 
-	UFUNCTION( BlueprintCallable )
-	void DropItem( UItemCore* ItemToDrop );
+	void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage );
 
-	UFUNCTION( BlueprintCallable )
 	void CombineItems( TArray<UItemCore*> SourceItems );
 
+protected:
+
+	void DropItem( UItemCore* ItemToDrop );
 		
 };

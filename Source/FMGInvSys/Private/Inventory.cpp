@@ -38,19 +38,27 @@ void UInventory::RemoveItem( UItemCore* ItemToRemove )
 	OnItemRemoved.Broadcast( ItemToRemove );
 }
 
-void UInventory::DropItem( UItemCore* ItemToDrop )
+void UInventory::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage )
 {
-	if ( UItemDrop* ItemDrop = GetOwner()->FindComponentByClass<UItemDrop>() )
+	switch ( ItemUsage )
 	{
-		ItemDrop->DropItem( ItemToDrop );
-	}
-	else
-	{
-		ensureAlways( false );
-		return;
-	}
+	case EItemUsage::Drop:
 
-	RemoveItem( ItemToDrop );
+		DropItem( ItemCore );
+
+		break;
+
+	case EItemUsage::Destroy:
+
+		RemoveItem( ItemCore );
+
+		break;
+
+	default:
+
+		ensureAlways( false );
+
+	}
 }
 
 void UInventory::CombineItems( TArray<UItemCore*> SourceItems )
@@ -90,4 +98,19 @@ void UInventory::CombineItems( TArray<UItemCore*> SourceItems )
 	{
 		AddItem( Item );
 	}
+}
+
+void UInventory::DropItem( UItemCore* ItemToDrop )
+{
+	if ( UItemDrop * ItemDrop = GetOwner()->FindComponentByClass<UItemDrop>() )
+	{
+		ItemDrop->DropItem( ItemToDrop );
+	}
+	else
+	{
+		ensureAlways( false );
+		return;
+	}
+
+	RemoveItem( ItemToDrop );
 }
