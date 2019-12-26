@@ -8,6 +8,8 @@
 
 void UItemUsageButton::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
+
 	Button_ItemUsage->OnClicked.AddDynamic( this, &UItemUsageButton::HandleOnClicked );
 }
 

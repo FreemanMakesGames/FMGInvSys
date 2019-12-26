@@ -11,6 +11,8 @@
 
 void UItemClicker::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
+
 	Clicker->OnClicked.AddDynamic( this, &UItemClicker::HandleOnButtonClicked );
 }
 
