@@ -68,7 +68,7 @@ void UInventoryMenu::Hide()
 
 void UInventoryMenu::SetupItemMenu()
 {
-	EItemUsage AllItemUsages[] = { EItemUsage::Drop, EItemUsage::Destroy };
+	EItemUsage AllItemUsages[] = { EItemUsage::Equip, EItemUsage::Drop, EItemUsage::Destroy };
 
 	// Create one button for each item usage. They should always be reused and never be destroyed.
 	for ( EItemUsage ItemUsage : AllItemUsages )

@@ -3,6 +3,8 @@
 
 #include "Inventory.h"
 
+#include "ItemCore.h"
+#include "InventoryOwner.h"
 #include "ItemDrop.h"
 #include "ItemCombiner.h"
 #include "BasicGameMode.h"
@@ -51,6 +53,21 @@ void UInventory::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage )
 	case EItemUsage::Destroy:
 
 		RemoveItem( ItemCore );
+
+		break;
+
+	case EItemUsage::Equip:
+
+		if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( GetOwner() ) )
+		{
+			AItem* Item = ItemCore->SpawnItem( FTransform::Identity );
+
+			InventoryOwner->Execute_Equip( GetOwner(), Item );
+		}
+		else
+		{
+			ensureAlways( false );
+		}
 
 		break;
 
