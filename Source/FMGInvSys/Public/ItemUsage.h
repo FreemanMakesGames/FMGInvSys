@@ -11,6 +11,7 @@ enum class EItemUsage : uint8
 
 	Eat			UMETA( DisplayName = "Eat" ),
 	Drink		UMETA( DisplayName = "Drink" ),
+	Heal		UMETA( DisplayName = "Heal" ),
 
 	Equip		UMETA( DisplayName = "Equip" ),
 
