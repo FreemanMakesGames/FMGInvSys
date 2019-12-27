@@ -14,6 +14,8 @@ AItem::AItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectIniti
 
 void AItem::BeginPlay()
 {
+	Super::BeginPlay();
+
 	ensureAlways( ItemCoreClass );
 
 	// This is for cases like when a level designer placed an AItem into the level manually.
@@ -36,7 +38,7 @@ void AItem::SetItemCore( UItemCore* InItemCore )
 	}
 	else
 	{
-		//UDevUtilities::PrintError( "This AItem already has a UItemInfo!" );
+		ensureAlways( false );
 		return;
 	}
 }

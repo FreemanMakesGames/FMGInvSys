@@ -16,6 +16,8 @@ UItemMenu::UItemMenu( const FObjectInitializer& ObjectInitializer ) : Super( Obj
 
 void UItemMenu::NativeOnInitialized()
 {
+	Super::NativeOnInitialized();
+
 	EItemUsage AllItemUsages[] = { EItemUsage::Drop, EItemUsage::Destroy };
 
 	// Create one button for each item usage. They should always be reused and never be destroyed.
