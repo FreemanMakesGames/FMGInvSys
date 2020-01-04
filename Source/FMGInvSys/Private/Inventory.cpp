@@ -12,6 +12,9 @@
 void UInventory::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InventoryOwner = Cast<IInventoryOwner>( GetOwner() );
+	if ( !InventoryOwner ) { ensureAlways( false ); }
 }
 
 TArray<UItemCore*> UInventory::GetItemCores()
@@ -44,13 +47,15 @@ void UInventory::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage )
 {
 	switch ( ItemUsage )
 	{
-	case EItemUsage::Drop:
+	case EItemUsage::Destroy:
 
-		DropItem( ItemCore );
+		RemoveItem( ItemCore );
 
 		break;
 
-	case EItemUsage::Destroy:
+	case EItemUsage::Drop:
+
+		InventoryOwner->Execute_Drop( GetOwner(), ItemCore );
 
 		RemoveItem( ItemCore );
 
@@ -58,16 +63,9 @@ void UInventory::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage )
 
 	case EItemUsage::Equip:
 
-		if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( GetOwner() ) )
-		{
-			AItem* Item = ItemCore->SpawnItem( FTransform::Identity );
+		InventoryOwner->Execute_Equip( GetOwner(), ItemCore );
 
-			InventoryOwner->Execute_Equip( GetOwner(), Item );
-		}
-		else
-		{
-			ensureAlways( false );
-		}
+		EquippedItemCore = ItemCore;
 
 		break;
 
@@ -115,19 +113,4 @@ void UInventory::CombineItems( TArray<UItemCore*> SourceItems )
 	{
 		AddItem( Item );
 	}
-}
-
-void UInventory::DropItem( UItemCore* ItemToDrop )
-{
-	if ( UItemDrop * ItemDrop = GetOwner()->FindComponentByClass<UItemDrop>() )
-	{
-		ItemDrop->DropItem( ItemToDrop );
-	}
-	else
-	{
-		ensureAlways( false );
-		return;
-	}
-
-	RemoveItem( ItemToDrop );
 }

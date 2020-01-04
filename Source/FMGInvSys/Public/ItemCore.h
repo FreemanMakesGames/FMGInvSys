@@ -21,7 +21,7 @@ class FMGINVSYS_API UItemCore : public UObject
 
 public:
 
-	UItemCore();
+	UItemCore( const FObjectInitializer& ObjectInitializer );
 
 public:
 

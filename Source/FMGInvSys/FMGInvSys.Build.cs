@@ -38,7 +38,8 @@ public class FMGInvSys : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"UMG"
+				"UMG",
+				"HeadMountedDisplay"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -8,6 +8,7 @@
 #include "Components/ActorComponent.h"
 #include "Inventory.generated.h"
 
+class IInventoryOwner;
 class UItemCore;
 class AItemCombiner;
 
@@ -58,5 +59,12 @@ public:
 protected:
 
 	void DropItem( UItemCore* ItemToDrop );
+
+// Global tracking variables
+protected:
+
+	IInventoryOwner* InventoryOwner;
+
+	UItemCore* EquippedItemCore;
 		
 };

@@ -5,7 +5,7 @@
 #include "Item.h"
 #include "ItemWidget.h"
 
-UItemCore::UItemCore()
+UItemCore::UItemCore( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
 {
 	// Add some common default EItemUsage, so the item designer doesn't have to add them manually for all kinds of UItemCore.
 	ItemUsages.Add( EItemUsage::Drop );
@@ -46,7 +46,7 @@ AItem* UItemCore::SpawnItem( const FTransform& SpawnTransform )
 	}
 	else
 	{
-		//UDevUtilities::PrintError( "This UItemInfo doesn't know the world!" );
+		ensureAlways( false );
 	}
 
 	return Item;

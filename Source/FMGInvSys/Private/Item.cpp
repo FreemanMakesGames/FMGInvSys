@@ -32,13 +32,15 @@ UItemCore* AItem::GetItemCore()
 
 void AItem::SetItemCore( UItemCore* InItemCore )
 {
-	if ( !ItemCore )
-	{
-		ItemCore = InItemCore;
-	}
-	else
-	{
-		ensureAlways( false );
-		return;
-	}
+// 	if ( !ItemCore )
+// 	{
+// 		ItemCore = InItemCore;
+// 	}
+// 	else
+// 	{
+// 		ensureAlways( false );
+// 		return;
+// 	}
+
+	ItemCore = InItemCore;
 }

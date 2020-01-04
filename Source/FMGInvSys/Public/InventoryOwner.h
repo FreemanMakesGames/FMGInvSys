@@ -2,7 +2,7 @@
 
 #include "InventoryOwner.generated.h"
 
-class AItem;
+class UItemCore;
 
 UINTERFACE( BlueprintType )
 class FMGINVSYS_API UInventoryOwner : public UInterface
@@ -17,6 +17,9 @@ class FMGINVSYS_API IInventoryOwner
 public:
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void Equip( AItem* Item );
+	void Equip( UItemCore* ItemCore );
+
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
+	void Drop( UItemCore* ItemCore );
 
 };
