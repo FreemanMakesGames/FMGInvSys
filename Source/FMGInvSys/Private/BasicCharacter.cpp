@@ -17,7 +17,7 @@
 #include "Engine/EngineTypes.h"
 
 //////////////////////////////////////////////////////////////////////////
-// ATP_ThirdPersonCharacter
+// ABasicCharacter
 
 ABasicCharacter::ABasicCharacter()
 {
