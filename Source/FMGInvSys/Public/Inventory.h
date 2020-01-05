@@ -8,7 +8,6 @@
 #include "Components/ActorComponent.h"
 #include "Inventory.generated.h"
 
-class IInventoryOwner;
 class UItemCore;
 class AItemCombiner;
 
@@ -19,10 +18,6 @@ UCLASS( Blueprintable, BlueprintType, ClassGroup=( Custom ), meta=( BlueprintSpa
 class FMGINVSYS_API UInventory : public UActorComponent
 {
 	GENERATED_BODY()
-
-protected:
-
-	virtual void BeginPlay() override;
 
 public:
 
@@ -52,19 +47,6 @@ public:
 	UFUNCTION( BlueprintCallable )
 	void RemoveItem( UItemCore* ItemToRemove );
 
-	void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage );
-
 	void CombineItems( TArray<UItemCore*> SourceItems );
-
-protected:
-
-	void DropItem( UItemCore* ItemToDrop );
-
-// Global tracking variables
-protected:
-
-	IInventoryOwner* InventoryOwner;
-
-	UItemCore* EquippedItemCore;
 		
 };

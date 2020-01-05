@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ItemUsage.h"
+
 #include "InventoryOwner.generated.h"
 
 class UItemCore;
@@ -17,9 +19,6 @@ class FMGINVSYS_API IInventoryOwner
 public:
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void Equip( UItemCore* ItemCore );
-
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void Drop( UItemCore* ItemCore );
+	void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage );
 
 };

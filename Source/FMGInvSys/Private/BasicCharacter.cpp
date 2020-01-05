@@ -144,7 +144,36 @@ void ABasicCharacter::MoveRight( float Value )
 	}
 }
 
-void ABasicCharacter::Equip_Implementation( UItemCore* ItemCore )
+void ABasicCharacter::ApplyItemUsage_Implementation( UItemCore* ItemCore, EItemUsage ItemUsage )
+{
+	switch ( ItemUsage )
+	{
+	case EItemUsage::Destroy:
+
+		Inventory->RemoveItem( ItemCore );
+
+		break;
+
+	case EItemUsage::Drop:
+
+		Drop( ItemCore );
+
+		break;
+
+	case EItemUsage::Equip:
+
+		Equip( ItemCore );
+
+		break;
+
+	default:
+
+		ensureAlways( false );
+
+	}
+}
+
+void ABasicCharacter::Equip( UItemCore* ItemCore )
 {
 	// For now, only support to equip one item at a time.
 	// To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
@@ -163,7 +192,7 @@ void ABasicCharacter::Equip_Implementation( UItemCore* ItemCore )
 	Item->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket" );
 }
 
-void ABasicCharacter::Drop_Implementation( UItemCore* ItemCore )
+void ABasicCharacter::Drop( UItemCore* ItemCore )
 {
 	// Determine if the item to drop is equipped.
 	for ( USceneComponent* AttachedSceneComponent : GetMesh()->GetAttachChildren() )
@@ -178,6 +207,8 @@ void ABasicCharacter::Drop_Implementation( UItemCore* ItemCore )
 
 				AttachedItem->SetActorLocation( ItemDrop->GetComponentLocation() );
 
+				Inventory->RemoveItem( ItemCore );
+
 				return;
 			}
 		}
@@ -185,4 +216,6 @@ void ABasicCharacter::Drop_Implementation( UItemCore* ItemCore )
 
 	// If the item to drop isn't equipped, spawn it at the item drop component.
 	ItemCore->SpawnItem( ItemDrop->GetComponentTransform() );
+
+	Inventory->RemoveItem( ItemCore );
 }

@@ -4,18 +4,9 @@
 #include "Inventory.h"
 
 #include "ItemCore.h"
-#include "InventoryOwner.h"
 #include "ItemDrop.h"
 #include "ItemCombiner.h"
 #include "BasicGameMode.h"
-
-void UInventory::BeginPlay()
-{
-	Super::BeginPlay();
-
-	InventoryOwner = Cast<IInventoryOwner>( GetOwner() );
-	if ( !InventoryOwner ) { ensureAlways( false ); }
-}
 
 TArray<UItemCore*> UInventory::GetItemCores()
 {
@@ -41,39 +32,6 @@ void UInventory::RemoveItem( UItemCore* ItemToRemove )
 	ItemCores.Remove( ItemToRemove );
 
 	OnItemRemoved.Broadcast( ItemToRemove );
-}
-
-void UInventory::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage )
-{
-	switch ( ItemUsage )
-	{
-	case EItemUsage::Destroy:
-
-		RemoveItem( ItemCore );
-
-		break;
-
-	case EItemUsage::Drop:
-
-		InventoryOwner->Execute_Drop( GetOwner(), ItemCore );
-
-		RemoveItem( ItemCore );
-
-		break;
-
-	case EItemUsage::Equip:
-
-		InventoryOwner->Execute_Equip( GetOwner(), ItemCore );
-
-		EquippedItemCore = ItemCore;
-
-		break;
-
-	default:
-
-		ensureAlways( false );
-
-	}
 }
 
 void UInventory::CombineItems( TArray<UItemCore*> SourceItems )

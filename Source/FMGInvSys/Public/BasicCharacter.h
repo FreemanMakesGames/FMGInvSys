@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "ItemUsage.h"
+
 #include "InventoryOwner.h"
 
 #include "CoreMinimal.h"
@@ -10,7 +12,6 @@
 
 class UInventory;
 class UItemDrop;
-class AItem;
 
 UCLASS( config = Game )
 class ABasicCharacter : public ACharacter, public IInventoryOwner
@@ -80,12 +81,14 @@ public:
 public:
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void Equip( UItemCore* ItemCore );
-	virtual void Equip_Implementation( UItemCore* ItemCore ) override;
+	void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage );
+	virtual void ApplyItemUsage_Implementation( UItemCore* ItemCore, EItemUsage ItemUsage );
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
+protected:
+
+	void Equip( UItemCore* ItemCore );
+
 	void Drop( UItemCore* ItemCore );
-	virtual void Drop_Implementation( UItemCore* ItemCore ) override;
 
 protected:
 

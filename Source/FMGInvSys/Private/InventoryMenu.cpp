@@ -6,6 +6,7 @@
 #include "ItemClicker.h"
 #include "ItemUsageButton.h"
 #include "Inventory.h"
+#include "InventoryOwner.h"
 #include "ItemCore.h"
 #include "ItemWidget.h"
 #include "Item.h"
@@ -201,7 +202,16 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 		return;
 	}
 
-	Inventory->ApplyItemUsage( LatestClicked->GetItemCore(), ItemUsageButton->GetItemUsage() );
+	APawn* ControlledPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+	if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( ControlledPawn ) )
+	{
+		InventoryOwner->Execute_ApplyItemUsage( ControlledPawn, LatestClicked->GetItemCore(), ItemUsageButton->GetItemUsage() );
+	}
+	else
+	{
+		ensureAlwaysMsgf( false, TEXT( "If the player controller is controlling a non inventory owner, then inventory menu shouldn't be able to be opened." ) );
+		return;
+	}
 }
 
 void UInventoryMenu::HandleOnButtonAddToCombinationClicked()
