@@ -14,6 +14,7 @@
 #include "Components/WrapBox.h"
 #include "Components/VerticalBox.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
 #include "Components/NamedSlot.h"
 
 void UInventoryMenu::NativeOnInitialized()
@@ -165,9 +166,11 @@ void UInventoryMenu::ResetLatestClicked()
 
 void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
 {
-	UItemCore* ItemCore = Clicked->GetItemCore();
+	UItemCore* Core = Clicked->GetItemCore();
 
-	DisplayItemMenu( ItemCore );
+	DisplayItemMenu( Core );
+
+	TextBlock_Description->SetText( Core->Describe() );
 	
 	if ( LatestClicked )
 	{

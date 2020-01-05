@@ -55,7 +55,7 @@ public:
 	UFUNCTION( BlueprintCallable )
 	AItem* SpawnItem( const FTransform& SpawnTransform );
 
-	UFUNCTION( BlueprintCallable )
-	virtual UItemCore* Duplicate() PURE_VIRTUAL( , return nullptr; );
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
+	FText Describe();
 
 };

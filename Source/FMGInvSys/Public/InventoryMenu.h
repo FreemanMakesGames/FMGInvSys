@@ -16,7 +16,7 @@ class UItemCore;
 class UWrapBox;
 class UVerticalBox;
 class UButton;
-class UItemMenu;
+class UTextBlock;
 
 /**
  *
@@ -55,6 +55,9 @@ protected:
 
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* Button_Combine;
+
+	UPROPERTY( meta = ( BindWidget ) )
+	UTextBlock* TextBlock_Description;
 
 	UPROPERTY( meta = ( BindWidget ) )
 	UButton* Button_Hide;

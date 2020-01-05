@@ -51,3 +51,9 @@ AItem* UItemCore::SpawnItem( const FTransform& SpawnTransform )
 
 	return Item;
 }
+
+FText UItemCore::Describe_Implementation()
+{
+	//ensureAlways( false );
+	return NSLOCTEXT( "", "", "Description is not overriden!" );
+}
