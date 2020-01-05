@@ -107,7 +107,6 @@ UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
 	return ItemClicker;
 }
 
-PRAGMA_DISABLE_OPTIMIZATION
 void UInventoryMenu::DisplayItemMenu( UItemCore* ItemCore )
 {
 	ItemMenu->ClearChildren();
@@ -124,7 +123,6 @@ void UInventoryMenu::DisplayItemMenu( UItemCore* ItemCore )
 		}
 	}
 }
-PRAGMA_ENABLE_OPTIMIZATION
 
 void UInventoryMenu::RemoveItemClicker( UItemCore* ItemCore )
 {

@@ -119,6 +119,7 @@ protected:
 	UPROPERTY( BlueprintReadOnly )
 	TMap<UItemCore*, UItemClicker*> ItemToClicker;
 
+	UPROPERTY()
 	TMap<EItemUsage, UItemUsageButton*> AllItemUsagesToButtons;
 
 	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
