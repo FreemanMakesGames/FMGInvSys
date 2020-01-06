@@ -172,46 +172,46 @@ void ABasicCharacter::ApplyItemUsage_Implementation( UItemCore* ItemCore, EItemU
 
 	}
 }
-
+// For now, only support to equip one item at a time.
+// To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
 void ABasicCharacter::Equip( UItemCore* ItemCore )
 {
-	// For now, only support to equip one item at a time.
-	// To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
+	// Do nothing if the item is already equipped.
+	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore ) { return; }
 
-	for ( USceneComponent* SceneComponent : GetMesh()->GetAttachChildren() )
+	// Now that we need to equip a new item...
+
+	// Detach and destroy old equipped item, if there is one.
+	if ( EquippedItem )
 	{
-		SceneComponent->GetOwner()->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
-
-		SceneComponent->GetOwner()->Destroy();
+		EquippedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
+		EquippedItem->Destroy();
 	}
 
-	AItem* Item = ItemCore->SpawnItem( FTransform::Identity );
+	// Spawn and attach new item.
+	AItem* ItemToEquip = ItemCore->SpawnItem( FTransform::Identity );
+	ItemToEquip->SetActorEnableCollision( false );
+	ItemToEquip->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket" );
 
-	Item->SetActorEnableCollision( false );
-
-	Item->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket" );
+	EquippedItem = ItemToEquip;
 }
 
 void ABasicCharacter::Drop( UItemCore* ItemCore )
 {
-	// Determine if the item to drop is equipped.
-	for ( USceneComponent* AttachedSceneComponent : GetMesh()->GetAttachChildren() )
+	// If the item to drop is equipped,
+	// Simply detach it and relocate it to item drop component,
+	// And remove it from the inventory.
+	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
 	{
-		// If this actor, which is attached to the skeletal mesh, is an item
-		if ( AItem* AttachedItem = Cast<AItem>( AttachedSceneComponent->GetOwner() ) )
-		{
-			// If this attached item is the item to drop, simply detach it and locate it to item drop component.
-			if ( AttachedItem->GetItemCore() == ItemCore )
-			{
-				AttachedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
+		EquippedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
+		EquippedItem->SetActorLocation( ItemDrop->GetComponentLocation() );
+		EquippedItem->SetActorEnableCollision( true ); // Re-enable collision, which was disabled when equipping this item.
 
-				AttachedItem->SetActorLocation( ItemDrop->GetComponentLocation() );
+		EquippedItem = nullptr;
 
-				Inventory->RemoveItem( ItemCore );
+		Inventory->RemoveItem( ItemCore );
 
-				return;
-			}
-		}
+		return;
 	}
 
 	// If the item to drop isn't equipped, spawn it at the item drop component.

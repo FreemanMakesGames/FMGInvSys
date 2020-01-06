@@ -12,6 +12,7 @@
 
 class UInventory;
 class UItemDrop;
+class AItem;
 
 UCLASS( config = Game )
 class ABasicCharacter : public ACharacter, public IInventoryOwner
@@ -97,6 +98,11 @@ protected:
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly )
 	UItemDrop* ItemDrop;
+
+// Global tracking variables
+protected:
+
+	AItem* EquippedItem;
 
 };
 
