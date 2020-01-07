@@ -146,7 +146,12 @@ void ABasicCharacter::MoveRight( float Value )
 	}
 }
 
-void ABasicCharacter::ApplyItemUsage_Implementation( UItemCore* ItemCore, EItemUsage ItemUsage )
+UInventory* ABasicCharacter::GetInventory()
+{
+	return Inventory;
+}
+
+void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage )
 {
 	switch ( ItemUsage )
 	{
@@ -175,7 +180,7 @@ void ABasicCharacter::ApplyItemUsage_Implementation( UItemCore* ItemCore, EItemU
 	}
 }
 
-void ABasicCharacter::CombineItems_Implementation( const TArray<UItemCore*>& SourceItems )
+void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItems )
 {
 	///////////////////
 

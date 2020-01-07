@@ -19,13 +19,10 @@ class FMGINVSYS_API IInventoryOwner
 
 public:
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	UInventory* GetInventory();
+	virtual UInventory* GetInventory() PURE_VIRTUAL( , return nullptr; );
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage );
+	virtual void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage ) PURE_VIRTUAL( , );
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void CombineItems( const TArray<UItemCore*>& SourceItems );
+	virtual void CombineItems( const TArray<UItemCore*>& SourceItems ) PURE_VIRTUAL( , );
 
 };

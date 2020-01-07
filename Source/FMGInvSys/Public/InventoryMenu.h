@@ -65,7 +65,7 @@ protected:
 
 public:
 
-	void Setup( APawn* NewInventoryOwnerPawn );
+	void Setup( IInventoryOwner* NewInventoryOwner );
 
 	UFUNCTION( BlueprintCallable )
 	void Show();
@@ -116,8 +116,7 @@ public:
 // Global variables for tracking
 protected:
 
-	UPROPERTY( VisibleAnywhere )
-	APawn* InventoryOwnerPawn;
+	IInventoryOwner* InventoryOwner;
 
 	UPROPERTY( BlueprintReadOnly )
 	TMap<UItemCore*, UItemClicker*> ItemToClicker;

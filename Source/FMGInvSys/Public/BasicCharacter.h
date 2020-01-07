@@ -81,17 +81,11 @@ public:
 
 public:
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	UInventory* GetInventory();
-	virtual UInventory* GetInventory_Implementation() { return Inventory; }
+	virtual UInventory* GetInventory() override;
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage );
-	virtual void ApplyItemUsage_Implementation( UItemCore* ItemCore, EItemUsage ItemUsage );
+	virtual void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage ) override;
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
-	void CombineItems( const TArray<UItemCore*>& SourceItems );
-	virtual void CombineItems_Implementation( const TArray<UItemCore*>& SourceItems );
+	virtual void CombineItems( const TArray<UItemCore*>& SourceItems ) override;
 
 protected:
 

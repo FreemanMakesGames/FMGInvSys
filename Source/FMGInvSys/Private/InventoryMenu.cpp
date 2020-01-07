@@ -1,5 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
+#include "UObject/ObjectMacros.h"
 
 #include "InventoryMenu.h"
 
@@ -32,26 +32,24 @@ void UInventoryMenu::NativeOnInitialized()
 	Button_Hide->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonHideClicked );
 }
 
-void UInventoryMenu::Setup( APawn* NewInventoryOwnerPawn )
+void UInventoryMenu::Setup( IInventoryOwner* NewInventoryOwner )
 {
-	if ( !Cast<IInventoryOwner>( NewInventoryOwnerPawn ) ) { ensureAlways( false ); return; }
-
-	if ( InventoryOwnerPawn == NewInventoryOwnerPawn )
+	if ( InventoryOwner == NewInventoryOwner )
 	{
 		ensureAlwaysMsgf( false, TEXT( "Why is the menu set up for the same inventory owner again?" ) );
 		return;
 	}
 
-	if ( InventoryOwnerPawn )
+	if ( InventoryOwner )
 	{
-		UInventory* OldInventory = Cast<IInventoryOwner>( InventoryOwnerPawn )->Execute_GetInventory( InventoryOwnerPawn );
+		UInventory* OldInventory = InventoryOwner->GetInventory();
 		OldInventory->OnItemAdded.RemoveDynamic( this, &UInventoryMenu::HandleOnItemAdded );
 		OldInventory->OnItemRemoved.RemoveDynamic( this, &UInventoryMenu::HandleOnItemRemoved );
 	}
 
-	InventoryOwnerPawn = NewInventoryOwnerPawn;
+	InventoryOwner = NewInventoryOwner;
 
-	UInventory* NewInventory = Cast<IInventoryOwner>( InventoryOwnerPawn )->Execute_GetInventory( InventoryOwnerPawn );
+	UInventory* NewInventory = InventoryOwner->GetInventory();
 	NewInventory->OnItemAdded.AddDynamic( this, &UInventoryMenu::HandleOnItemAdded );
 	NewInventory->OnItemRemoved.AddDynamic( this, &UInventoryMenu::HandleOnItemRemoved );
 
@@ -220,7 +218,7 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 	APawn* ControlledPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( ControlledPawn ) )
 	{
-		InventoryOwner->Execute_ApplyItemUsage( ControlledPawn, LatestClicked->GetItemCore(), ItemUsageButton->GetItemUsage() );
+		InventoryOwner->ApplyItemUsage( LatestClicked->GetItemCore(), ItemUsageButton->GetItemUsage() );
 	}
 	else
 	{
@@ -276,7 +274,7 @@ void UInventoryMenu::HandleOnButtonCombineClicked()
 			SourceItems.Add( ItemClicker->GetItemCore() );
 		}
 
-		Cast<IInventoryOwner>( InventoryOwnerPawn )->Execute_CombineItems( InventoryOwnerPawn, SourceItems );
+		InventoryOwner->CombineItems( SourceItems );
 	}
 }
 

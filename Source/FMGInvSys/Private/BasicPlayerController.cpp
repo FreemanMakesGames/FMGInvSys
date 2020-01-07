@@ -27,7 +27,7 @@ void ABasicPlayerController::OnPossess( APawn* PawnToPossess )
 {
 	Super::OnPossess( PawnToPossess );
 
-	if ( Cast<IInventoryOwner>( PawnToPossess ) )
+	if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( PawnToPossess ) )
 	{
 		// This is very possible because OnPossess happens before BeginPlay.
 		if ( !InventoryMenu )
@@ -39,7 +39,7 @@ void ABasicPlayerController::OnPossess( APawn* PawnToPossess )
 			else { ensureAlways( false ); return; }
 		}
 
-		InventoryMenu->Setup( PawnToPossess );
+		InventoryMenu->Setup( InventoryOwner );
 	}
 	else
 	{
