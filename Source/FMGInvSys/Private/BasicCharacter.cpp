@@ -13,6 +13,8 @@
 #include "ItemDrop.h"
 #include "ItemCore.h"
 #include "Item.h"
+#include "ItemCombiner.h"
+#include "BasicGameMode.h"
 
 #include "Engine/EngineTypes.h"
 
@@ -172,6 +174,46 @@ void ABasicCharacter::ApplyItemUsage_Implementation( UItemCore* ItemCore, EItemU
 
 	}
 }
+
+void ABasicCharacter::CombineItems_Implementation( const TArray<UItemCore*>& SourceItems )
+{
+	///////////////////
+
+	// TODO FMGInvSys:
+
+	// As the author I'm not creating one AItemCombiner per inventory, simply because it's unnecessary.
+	// I provided an ABasicGameMode, which holds an AItemCombiner,
+	// So it can be easily found and referenced from other classes, like the sample code below.
+
+	// But this may contradict with your game, or you may want to do it in other ways.
+	// You likely need to write your own code here to find the AItemCombiner in the game.
+
+	// Note that you can have more than one AItemCombiner. For example,
+	// The game mode can give a normal AItemCombiner most of the time,
+	// And give a "blessed" AItemCombiner if the player has acquired a skill,
+	// Or has entered a special area.
+
+	AItemCombiner* ItemCombiner = GetWorld()->GetAuthGameMode<ABasicGameMode>()->GetItemCombiner();
+
+	if ( !ItemCombiner ) { ensureAlways( false ); return; }
+
+	////////////////////////////////////////////////////////////////////////////////////////////////
+
+	FItemCombinationResult Result = ItemCombiner->CombineItems( SourceItems, false );
+
+	if ( !Result.Successful ) { return; }
+
+	for ( UItemCore* Item : SourceItems )
+	{
+		Inventory->RemoveItem( Item );
+	}
+
+	for ( UItemCore* Item : Result.ResultItems )
+	{
+		Inventory->AddItem( Item );
+	}
+}
+
 // For now, only support to equip one item at a time.
 // To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
 void ABasicCharacter::Equip( UItemCore* ItemCore )

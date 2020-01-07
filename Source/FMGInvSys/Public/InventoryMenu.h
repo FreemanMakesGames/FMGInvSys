@@ -12,6 +12,7 @@ class UInventory;
 class UItemClicker;
 class UItemWidget;
 class UItemCore;
+class IInventoryOwner;
 
 class UWrapBox;
 class UVerticalBox;
@@ -64,8 +65,7 @@ protected:
 
 public:
 
-	UFUNCTION( BlueprintCallable )
-	void Setup( UInventory* InInventory );
+	void Setup( APawn* NewInventoryOwnerPawn );
 
 	UFUNCTION( BlueprintCallable )
 	void Show();
@@ -116,8 +116,8 @@ public:
 // Global variables for tracking
 protected:
 
-	UPROPERTY()
-	UInventory* Inventory;
+	UPROPERTY( VisibleAnywhere )
+	APawn* InventoryOwnerPawn;
 
 	UPROPERTY( BlueprintReadOnly )
 	TMap<UItemCore*, UItemClicker*> ItemToClicker;

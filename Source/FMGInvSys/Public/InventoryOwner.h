@@ -4,6 +4,7 @@
 
 #include "InventoryOwner.generated.h"
 
+class UInventory;
 class UItemCore;
 
 UINTERFACE( BlueprintType )
@@ -19,6 +20,12 @@ class FMGINVSYS_API IInventoryOwner
 public:
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
+	UInventory* GetInventory();
+
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
 	void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage );
+
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
+	void CombineItems( const TArray<UItemCore*>& SourceItems );
 
 };

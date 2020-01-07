@@ -46,7 +46,5 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 	void RemoveItem( UItemCore* ItemToRemove );
-
-	void CombineItems( TArray<UItemCore*> SourceItems );
 		
 };

@@ -32,25 +32,37 @@ void UInventoryMenu::NativeOnInitialized()
 	Button_Hide->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonHideClicked );
 }
 
-void UInventoryMenu::Setup( UInventory* InInventory )
+void UInventoryMenu::Setup( APawn* NewInventoryOwnerPawn )
 {
-	if ( Inventory ) { ensureAlwaysMsgf( false, TEXT( "The current design is one menu for one unique inventory, and no other." ) ); return; }
+	if ( !Cast<IInventoryOwner>( NewInventoryOwnerPawn ) ) { ensureAlways( false ); return; }
 
-	Inventory = InInventory;
-
-	Inventory->OnItemAdded.AddDynamic( this, &UInventoryMenu::HandleOnItemAdded );
-	Inventory->OnItemRemoved.AddDynamic( this, &UInventoryMenu::HandleOnItemRemoved );
-
-	ensureAlwaysMsgf( !WrapBox_Clickers->HasAnyChildren(), TEXT( "Somehow the wrap box already has children?" ) );
-
-	TArray<UItemCore*> Items = Inventory->GetItemCores();
-
-	for ( int i = 0; i < Items.Num(); i++ )
+	if ( InventoryOwnerPawn == NewInventoryOwnerPawn )
 	{
-		if ( ensureAlways( Items[i] ) )
-		{
-			AddNewItemClicker( Items[i] );
-		}
+		ensureAlwaysMsgf( false, TEXT( "Why is the menu set up for the same inventory owner again?" ) );
+		return;
+	}
+
+	if ( InventoryOwnerPawn )
+	{
+		UInventory* OldInventory = Cast<IInventoryOwner>( InventoryOwnerPawn )->Execute_GetInventory( InventoryOwnerPawn );
+		OldInventory->OnItemAdded.RemoveDynamic( this, &UInventoryMenu::HandleOnItemAdded );
+		OldInventory->OnItemRemoved.RemoveDynamic( this, &UInventoryMenu::HandleOnItemRemoved );
+	}
+
+	InventoryOwnerPawn = NewInventoryOwnerPawn;
+
+	UInventory* NewInventory = Cast<IInventoryOwner>( InventoryOwnerPawn )->Execute_GetInventory( InventoryOwnerPawn );
+	NewInventory->OnItemAdded.AddDynamic( this, &UInventoryMenu::HandleOnItemAdded );
+	NewInventory->OnItemRemoved.AddDynamic( this, &UInventoryMenu::HandleOnItemRemoved );
+
+	// Clean up old display.
+	ResetLatestClicked();
+	WrapBox_Clickers->ClearChildren();
+	WrapBox_Clickers_Combining->ClearChildren();
+
+	for ( UItemCore* ItemCore : NewInventory->GetItemCores() )
+	{
+		AddNewItemClicker( ItemCore );
 	}
 }
 
@@ -224,6 +236,11 @@ void UInventoryMenu::HandleOnButtonAddToCombinationClicked()
 		WrapBox_Clickers->RemoveChild( LatestClicked );
 		WrapBox_Clickers_Combining->AddChildToWrapBox( LatestClicked );
 	}
+	else
+	{
+		ensureAlwaysMsgf( false, TEXT( "If there's no latest clicked, why is this button not disabled?" ) );
+		return;
+	}
 
 	ResetLatestClicked();
 }
@@ -234,6 +251,11 @@ void UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
 	{
 		WrapBox_Clickers_Combining->RemoveChild( LatestClicked );
 		WrapBox_Clickers->AddChildToWrapBox( LatestClicked );
+	}
+	else
+	{
+		ensureAlwaysMsgf( false, TEXT( "If there's no latest clicked, why is this button not disabled?" ) );
+		return;
 	}
 
 	ResetLatestClicked();
@@ -251,12 +273,10 @@ void UInventoryMenu::HandleOnButtonCombineClicked()
 		{
 			UItemClicker* ItemClicker = Cast<UItemClicker>( Widget );
 
-			if ( !ItemClicker ) { ensureAlways( false ); return; }
-
 			SourceItems.Add( ItemClicker->GetItemCore() );
 		}
 
-		Inventory->CombineItems( SourceItems );
+		Cast<IInventoryOwner>( InventoryOwnerPawn )->Execute_CombineItems( InventoryOwnerPawn, SourceItems );
 	}
 }
 
