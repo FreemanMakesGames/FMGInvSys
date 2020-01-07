@@ -265,16 +265,16 @@ void UInventoryMenu::HandleOnButtonCombineClicked()
 
 	if ( WrapBox_Clickers_Combining->GetChildrenCount() >= 2 )
 	{
-		TArray<UItemCore*> SourceItems;
+		TArray<UItemCore*> SourceItemCores;
 
 		for ( UWidget* Widget : WrapBox_Clickers_Combining->GetAllChildren() )
 		{
 			UItemClicker* ItemClicker = Cast<UItemClicker>( Widget );
 
-			SourceItems.Add( ItemClicker->GetItemCore() );
+			SourceItemCores.Add( ItemClicker->GetItemCore() );
 		}
 
-		InventoryOwner->CombineItems( SourceItems );
+		InventoryOwner->CombineItems( SourceItemCores );
 	}
 }
 

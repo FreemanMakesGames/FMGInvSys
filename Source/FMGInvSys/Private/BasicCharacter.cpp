@@ -180,7 +180,7 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 	}
 }
 
-void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItems )
+void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
 {
 	///////////////////
 
@@ -204,18 +204,18 @@ void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItems )
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	FItemCombinationResult Result = ItemCombiner->CombineItems( SourceItems, false );
+	FItemCombinationResult Result = ItemCombiner->CombineItems( SourceItemCores, false );
 
 	if ( !Result.Successful ) { return; }
 
-	for ( UItemCore* Item : SourceItems )
+	for ( UItemCore* ItemCore : SourceItemCores )
 	{
-		Inventory->RemoveItem( Item );
+		Destroy( ItemCore );
 	}
 
-	for ( UItemCore* Item : Result.ResultItems )
+	for ( UItemCore* ItemCore : Result.ResultItems )
 	{
-		Inventory->AddItem( Item );
+		Inventory->AddItem( ItemCore );
 	}
 }
 
@@ -265,8 +265,6 @@ void ABasicCharacter::Destroy( UItemCore* ItemCore )
 	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
 	{
 		EquippedItem->Destroy();
-
-		if ( EquippedItem ) { UE_LOG( LogTemp, Warning, TEXT( "non-null" ) ); }
 	}
 
 	Inventory->RemoveItem( ItemCore );

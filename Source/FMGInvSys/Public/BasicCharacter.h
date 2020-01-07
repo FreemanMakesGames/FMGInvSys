@@ -85,7 +85,7 @@ public:
 
 	virtual void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage ) override;
 
-	virtual void CombineItems( const TArray<UItemCore*>& SourceItems ) override;
+	virtual void CombineItems( const TArray<UItemCore*>& SourceItemCores ) override;
 
 protected:
 
