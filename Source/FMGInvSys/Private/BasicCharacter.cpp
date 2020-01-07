@@ -155,9 +155,9 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 {
 	switch ( ItemUsage )
 	{
-	case EItemUsage::Destroy:
+	case EItemUsage::Equip:
 
-		Inventory->RemoveItem( ItemCore );
+		Equip( ItemCore );
 
 		break;
 
@@ -167,9 +167,9 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 
 		break;
 
-	case EItemUsage::Equip:
+	case EItemUsage::Destroy:
 
-		Equip( ItemCore );
+		Destroy( ItemCore );
 
 		break;
 
@@ -226,14 +226,7 @@ void ABasicCharacter::Equip( UItemCore* ItemCore )
 	// Do nothing if the item is already equipped.
 	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore ) { return; }
 
-	// Now that we need to equip a new item...
-
-	// Detach and destroy old equipped item, if there is one.
-	if ( EquippedItem )
-	{
-		EquippedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
-		EquippedItem->Destroy();
-	}
+	if ( EquippedItem ) { EquippedItem->Destroy(); }
 
 	// Spawn and attach new item.
 	AItem* ItemToEquip = ItemCore->SpawnItem( FTransform::Identity );
@@ -263,6 +256,18 @@ void ABasicCharacter::Drop( UItemCore* ItemCore )
 
 	// If the item to drop isn't equipped, spawn it at the item drop component.
 	ItemCore->SpawnItem( ItemDrop->GetComponentTransform() );
+
+	Inventory->RemoveItem( ItemCore );
+}
+
+void ABasicCharacter::Destroy( UItemCore* ItemCore )
+{
+	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
+	{
+		EquippedItem->Destroy();
+
+		if ( EquippedItem ) { UE_LOG( LogTemp, Warning, TEXT( "non-null" ) ); }
+	}
 
 	Inventory->RemoveItem( ItemCore );
 }

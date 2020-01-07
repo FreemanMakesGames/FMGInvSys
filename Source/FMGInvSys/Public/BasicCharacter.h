@@ -93,6 +93,8 @@ protected:
 
 	void Drop( UItemCore* ItemCore );
 
+	void Destroy( UItemCore* ItemCore );
+
 protected:
 
 	UPROPERTY( BlueprintReadOnly )
