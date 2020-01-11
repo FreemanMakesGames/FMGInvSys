@@ -81,7 +81,7 @@ public:
 
 public:
 
-	virtual UInventory* GetInventory() override;
+	virtual UInventory* GetInventory() override { return Inventory; }
 
 	virtual void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage ) override;
 

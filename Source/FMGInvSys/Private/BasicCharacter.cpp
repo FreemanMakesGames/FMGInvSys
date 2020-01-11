@@ -146,11 +146,6 @@ void ABasicCharacter::MoveRight( float Value )
 	}
 }
 
-UInventory* ABasicCharacter::GetInventory()
-{
-	return Inventory;
-}
-
 void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage )
 {
 	switch ( ItemUsage )

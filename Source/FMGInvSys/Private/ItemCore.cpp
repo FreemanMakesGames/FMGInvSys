@@ -12,26 +12,6 @@ UItemCore::UItemCore( const FObjectInitializer& ObjectInitializer ) : Super( Obj
 	ItemUsages.Add( EItemUsage::Destroy );
 }
 
-TSubclassOf<AItem> UItemCore::GetItemClass()
-{
-	return ItemClass;
-}
-
-TSubclassOf<UItemWidget> UItemCore::GetItemWidgetClass()
-{
-	return ItemWidgetClass;
-}
-
-int UItemCore::GetItemTypeId()
-{
-	return ItemTypeId;
-}
-
-TArray<EItemUsage> UItemCore::GetItemUsages()
-{
-	return ItemUsages;
-}
-
 AItem* UItemCore::SpawnItem( const FTransform& SpawnTransform )
 {
 	AItem* Item = nullptr;

@@ -26,16 +26,13 @@ public:
 public:
 
 	UFUNCTION(BlueprintCallable)
-	TSubclassOf<AItem> GetItemClass();
+	TSubclassOf<AItem> GetItemClass() { return ItemClass; }
 
 	UFUNCTION()
-	TSubclassOf<UItemWidget> GetItemWidgetClass();
+	TSubclassOf<UItemWidget> GetItemWidgetClass() { return ItemWidgetClass; }
 
 	UFUNCTION( BlueprintCallable )
-	int GetItemTypeId();
-
-	UFUNCTION( BlueprintCallable )
-	TArray<EItemUsage> GetItemUsages();
+	TArray<EItemUsage> GetItemUsages() { return ItemUsages; }
 
 protected:
 
@@ -44,8 +41,6 @@ protected:
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly )
 	TSubclassOf<UItemWidget> ItemWidgetClass;
-
-	int ItemTypeId;
 
 	UPROPERTY( EditDefaultsOnly )
 	TArray<EItemUsage> ItemUsages;
