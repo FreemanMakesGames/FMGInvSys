@@ -159,7 +159,7 @@ void UInventoryMenu::RemoveItemClicker( UItemCore* ItemCore )
 
 void UInventoryMenu::ResetLatestClicked()
 {
-	// TODO: FMGInvSys: Clear description.
+	TextBlock_Description->SetText( FText::GetEmpty() );
 
 	ItemMenu->ClearChildren();
 
