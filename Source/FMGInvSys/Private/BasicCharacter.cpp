@@ -150,6 +150,12 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 {
 	switch ( ItemUsage )
 	{
+	case EItemUsage::Dismantle:
+
+		Dismantle( ItemCore );
+
+		break;
+
 	case EItemUsage::Equip:
 
 		Equip( ItemCore );
@@ -212,6 +218,26 @@ void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
 	{
 		Inventory->AddItem( ItemCore );
 	}
+}
+
+void ABasicCharacter::Dismantle( UItemCore* ItemCore )
+{
+	for ( TPair<TSubclassOf<UItemCore>, int> DismantleResult : ItemCore->GetDismantleResults() )
+	{
+		for ( int i = 0; i < DismantleResult.Value; i++ )
+		{
+			UItemCore* Result = NewObject<UItemCore>( this, DismantleResult.Key );
+
+			Inventory->AddItem( Result );
+		}
+	}
+
+	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
+	{
+		EquippedItem->Destroy();
+	}
+
+	Inventory->RemoveItem( ItemCore );
 }
 
 // For now, only support to equip one item at a time.

@@ -25,7 +25,7 @@ public:
 
 public:
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION( BlueprintCallable )
 	TSubclassOf<AItem> GetItemClass() { return ItemClass; }
 
 	UFUNCTION()
@@ -33,6 +33,14 @@ public:
 
 	UFUNCTION( BlueprintCallable )
 	TArray<EItemUsage> GetItemUsages() { return ItemUsages; }
+
+	UFUNCTION( BlueprintCallable )
+	TMap<TSubclassOf<UItemCore>, int> GetDismantleResults()
+	{
+		ensureAlwaysMsgf( DismantleResults.Num() > 0, TEXT( "This item core's dismantle results aren't setup, but it's being dismantled?" ) );
+
+		return DismantleResults;
+	}
 
 protected:
 
@@ -44,6 +52,9 @@ protected:
 
 	UPROPERTY( EditDefaultsOnly )
 	TArray<EItemUsage> ItemUsages;
+
+	UPROPERTY( EditDefaultsOnly )
+	TMap<TSubclassOf<UItemCore>, int> DismantleResults;
 
 public:
 

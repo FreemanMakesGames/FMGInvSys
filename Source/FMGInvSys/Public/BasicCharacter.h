@@ -89,6 +89,8 @@ public:
 
 protected:
 
+	void Dismantle( UItemCore* ItemCore );
+
 	void Equip( UItemCore* ItemCore );
 
 	void Drop( UItemCore* ItemCore );
