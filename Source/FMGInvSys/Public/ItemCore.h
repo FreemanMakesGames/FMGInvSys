@@ -25,16 +25,16 @@ public:
 
 public:
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	TSubclassOf<AItem> GetItemClass() { return ItemClass; }
 
 	UFUNCTION()
 	TSubclassOf<UItemWidget> GetItemWidgetClass() { return ItemWidgetClass; }
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	TArray<EItemUsage> GetItemUsages() { return ItemUsages; }
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	TMap<TSubclassOf<UItemCore>, int> GetDismantleResults()
 	{
 		ensureAlwaysMsgf( DismantleResults.Num() > 0, TEXT( "This item core's dismantle results aren't setup, but it's being dismantled?" ) );
@@ -44,24 +44,24 @@ public:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly )
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
 	TSubclassOf<AItem> ItemClass;
 
-	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly )
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemWidget> ItemWidgetClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TArray<EItemUsage> ItemUsages;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TMap<TSubclassOf<UItemCore>, int> DismantleResults;
 
 public:
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	AItem* SpawnItem( const FTransform& SpawnTransform );
 
-	UFUNCTION( BlueprintNativeEvent, BlueprintCallable )
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	FText Describe();
 
 };

@@ -25,20 +25,20 @@ protected:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> ItemCoreClass;
 
 public:
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	UItemCore* GetItemCore();
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void SetItemCore( UItemCore* InItemCore );
 
 protected:
 
-	UPROPERTY( BlueprintReadOnly )
+	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
 	UItemCore* ItemCore;
 
 public:	

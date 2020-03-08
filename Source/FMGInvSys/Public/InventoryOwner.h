@@ -1,5 +1,9 @@
 #pragma once
 
+#include "UObject/ObjectMacros.h"
+#include "UObject/ScriptMacros.h"
+#include "UObject/Interface.h"
+
 #include "ItemUsage.h"
 
 #include "InventoryOwner.generated.h"

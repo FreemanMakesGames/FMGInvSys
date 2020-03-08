@@ -36,7 +36,7 @@ protected:
 public:
 
 	/** Initialize ItemWidget with ItemCore here. */
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	virtual void SetItemCore( UItemCore* InItemCore );
 
 };

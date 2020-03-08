@@ -42,7 +42,7 @@ protected:
 
 	TMap<EItemUsage, UItemUsageButton*> AllItemUsagesToButtons;
 
-	UPROPERTY( VisibleAnywhere )
+	UPROPERTY( VisibleAnywhere, Category = "FMGInvSys" )
 	UItemCore* CurrentItemCore;
 
 public:

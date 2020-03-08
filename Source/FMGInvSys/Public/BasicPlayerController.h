@@ -26,7 +26,7 @@ protected:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UInventoryMenu> InventoryMenuClass;
 
 	UPROPERTY()

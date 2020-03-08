@@ -27,7 +27,7 @@ public:
 		ItemCoreClasses = InItemCoreClasses;
 	}
 
-	UPROPERTY( BlueprintReadOnly )
+	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
 	TArray<TSubclassOf<UItemCore>> ItemCoreClasses;
 
 	// Equivalence means having the same number of each element, regardless of the order.
@@ -103,34 +103,34 @@ public:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> RedGemClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> GreenGemClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> BlueGemClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> WhiteGemClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> SilverCoinClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> GoldCoinClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> GoldBarClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> MediumChinaUrnClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> FatGoldUrnClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemCore> PearlBraceletClass;
 
 protected:

@@ -29,22 +29,22 @@ public:
 
 public:
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	TArray<UItemCore*> GetItemCores();
 
 protected:
 
-	UPROPERTY( VisibleInstanceOnly )
+	UPROPERTY( VisibleInstanceOnly, Category = "FMGInvSys" )
 	TArray<UItemCore*> ItemCores;
 
 public:
 
 	int CountItems();
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void AddItem( UItemCore* ItemToAdd );
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void RemoveItem( UItemCore* ItemToRemove );
 		
 };

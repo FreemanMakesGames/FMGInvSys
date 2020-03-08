@@ -33,10 +33,10 @@ protected:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemClicker> ItemClickerClass;
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UItemUsageButton> ItemUsageButtonClass;
 
 	UPROPERTY( meta = ( BindWidget ) )
@@ -67,10 +67,10 @@ public:
 
 	void Setup( IInventoryOwner* NewInventoryOwner );
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void Show();
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	virtual void Hide();
 
 protected:
@@ -118,13 +118,13 @@ protected:
 
 	IInventoryOwner* InventoryOwner;
 
-	UPROPERTY( BlueprintReadOnly )
+	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
 	TMap<UItemCore*, UItemClicker*> ItemToClicker;
 
 	UPROPERTY()
 	TMap<EItemUsage, UItemUsageButton*> AllItemUsagesToButtons;
 
-	UPROPERTY( BlueprintReadOnly, VisibleAnywhere )
+	UPROPERTY( BlueprintReadOnly, VisibleAnywhere, Category = "FMGInvSys" )
 	UItemClicker* LatestClicked;
 
 };

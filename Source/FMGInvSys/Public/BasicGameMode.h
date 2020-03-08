@@ -26,7 +26,7 @@ public:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<AItemCombiner> ItemCombinerClass;
 
 	AItemCombiner* ItemCombiner;

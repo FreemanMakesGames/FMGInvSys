@@ -99,10 +99,10 @@ protected:
 
 protected:
 
-	UPROPERTY( BlueprintReadOnly )
+	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
 	UInventory* Inventory;
 
-	UPROPERTY( VisibleAnywhere, BlueprintReadOnly )
+	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "FMGInvSys" )
 	UItemDrop* ItemDrop;
 
 // Global tracking variables

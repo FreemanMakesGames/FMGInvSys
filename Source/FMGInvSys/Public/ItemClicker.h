@@ -32,15 +32,15 @@ public:
 
 public:
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	UItemCore* GetItemCore();
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void SetItemCore( UItemCore* InItemCore );
 
 protected:
 
-	UPROPERTY( meta = ( BindWidget ), BlueprintReadOnly )
+	UPROPERTY( meta = ( BindWidget ), BlueprintReadOnly, Category = "FMGInvSys" )
 	UButton* Clicker;
 
 	UPROPERTY( meta = ( BindWidget ) )
