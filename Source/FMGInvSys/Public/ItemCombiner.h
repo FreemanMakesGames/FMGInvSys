@@ -103,38 +103,6 @@ public:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> RedGemClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> GreenGemClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> BlueGemClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> WhiteGemClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> SilverCoinClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> GoldCoinClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> GoldBarClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> MediumChinaUrnClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> FatGoldUrnClass;
-
-	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> PearlBraceletClass;
-
-protected:
-
 	/**
 	 * A map of simple combinations like A + B + C --> D
 	 */ 

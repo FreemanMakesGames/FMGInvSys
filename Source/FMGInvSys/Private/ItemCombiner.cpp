@@ -11,26 +11,6 @@ void AItemCombiner::BeginPlay()
 
 	/* All possible combination among different classes of item cores. */
 
-	FItemCoreClassArray WhiteGemRecipe;
-	WhiteGemRecipe.ItemCoreClasses.Add( RedGemClass );
-	WhiteGemRecipe.ItemCoreClasses.Add( GreenGemClass );
-	WhiteGemRecipe.ItemCoreClasses.Add( BlueGemClass );
-	ClassMap.Add( WhiteGemRecipe, WhiteGemClass );
-
-	FItemCoreClassArray GoldBarRecipe;
-	for ( int i = 1; i <= 3; i++ )
-	{
-		GoldBarRecipe.ItemCoreClasses.Add( GoldCoinClass );
-	}
-	ClassMap.Add( GoldBarRecipe, GoldBarClass );
-
-	FItemCoreClassArray GoldBarAndMediumChinaUrn;
-	GoldBarAndMediumChinaUrn.ItemCoreClasses.Add( GoldBarClass );
-	GoldBarAndMediumChinaUrn.ItemCoreClasses.Add( MediumChinaUrnClass );
-	FItemCoreClassArray FatGoldUrnAndPearlBracelet;
-	FatGoldUrnAndPearlBracelet.ItemCoreClasses.Add( FatGoldUrnClass );
-	FatGoldUrnAndPearlBracelet.ItemCoreClasses.Add( PearlBraceletClass );
-	ClassMap_Multiple.Add( GoldBarAndMediumChinaUrn, FatGoldUrnAndPearlBracelet );
 }
 
 FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceItems, bool Directional )
