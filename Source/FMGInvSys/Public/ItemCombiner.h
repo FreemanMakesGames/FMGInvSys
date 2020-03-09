@@ -106,13 +106,13 @@ protected:
 	/**
 	 * A map of simple combinations like A + B + C --> D
 	 */ 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TMap<FItemCoreClassArray, TSubclassOf<UItemCore>> ClassMap;
 
 	/**
 	 * A map of combinations like A + B + C --> D + E + ...
 	 */
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TMap<FItemCoreClassArray, FItemCoreClassArray> ClassMap_Multiple;
 
 	/**
