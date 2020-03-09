@@ -27,7 +27,7 @@ public:
 		ItemCoreClasses = InItemCoreClasses;
 	}
 
-	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
 	TArray<TSubclassOf<UItemCore>> ItemCoreClasses;
 
 	// Equivalence means having the same number of each element, regardless of the order.
@@ -106,11 +106,13 @@ protected:
 	/**
 	 * A map of simple combinations like A + B + C --> D
 	 */ 
+	UPROPERTY( EditDefaultsOnly )
 	TMap<FItemCoreClassArray, TSubclassOf<UItemCore>> ClassMap;
 
 	/**
 	 * A map of combinations like A + B + C --> D + E + ...
 	 */
+	UPROPERTY( EditDefaultsOnly )
 	TMap<FItemCoreClassArray, FItemCoreClassArray> ClassMap_Multiple;
 
 	/**
