@@ -45,10 +45,14 @@ public:
 
 	int CountItems();
 
-	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void AddItem( UItemCore* ItemToAdd );
+	UFUNCTION( NetMulticast, Reliable, BlueprintCallable, Category = "FMGInvSys" )
+	void Multicast_AddItem( UItemCore* ItemToAdd );
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void RemoveItem( UItemCore* ItemToRemove );
+
+// public:
+// 
+// 	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
 		
 };

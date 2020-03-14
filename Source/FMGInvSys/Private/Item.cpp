@@ -3,6 +3,9 @@
 
 #include "Item.h"
 
+#include "Engine/ActorChannel.h"
+#include "Net/UnrealNetwork.h"
+
 #include "ItemCore.h"
 #include "ItemWidget.h"
 
@@ -43,4 +46,20 @@ void AItem::SetItemCore( UItemCore* InItemCore )
 // 	}
 
 	ItemCore = InItemCore;
+}
+
+bool AItem::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
+{
+	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
+
+	bWroteSomething |= Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags );
+
+	return bWroteSomething;
+}
+
+void AItem::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( AItem, ItemCore );
 }

@@ -225,7 +225,7 @@ void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
 
 	for ( UItemCore* ItemCore : Result.ResultItems )
 	{
-		Inventory->AddItem( ItemCore );
+		Inventory->Multicast_AddItem( ItemCore );
 	}
 }
 
@@ -238,7 +238,11 @@ void ABasicCharacter::Server_CollectItem_Implementation()
 
 	for ( AActor* AdjacentActor : AdjacentActors )
 	{
-		Inventory->AddItem( Cast<AItem>( AdjacentActor )->GetItemCore() );
+		UItemCore* ItemCore = Cast<AItem>( AdjacentActor )->GetItemCore();
+
+		ItemCore->Rename( nullptr, Inventory );
+
+		Inventory->Multicast_AddItem( ItemCore );
 
 		AdjacentActor->Destroy();
 	}
@@ -254,7 +258,7 @@ void ABasicCharacter::Dismantle( UItemCore* ItemCore )
 		{
 			UItemCore* Result = NewObject<UItemCore>( this, DismantleResult.Key );
 
-			Inventory->AddItem( Result );
+			Inventory->Multicast_AddItem( Result );
 		}
 	}
 
@@ -319,24 +323,16 @@ void ABasicCharacter::Destroy( UItemCore* ItemCore )
 
 bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
 {
-	bool bSuper = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
+	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
 
-	if ( Channel->ReplicateSubobject( Inventory, *Bunch, *RepFlags ) )
+	bWroteSomething |= Channel->ReplicateSubobject( Inventory, *Bunch, *RepFlags );
+
+	for ( UItemCore* ItemCore : Inventory->GetItemCores() )
 	{
-		return true;
-	}
-	else
-	{
-		for ( UItemCore* ItemCore : Inventory->GetItemCores() )
-		{
-			if ( Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags ) )
-			{
-				return true;
-			}
-		}
+		bWroteSomething |= Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags );
 	}
 
- 	return bSuper;
+ 	return bWroteSomething;
 }
 
 void ABasicCharacter::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const

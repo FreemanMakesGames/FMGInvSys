@@ -38,11 +38,11 @@ public:
 
 protected:
 
-	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
+	UPROPERTY( Replicated, BlueprintReadOnly, Category = "FMGInvSys" )
 	UItemCore* ItemCore;
 
 public:	
 
-	// Replicate Subobject?
+	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
 
 };

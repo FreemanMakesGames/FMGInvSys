@@ -3,6 +3,7 @@
 
 #include "Inventory.h"
 
+#include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 
 #include "ItemCore.h"
@@ -25,7 +26,7 @@ int UInventory::CountItems()
 	return ItemCores.Num();
 }
 
-void UInventory::AddItem( UItemCore* ItemToAdd )
+void UInventory::Multicast_AddItem_Implementation( UItemCore* ItemToAdd )
 {
 	ensureAlways( ItemToAdd );
 
@@ -40,6 +41,18 @@ void UInventory::RemoveItem( UItemCore* ItemToRemove )
 
 	OnItemRemoved.Broadcast( ItemToRemove );
 }
+
+// bool UInventory::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
+// {
+// 	bool bSuper = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
+// 
+// 	for ( UItemCore* ItemCore : ItemCores )
+// 	{
+// 		bSuper |= Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags );
+// 	}
+// 
+// 	return bSuper;
+// }
 
 void UInventory::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
 {
