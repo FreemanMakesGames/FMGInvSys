@@ -93,7 +93,7 @@ void ABasicCharacter::SetupPlayerInputComponent( class UInputComponent* PlayerIn
 	PlayerInputComponent->BindAction( "ResetVR", IE_Pressed, this, &ABasicCharacter::OnResetVR );
 
 
-	PlayerInputComponent->BindAction( "CollectItem", IE_Pressed, this, &ABasicCharacter::CollectItem );
+	PlayerInputComponent->BindAction( "CollectItem", IE_Pressed, this, &ABasicCharacter::Server_CollectItem );
 }
 
 void ABasicCharacter::OnResetVR()
@@ -226,7 +226,7 @@ void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
 	}
 }
 
-void ABasicCharacter::CollectItem()
+void ABasicCharacter::Server_CollectItem_Implementation()
 {
 	TArray<TEnumAsByte<EObjectTypeQuery>> Filter;
 	TArray<AActor*> Ignoring;
@@ -240,6 +240,8 @@ void ABasicCharacter::CollectItem()
 		AdjacentActor->Destroy();
 	}
 }
+
+bool ABasicCharacter::Server_CollectItem_Validate() { return true; }
 
 void ABasicCharacter::Dismantle( UItemCore* ItemCore )
 {

@@ -102,7 +102,8 @@ protected:
 
 protected:
 
-	void CollectItem();
+	UFUNCTION( Server, Reliable, WithValidation )
+	void Server_CollectItem();
 
 	void Dismantle( UItemCore* ItemCore );
 

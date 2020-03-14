@@ -20,7 +20,7 @@ protected:
 
 	virtual void BeginPlay() override;
 
-protected:
+	virtual void SetupInputComponent() override;
 
 	virtual void OnPossess( APawn* PawnToPossess ) override;
 

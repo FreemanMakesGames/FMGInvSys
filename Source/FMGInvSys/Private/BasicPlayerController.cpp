@@ -19,13 +19,22 @@ void ABasicPlayerController::BeginPlay()
 		}
 		else { ensureAlways( false ); }
 	}
+}
 
-	InputComponent->BindAction( "OpenInventory", IE_Pressed, this, &ABasicPlayerController::ToggleInventoryMenu );
+void ABasicPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	if ( IsLocalController() )
+		InputComponent->BindAction( "OpenInventory", IE_Pressed, this, &ABasicPlayerController::ToggleInventoryMenu );
 }
 
 void ABasicPlayerController::OnPossess( APawn* PawnToPossess )
 {
 	Super::OnPossess( PawnToPossess );
+
+	if ( !IsLocalController() )
+		return;
 
 	if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( PawnToPossess ) )
 	{
@@ -35,11 +44,11 @@ void ABasicPlayerController::OnPossess( APawn* PawnToPossess )
 			if ( InventoryMenuClass )
 			{
 				InventoryMenu = CreateWidget<UInventoryMenu>( this, InventoryMenuClass );
+
+				InventoryMenu->Setup( InventoryOwner );
 			}
 			else { ensureAlways( false ); return; }
 		}
-
-		InventoryMenu->Setup( InventoryOwner );
 	}
 	else
 	{
