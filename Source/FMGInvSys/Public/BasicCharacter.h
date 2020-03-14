@@ -94,7 +94,7 @@ public:
 
 protected:
 
-	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
+	UPROPERTY( Replicated, BlueprintReadOnly, Category = "FMGInvSys" )
 	UInventory* Inventory;
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "FMGInvSys" )
@@ -112,6 +112,10 @@ protected:
 	void Drop( UItemCore* ItemCore );
 
 	void Destroy( UItemCore* ItemCore );
+
+public:
+
+	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
 
 // Global tracking variables
 protected:

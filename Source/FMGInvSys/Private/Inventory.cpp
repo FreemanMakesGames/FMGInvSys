@@ -3,10 +3,17 @@
 
 #include "Inventory.h"
 
+#include "Net/UnrealNetwork.h"
+
 #include "ItemCore.h"
 #include "ItemDrop.h"
 #include "ItemCombiner.h"
 #include "BasicGameMode.h"
+
+UInventory::UInventory()
+{
+	SetIsReplicated( true );
+}
 
 TArray<UItemCore*> UInventory::GetItemCores()
 {
@@ -32,4 +39,11 @@ void UInventory::RemoveItem( UItemCore* ItemToRemove )
 	ItemCores.Remove( ItemToRemove );
 
 	OnItemRemoved.Broadcast( ItemToRemove );
+}
+
+void UInventory::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( UInventory, ItemCores );
 }

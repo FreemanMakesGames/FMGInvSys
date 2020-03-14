@@ -21,6 +21,10 @@ class FMGINVSYS_API UInventory : public UActorComponent
 
 public:
 
+	UInventory();
+
+public:
+
 	UPROPERTY( BlueprintAssignable )
 	FOnItemAdded OnItemAdded;
 
@@ -34,7 +38,7 @@ public:
 
 protected:
 
-	UPROPERTY( VisibleInstanceOnly, Category = "FMGInvSys" )
+	UPROPERTY( Replicated, VisibleInstanceOnly, Category = "FMGInvSys" )
 	TArray<UItemCore*> ItemCores;
 
 public:

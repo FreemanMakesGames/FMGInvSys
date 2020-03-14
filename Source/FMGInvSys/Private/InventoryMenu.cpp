@@ -288,6 +288,8 @@ void UInventoryMenu::HandleOnButtonHideClicked()
  */
 void UInventoryMenu::HandleOnItemAdded( UItemCore* ItemAdded )
 {
+	UE_LOG( LogTemp, Warning, TEXT( "Handle on item added" ) );
+
 	UItemClicker* NewItemClicker = AddNewItemClicker( ItemAdded );
 
 	NewItemClicker->HighlightForAddition();

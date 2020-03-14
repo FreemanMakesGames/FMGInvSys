@@ -1,6 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "BasicCharacter.h"
+
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -20,6 +21,8 @@
 #include "BasicPlayerController.h"
 
 #include "Engine/EngineTypes.h"
+#include "Engine/ActorChannel.h"
+#include "Net/UnrealNetwork.h"
 
 //////////////////////////////////////////////////////////////////////////
 // ABasicCharacter
@@ -312,4 +315,33 @@ void ABasicCharacter::Destroy( UItemCore* ItemCore )
 	}
 
 	Inventory->RemoveItem( ItemCore );
+}
+
+bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
+{
+	bool bSuper = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
+
+	if ( Channel->ReplicateSubobject( Inventory, *Bunch, *RepFlags ) )
+	{
+		return true;
+	}
+	else
+	{
+		for ( UItemCore* ItemCore : Inventory->GetItemCores() )
+		{
+			if ( Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags ) )
+			{
+				return true;
+			}
+		}
+	}
+
+ 	return bSuper;
+}
+
+void ABasicCharacter::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( ABasicCharacter, Inventory );
 }

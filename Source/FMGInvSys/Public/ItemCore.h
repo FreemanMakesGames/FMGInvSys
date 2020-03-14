@@ -23,6 +23,8 @@ public:
 
 	UItemCore( const FObjectInitializer& ObjectInitializer );
 
+	virtual bool IsSupportedForNetworking() const override { return true; }
+
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
