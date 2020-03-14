@@ -79,6 +79,11 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+protected:
+
+	UPROPERTY( EditDefaultsOnly )
+	float ItemCollectionRange = 150;
+
 public:
 
 	virtual UInventory* GetInventory() override { return Inventory; }
@@ -89,6 +94,16 @@ public:
 
 protected:
 
+	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
+	UInventory* Inventory;
+
+	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "FMGInvSys" )
+	UItemDrop* ItemDrop;
+
+protected:
+
+	void CollectItem();
+
 	void Dismantle( UItemCore* ItemCore );
 
 	void Equip( UItemCore* ItemCore );
@@ -96,14 +111,6 @@ protected:
 	void Drop( UItemCore* ItemCore );
 
 	void Destroy( UItemCore* ItemCore );
-
-protected:
-
-	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
-	UInventory* Inventory;
-
-	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "FMGInvSys" )
-	UItemDrop* ItemDrop;
 
 // Global tracking variables
 protected:

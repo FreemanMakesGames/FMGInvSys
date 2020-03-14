@@ -9,6 +9,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #include "Inventory.h"
 #include "ItemDrop.h"
@@ -16,6 +17,7 @@
 #include "Item.h"
 #include "ItemCombiner.h"
 #include "BasicGameMode.h"
+#include "BasicPlayerController.h"
 
 #include "Engine/EngineTypes.h"
 
@@ -89,6 +91,9 @@ void ABasicCharacter::SetupPlayerInputComponent( class UInputComponent* PlayerIn
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction( "ResetVR", IE_Pressed, this, &ABasicCharacter::OnResetVR );
+
+
+	PlayerInputComponent->BindAction( "CollectItem", IE_Pressed, this, &ABasicCharacter::CollectItem );
 }
 
 void ABasicCharacter::OnResetVR()
@@ -218,6 +223,21 @@ void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
 	for ( UItemCore* ItemCore : Result.ResultItems )
 	{
 		Inventory->AddItem( ItemCore );
+	}
+}
+
+void ABasicCharacter::CollectItem()
+{
+	TArray<TEnumAsByte<EObjectTypeQuery>> Filter;
+	TArray<AActor*> Ignoring;
+	TArray<AActor*> AdjacentActors;
+	UKismetSystemLibrary::SphereOverlapActors( GetWorld(), GetActorLocation(), ItemCollectionRange, Filter, AItem::StaticClass(), Ignoring, AdjacentActors );
+
+	for ( AActor* AdjacentActor : AdjacentActors )
+	{
+		Inventory->AddItem( Cast<AItem>( AdjacentActor )->GetItemCore() );
+
+		AdjacentActor->Destroy();
 	}
 }
 
