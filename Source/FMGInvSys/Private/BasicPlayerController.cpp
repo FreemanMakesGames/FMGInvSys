@@ -6,16 +6,26 @@
 #include "InventoryMenu.h"
 #include "InventoryOwner.h"
 
+/**
+ * On server, this happens before OnPossess, for remote player controllers.
+ */
 void ABasicPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Is this possible? Can player controller not have possessed any pawn after BeginPlay?
+	if ( !IsLocalController() )
+		return;
+
 	if ( !InventoryMenu )
 	{
+		// It looks like the code here will only run on clients,
+		// Because listen server would have created InventoryMenu in OnPossess already.
+
 		if ( InventoryMenuClass )
 		{
 			InventoryMenu = CreateWidget<UInventoryMenu>( this, InventoryMenuClass );
+
+			InventoryMenu->Setup( Cast<IInventoryOwner>( GetPawn() ) );
 		}
 		else { ensureAlways( false ); }
 	}
@@ -29,6 +39,9 @@ void ABasicPlayerController::SetupInputComponent()
 		InputComponent->BindAction( "OpenInventory", IE_Pressed, this, &ABasicPlayerController::ToggleInventoryMenu );
 }
 
+/**
+ * This isn't fired on clients.
+ */
 void ABasicPlayerController::OnPossess( APawn* PawnToPossess )
 {
 	Super::OnPossess( PawnToPossess );
@@ -38,7 +51,7 @@ void ABasicPlayerController::OnPossess( APawn* PawnToPossess )
 
 	if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( PawnToPossess ) )
 	{
-		// This is very possible because OnPossess happens before BeginPlay.
+		// On server, OnPossess happens before BeginPlay.
 		if ( !InventoryMenu )
 		{
 			if ( InventoryMenuClass )
