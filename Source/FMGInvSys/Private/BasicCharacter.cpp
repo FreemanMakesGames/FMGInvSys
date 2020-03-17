@@ -179,7 +179,7 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 
 	case EItemUsage::Destroy:
 
-		Destroy( ItemCore );
+		Server_Destroy( ItemCore );
 
 		break;
 
@@ -220,7 +220,7 @@ void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
 
 	for ( UItemCore* ItemCore : SourceItemCores )
 	{
-		Destroy( ItemCore );
+		Server_Destroy( ItemCore );
 	}
 
 	for ( UItemCore* ItemCore : Result.ResultItems )
@@ -314,7 +314,7 @@ void ABasicCharacter::Server_Drop_Implementation( UItemCore* ItemCore )
 }
 bool ABasicCharacter::Server_Drop_Validate( UItemCore* ItemCore ) { return true; }
 
-void ABasicCharacter::Destroy( UItemCore* ItemCore )
+void ABasicCharacter::Server_Destroy_Implementation( UItemCore* ItemCore )
 {
 	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
 	{
@@ -323,6 +323,7 @@ void ABasicCharacter::Destroy( UItemCore* ItemCore )
 
 	Inventory->RemoveItem( ItemCore );
 }
+bool ABasicCharacter::Server_Destroy_Validate( UItemCore* ItemCore ) { return true; }
 
 // bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
 // {

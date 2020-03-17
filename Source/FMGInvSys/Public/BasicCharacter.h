@@ -112,7 +112,8 @@ protected:
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_Drop( UItemCore* ItemCore );
 
-	void Destroy( UItemCore* ItemCore );
+	UFUNCTION( Server, Reliable, WithValidation )
+	void Server_Destroy( UItemCore* ItemCore );
 
 // public:
 // 

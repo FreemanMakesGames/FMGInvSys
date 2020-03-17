@@ -24,6 +24,10 @@ public:
 
 public:
 
+	/**
+	 * This is fired either in AddItem and RemoveItem, updating one item a time, for listen-server or standalone,
+	 * Or in OnRep_ItemCores, updating in bulk ( though usually an item I guess ), for clients.
+	 */
 	UPROPERTY( BlueprintAssignable )
 	FOnItemCoresUpdated OnItemCoresUpdated;
 
