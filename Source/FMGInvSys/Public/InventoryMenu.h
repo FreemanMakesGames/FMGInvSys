@@ -79,6 +79,8 @@ protected:
 
 	UItemUsageButton* InitItemUsageButton( EItemUsage ItemUsage );
 
+	void Redraw();
+
 	UItemClicker* AddNewItemClicker( UItemCore* ItemCore );
 
 	void DisplayItemMenu( UItemCore* ItemCore );
@@ -87,7 +89,7 @@ protected:
 
 	void ResetLatestClicked();
 
-public:
+protected:
 
 	UFUNCTION()
 	virtual void HandleOnItemClickerClicked( UItemClicker* Clicked );
@@ -108,10 +110,7 @@ public:
 	void HandleOnButtonHideClicked();
 
 	UFUNCTION()
-	void HandleOnItemAdded( UItemCore* ItemAdded );
-
-	UFUNCTION()
-	void HandleOnItemRemoved( UItemCore* ItemRemoved );
+	void HandleOnInventoryUpdated();
 
 // Global variables for tracking
 protected:

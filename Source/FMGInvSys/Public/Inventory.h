@@ -11,8 +11,7 @@
 class UItemCore;
 class AItemCombiner;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnItemAdded, UItemCore*, ItemCore );
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnItemRemoved, UItemCore*, ItemCore );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE( FOnItemCoresUpdated );
 
 UCLASS( Blueprintable, BlueprintType, ClassGroup=( Custom ), meta=( BlueprintSpawnableComponent ) )
 class FMGINVSYS_API UInventory : public UActorComponent
@@ -26,10 +25,7 @@ public:
 public:
 
 	UPROPERTY( BlueprintAssignable )
-	FOnItemAdded OnItemAdded;
-
-	UPROPERTY( BlueprintAssignable )
-	FOnItemRemoved OnItemRemoved;
+	FOnItemCoresUpdated OnItemCoresUpdated;
 
 public:
 
@@ -38,21 +34,26 @@ public:
 
 protected:
 
-	UPROPERTY( Replicated, VisibleInstanceOnly, Category = "FMGInvSys" )
+	UPROPERTY( ReplicatedUsing=OnRep_ItemCores, VisibleInstanceOnly, Category = "FMGInvSys" )
 	TArray<UItemCore*> ItemCores;
 
 public:
 
 	int CountItems();
 
-	UFUNCTION( NetMulticast, Reliable, BlueprintCallable, Category = "FMGInvSys" )
-	void Multicast_AddItem( UItemCore* ItemToAdd );
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
+	void AddItem( UItemCore* ItemToAdd );
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void RemoveItem( UItemCore* ItemToRemove );
 
-// public:
-// 
-// 	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
+protected:
+
+	UFUNCTION()
+	void OnRep_ItemCores();
+
+public:
+
+	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
 		
 };

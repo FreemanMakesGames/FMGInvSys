@@ -13,6 +13,7 @@ AItem::AItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectIniti
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	bReplicates = true;
 }
 
 void AItem::BeginPlay()

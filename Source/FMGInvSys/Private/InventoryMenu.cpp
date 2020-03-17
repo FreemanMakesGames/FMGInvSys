@@ -43,25 +43,15 @@ void UInventoryMenu::Setup( IInventoryOwner* NewInventoryOwner )
 	if ( InventoryOwner )
 	{
 		UInventory* OldInventory = InventoryOwner->GetInventory();
-		OldInventory->OnItemAdded.RemoveDynamic( this, &UInventoryMenu::HandleOnItemAdded );
-		OldInventory->OnItemRemoved.RemoveDynamic( this, &UInventoryMenu::HandleOnItemRemoved );
+		OldInventory->OnItemCoresUpdated.RemoveDynamic( this, &UInventoryMenu::HandleOnInventoryUpdated );
 	}
 
 	InventoryOwner = NewInventoryOwner;
 
 	UInventory* NewInventory = InventoryOwner->GetInventory();
-	NewInventory->OnItemAdded.AddDynamic( this, &UInventoryMenu::HandleOnItemAdded );
-	NewInventory->OnItemRemoved.AddDynamic( this, &UInventoryMenu::HandleOnItemRemoved );
+	NewInventory->OnItemCoresUpdated.AddDynamic( this, &UInventoryMenu::HandleOnInventoryUpdated );
 
-	// Clean up old display.
-	ResetLatestClicked();
-	WrapBox_Clickers->ClearChildren();
-	WrapBox_Clickers_Combining->ClearChildren();
-
-	for ( UItemCore* ItemCore : NewInventory->GetItemCores() )
-	{
-		AddNewItemClicker( ItemCore );
-	}
+	Redraw();
 }
 
 void UInventoryMenu::Show()
@@ -102,6 +92,19 @@ UItemUsageButton* UInventoryMenu::InitItemUsageButton( EItemUsage ItemUsage )
 	ItemUsageButton->SetItemUsage( ItemUsage );
 
 	return ItemUsageButton;
+}
+
+void UInventoryMenu::Redraw()
+{
+	// Clean up old display.
+	ResetLatestClicked();
+	WrapBox_Clickers->ClearChildren();
+	WrapBox_Clickers_Combining->ClearChildren();
+
+	for ( UItemCore* ItemCore : InventoryOwner->GetInventory()->GetItemCores() )
+	{
+		AddNewItemClicker( ItemCore );
+	}
 }
 
 UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
@@ -283,23 +286,7 @@ void UInventoryMenu::HandleOnButtonHideClicked()
 	Hide();
 }
 
-/**
- * This can be invoked without inventory menu in view.
- */
-void UInventoryMenu::HandleOnItemAdded( UItemCore* ItemAdded )
+void UInventoryMenu::HandleOnInventoryUpdated()
 {
-	UE_LOG( LogTemp, Warning, TEXT( "Handle on item added" ) );
-
-	UItemClicker* NewItemClicker = AddNewItemClicker( ItemAdded );
-
-	NewItemClicker->HighlightForAddition();
+	Redraw();
 }
-
-/**
- * This can be invoked without inventory menu in view.
- */
-void UInventoryMenu::HandleOnItemRemoved( UItemCore* ItemRemoved )
-{
-	RemoveItemClicker( ItemRemoved );
-}
-

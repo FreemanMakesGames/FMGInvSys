@@ -173,7 +173,7 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 
 	case EItemUsage::Drop:
 
-		Drop( ItemCore );
+		Server_Drop( ItemCore );
 
 		break;
 
@@ -225,10 +225,13 @@ void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
 
 	for ( UItemCore* ItemCore : Result.ResultItems )
 	{
-		Inventory->Multicast_AddItem( ItemCore );
+		Inventory->AddItem( ItemCore );
 	}
 }
 
+// WTH if server collects item, then drops it, and Client then picks it UP, Client can actually drop it without crashing?
+// And server can also picks it UP again too???
+// But if Client picks UP, then drops, it crashes???
 void ABasicCharacter::Server_CollectItem_Implementation()
 {
 	TArray<TEnumAsByte<EObjectTypeQuery>> Filter;
@@ -240,14 +243,13 @@ void ABasicCharacter::Server_CollectItem_Implementation()
 	{
 		UItemCore* ItemCore = Cast<AItem>( AdjacentActor )->GetItemCore();
 
-		ItemCore->Rename( nullptr, Inventory );
+		//ItemCore->Rename( nullptr, this );
 
-		Inventory->Multicast_AddItem( ItemCore );
+		Inventory->AddItem( ItemCore );
 
 		AdjacentActor->Destroy();
 	}
 }
-
 bool ABasicCharacter::Server_CollectItem_Validate() { return true; }
 
 void ABasicCharacter::Dismantle( UItemCore* ItemCore )
@@ -258,7 +260,7 @@ void ABasicCharacter::Dismantle( UItemCore* ItemCore )
 		{
 			UItemCore* Result = NewObject<UItemCore>( this, DismantleResult.Key );
 
-			Inventory->Multicast_AddItem( Result );
+			Inventory->AddItem( Result );
 		}
 	}
 
@@ -287,7 +289,7 @@ void ABasicCharacter::Equip( UItemCore* ItemCore )
 	EquippedItem = ItemToEquip;
 }
 
-void ABasicCharacter::Drop( UItemCore* ItemCore )
+void ABasicCharacter::Server_Drop_Implementation( UItemCore* ItemCore )
 {
 	// If the item to drop is equipped,
 	// Simply detach it and relocate it to item drop component,
@@ -310,6 +312,7 @@ void ABasicCharacter::Drop( UItemCore* ItemCore )
 
 	Inventory->RemoveItem( ItemCore );
 }
+bool ABasicCharacter::Server_Drop_Validate( UItemCore* ItemCore ) { return true; }
 
 void ABasicCharacter::Destroy( UItemCore* ItemCore )
 {
@@ -321,19 +324,19 @@ void ABasicCharacter::Destroy( UItemCore* ItemCore )
 	Inventory->RemoveItem( ItemCore );
 }
 
-bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
-{
-	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
-
-	bWroteSomething |= Channel->ReplicateSubobject( Inventory, *Bunch, *RepFlags );
-
-	for ( UItemCore* ItemCore : Inventory->GetItemCores() )
-	{
-		bWroteSomething |= Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags );
-	}
-
- 	return bWroteSomething;
-}
+// bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
+// {
+// 	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
+// 
+// 	bWroteSomething |= Channel->ReplicateSubobject( Inventory, *Bunch, *RepFlags );
+// 
+// 	for ( UItemCore* ItemCore : Inventory->GetItemCores() )
+// 	{
+// 		bWroteSomething |= Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags );
+// 	}
+// 
+//  	return bWroteSomething;
+// }
 
 void ABasicCharacter::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
 {

@@ -14,6 +14,8 @@ UItemCore::UItemCore( const FObjectInitializer& ObjectInitializer ) : Super( Obj
 
 AItem* UItemCore::SpawnItem( const FTransform& SpawnTransform )
 {
+	// Assert to only be called on server?
+
 	AItem* Item = nullptr;
 
 	if ( UWorld* World = GetWorld() )

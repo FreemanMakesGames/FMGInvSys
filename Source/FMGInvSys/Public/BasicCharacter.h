@@ -109,13 +109,14 @@ protected:
 
 	void Equip( UItemCore* ItemCore );
 
-	void Drop( UItemCore* ItemCore );
+	UFUNCTION( Server, Reliable, WithValidation )
+	void Server_Drop( UItemCore* ItemCore );
 
 	void Destroy( UItemCore* ItemCore );
 
-public:
-
-	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
+// public:
+// 
+// 	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
 
 // Global tracking variables
 protected:
