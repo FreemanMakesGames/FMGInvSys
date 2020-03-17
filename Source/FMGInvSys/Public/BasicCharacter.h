@@ -90,7 +90,8 @@ public:
 
 	virtual void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage ) override;
 
-	virtual void CombineItems( const TArray<UItemCore*>& SourceItemCores ) override;
+	UFUNCTION( Server, Reliable, WithValidation )
+	virtual void Server_CombineItems( const TArray<UItemCore*>& SourceItemCores ) override;
 
 protected:
 

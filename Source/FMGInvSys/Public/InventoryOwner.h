@@ -27,6 +27,6 @@ public:
 
 	virtual void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage ) PURE_VIRTUAL( , );
 
-	virtual void CombineItems( const TArray<UItemCore*>& SourceItemCores ) PURE_VIRTUAL( , );
+	virtual void Server_CombineItems( const TArray<UItemCore*>& SourceItemCores ) PURE_VIRTUAL( , );
 
 };

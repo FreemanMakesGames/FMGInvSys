@@ -281,7 +281,7 @@ void UInventoryMenu::HandleOnButtonCombineClicked()
 			SourceItemCores.Add( ItemClicker->GetItemCore() );
 		}
 
-		InventoryOwner->CombineItems( SourceItemCores );
+		InventoryOwner->Server_CombineItems( SourceItemCores );
 	}
 }
 

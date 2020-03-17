@@ -190,7 +190,7 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 	}
 }
 
-void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
+void ABasicCharacter::Server_CombineItems_Implementation( const TArray<UItemCore*>& SourceItemCores )
 {
 	///////////////////
 
@@ -228,6 +228,7 @@ void ABasicCharacter::CombineItems( const TArray<UItemCore*>& SourceItemCores )
 		Inventory->AddItem( ItemCore );
 	}
 }
+bool ABasicCharacter::Server_CombineItems_Validate( const TArray<UItemCore*>& SourceItemCores ) { return true; }
 
 // WTH if server collects item, then drops it, and Client then picks it UP, Client can actually drop it without crashing?
 // And server can also picks it UP again too???
