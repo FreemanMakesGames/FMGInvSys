@@ -41,17 +41,19 @@ void UInventoryMenu::Setup( IInventoryOwner* NewInventoryOwner )
 	}
 
 	if ( InventoryOwner )
-	{
-		UInventory* OldInventory = InventoryOwner->GetInventory();
-		OldInventory->OnItemCoresUpdated.RemoveDynamic( this, &UInventoryMenu::HandleOnInventoryUpdated );
-	}
-
+		InventoryOwner->GetInventory()->OnItemCoresUpdated.RemoveDynamic( this, &UInventoryMenu::HandleOnInventoryUpdated );
 	InventoryOwner = NewInventoryOwner;
+	InventoryOwner->GetInventory()->OnItemCoresUpdated.AddDynamic( this, &UInventoryMenu::HandleOnInventoryUpdated );
 
-	UInventory* NewInventory = InventoryOwner->GetInventory();
-	NewInventory->OnItemCoresUpdated.AddDynamic( this, &UInventoryMenu::HandleOnInventoryUpdated );
+	// Clean up old display.
+	ResetLatestClicked();
+	WrapBox_Clickers->ClearChildren();
+	WrapBox_Clickers_Combining->ClearChildren();
 
-	Redraw();
+	for ( UItemCore* ItemCore : InventoryOwner->GetInventory()->GetItemCores() )
+	{
+		AddNewItemClicker( ItemCore );
+	}
 }
 
 void UInventoryMenu::Show()
@@ -92,19 +94,6 @@ UItemUsageButton* UInventoryMenu::InitItemUsageButton( EItemUsage ItemUsage )
 	ItemUsageButton->SetItemUsage( ItemUsage );
 
 	return ItemUsageButton;
-}
-
-void UInventoryMenu::Redraw()
-{
-	// Clean up old display.
-	ResetLatestClicked();
-	WrapBox_Clickers->ClearChildren();
-	WrapBox_Clickers_Combining->ClearChildren();
-
-	for ( UItemCore* ItemCore : InventoryOwner->GetInventory()->GetItemCores() )
-	{
-		AddNewItemClicker( ItemCore );
-	}
 }
 
 UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
@@ -174,6 +163,21 @@ void UInventoryMenu::ResetLatestClicked()
 		LatestClicked->Unhighlight();
 
 		LatestClicked = nullptr;
+	}
+}
+
+void UInventoryMenu::HandleOnInventoryUpdated( TArray<UItemCore*> Added, TArray<UItemCore*> Removed )
+{
+	for ( UItemCore* ItemCore : Removed )
+	{
+		RemoveItemClicker( ItemCore );
+	}
+
+	for ( UItemCore* ItemCore : Added )
+	{
+		UItemClicker* NewItemClicker = AddNewItemClicker( ItemCore );
+
+		NewItemClicker->HighlightForAddition();
 	}
 }
 
@@ -284,9 +288,4 @@ void UInventoryMenu::HandleOnButtonCombineClicked()
 void UInventoryMenu::HandleOnButtonHideClicked()
 {
 	Hide();
-}
-
-void UInventoryMenu::HandleOnInventoryUpdated()
-{
-	Redraw();
 }

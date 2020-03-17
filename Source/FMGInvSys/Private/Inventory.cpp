@@ -35,7 +35,8 @@ void UInventory::AddItem( UItemCore* ItemToAdd )
 	// Because OnRep_ItemCores won't fire in these net modes
 	if ( GetNetMode() == ENetMode::NM_ListenServer || GetNetMode() == ENetMode::NM_Standalone )
 	{
-		OnItemCoresUpdated.Broadcast();
+		TArray<UItemCore*> Added; Added.Add( ItemToAdd ); TArray<UItemCore*> Removed;
+		OnItemCoresUpdated.Broadcast( Added, Removed );
 	}
 }
 
@@ -48,13 +49,27 @@ void UInventory::RemoveItem( UItemCore* ItemToRemove )
 	// Because OnRep_ItemCores won't fire in these net modes
 	if ( GetNetMode() == ENetMode::NM_ListenServer || GetNetMode() == ENetMode::NM_Standalone )
 	{
-		OnItemCoresUpdated.Broadcast();
+		TArray<UItemCore*> Added; TArray<UItemCore*> Removed; Removed.Add( ItemToRemove );
+		OnItemCoresUpdated.Broadcast( Added, Removed );
 	}
 }
 
 void UInventory::OnRep_ItemCores()
 {
-	OnItemCoresUpdated.Broadcast();
+	TArray<UItemCore*> Added;
+	TArray<UItemCore*> Removed;
+
+	for ( UItemCore* ItemCore : ItemCores )
+		if ( !LastItemCores.Contains( ItemCore ) )
+			Added.Add( ItemCore );
+
+	for ( UItemCore* ItemCore : LastItemCores )
+		if ( !ItemCores.Contains( ItemCore ) )
+			Removed.Add( ItemCore );
+
+	OnItemCoresUpdated.Broadcast( Added, Removed );
+
+	LastItemCores = ItemCores;
 }
 
 bool UInventory::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )

@@ -11,7 +11,7 @@
 class UItemCore;
 class AItemCombiner;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE( FOnItemCoresUpdated );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FOnItemCoresUpdated, TArray<UItemCore*>, Added, TArray<UItemCore*>, Removed );
 
 UCLASS( Blueprintable, BlueprintType, ClassGroup=( Custom ), meta=( BlueprintSpawnableComponent ) )
 class FMGINVSYS_API UInventory : public UActorComponent
@@ -51,6 +51,12 @@ protected:
 
 	UFUNCTION()
 	void OnRep_ItemCores();
+
+// Global tracking variables
+protected:
+
+	/** Used to tell added and removed items when ItemCores is replicated. */
+	TArray<UItemCore*> LastItemCores;
 
 public:
 

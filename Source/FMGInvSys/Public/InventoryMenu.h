@@ -92,6 +92,9 @@ protected:
 protected:
 
 	UFUNCTION()
+	void HandleOnInventoryUpdated( TArray<UItemCore*> Added, TArray<UItemCore*> Removed );
+
+	UFUNCTION()
 	virtual void HandleOnItemClickerClicked( UItemClicker* Clicked );
 
 	UFUNCTION()
@@ -108,9 +111,6 @@ protected:
 
 	UFUNCTION()
 	void HandleOnButtonHideClicked();
-
-	UFUNCTION()
-	void HandleOnInventoryUpdated();
 
 // Global variables for tracking
 protected:
