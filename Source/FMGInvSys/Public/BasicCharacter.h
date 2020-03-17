@@ -105,7 +105,8 @@ protected:
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_CollectItem();
 
-	void Dismantle( UItemCore* ItemCore );
+	UFUNCTION( Server, Reliable, WithValidation )
+	void Server_Dismantle( UItemCore* ItemCore );
 
 	void Equip( UItemCore* ItemCore );
 

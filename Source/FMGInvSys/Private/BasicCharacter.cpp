@@ -161,7 +161,7 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 	{
 	case EItemUsage::Dismantle:
 
-		Dismantle( ItemCore );
+		Server_Dismantle( ItemCore );
 
 		break;
 
@@ -252,7 +252,7 @@ void ABasicCharacter::Server_CollectItem_Implementation()
 }
 bool ABasicCharacter::Server_CollectItem_Validate() { return true; }
 
-void ABasicCharacter::Dismantle( UItemCore* ItemCore )
+void ABasicCharacter::Server_Dismantle_Implementation( UItemCore* ItemCore )
 {
 	for ( TPair<TSubclassOf<UItemCore>, int> DismantleResult : ItemCore->GetDismantleResults() )
 	{
@@ -271,6 +271,7 @@ void ABasicCharacter::Dismantle( UItemCore* ItemCore )
 
 	Inventory->RemoveItem( ItemCore );
 }
+bool ABasicCharacter::Server_Dismantle_Validate( UItemCore* ItemCore ) { return true; }
 
 // For now, only support to equip one item at a time.
 // To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
