@@ -32,7 +32,8 @@ void UInventory::AddItem( UItemCore* ItemToAdd )
 
 	ItemCores.Add( ItemToAdd );
 
-	if ( GetNetMode() == ENetMode::NM_ListenServer )
+	// Because OnRep_ItemCores won't fire in these net modes
+	if ( GetNetMode() == ENetMode::NM_ListenServer || GetNetMode() == ENetMode::NM_Standalone )
 	{
 		OnItemCoresUpdated.Broadcast();
 	}
@@ -44,7 +45,8 @@ void UInventory::RemoveItem( UItemCore* ItemToRemove )
 
 	ItemCores.Remove( ItemToRemove );
 
-	if ( GetNetMode() == ENetMode::NM_ListenServer )
+	// Because OnRep_ItemCores won't fire in these net modes
+	if ( GetNetMode() == ENetMode::NM_ListenServer || GetNetMode() == ENetMode::NM_Standalone )
 	{
 		OnItemCoresUpdated.Broadcast();
 	}
