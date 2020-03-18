@@ -230,11 +230,11 @@ void ABasicCharacter::Server_CombineItems_Implementation( const TArray<UItemCore
 }
 bool ABasicCharacter::Server_CombineItems_Validate( const TArray<UItemCore*>& SourceItemCores ) { return true; }
 
-// WTH if server collects item, then drops it, and Client then picks it UP, Client can actually drop it without crashing?
-// And server can also picks it UP again too???
-// But if Client picks UP, then drops, it crashes???
 void ABasicCharacter::Server_CollectItem_Implementation()
 {
+	// TODO: FMGInvSys: Think about what happens if a character tries to collect an item equipped by another character?
+	//                  It works now and won't "rob" that item. But why? Because SphereOverlapActors rely on collision enabled? Or..?
+
 	TArray<TEnumAsByte<EObjectTypeQuery>> Filter;
 	TArray<AActor*> Ignoring;
 	TArray<AActor*> AdjacentActors;
