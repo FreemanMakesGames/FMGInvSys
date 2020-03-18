@@ -167,7 +167,7 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 
 	case EItemUsage::Equip:
 
-		Equip( ItemCore );
+		Server_Equip( ItemCore );
 
 		break;
 
@@ -276,7 +276,7 @@ bool ABasicCharacter::Server_Dismantle_Validate( UItemCore* ItemCore ) { return 
 
 // For now, only support to equip one item at a time.
 // To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
-void ABasicCharacter::Equip( UItemCore* ItemCore )
+void ABasicCharacter::Server_Equip_Implementation( UItemCore* ItemCore )
 {
 	// Do nothing if the item is already equipped.
 	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore ) { return; }
@@ -290,6 +290,7 @@ void ABasicCharacter::Equip( UItemCore* ItemCore )
 
 	EquippedItem = ItemToEquip;
 }
+bool ABasicCharacter::Server_Equip_Validate( UItemCore* ItemCore ) { return true; }
 
 void ABasicCharacter::Server_Drop_Implementation( UItemCore* ItemCore )
 {

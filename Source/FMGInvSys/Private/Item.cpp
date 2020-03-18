@@ -14,6 +14,7 @@ AItem::AItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectIniti
 	PrimaryActorTick.bCanEverTick = true;
 
 	bReplicates = true;
+	bReplicateMovement = true;
 }
 
 void AItem::BeginPlay()

@@ -88,6 +88,8 @@ public:
 
 	virtual UInventory* GetInventory() override { return Inventory; }
 
+	// Note: Although each method called by ApplyItemUsage is RPC, probably don't make itself RPC.
+	//       What if there needs to be non-RPC code later?
 	virtual void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage ) override;
 
 	UFUNCTION( Server, Reliable, WithValidation )
@@ -109,7 +111,8 @@ protected:
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_Dismantle( UItemCore* ItemCore );
 
-	void Equip( UItemCore* ItemCore );
+	UFUNCTION( Server, Reliable, WithValidation )
+	void Server_Equip( UItemCore* ItemCore );
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_Drop( UItemCore* ItemCore );
