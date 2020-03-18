@@ -14,7 +14,7 @@ UItemCore::UItemCore( const FObjectInitializer& ObjectInitializer ) : Super( Obj
 
 AItem* UItemCore::SpawnItem( const FTransform& SpawnTransform )
 {
-	// Assert to only be called on server?
+	//ensureAlways( GetNetMode() != ENetMode::NM_Client );
 
 	AItem* Item = nullptr;
 

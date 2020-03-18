@@ -30,6 +30,8 @@ void UInventory::AddItem( UItemCore* ItemToAdd )
 {
 	ensureAlways( ItemToAdd );
 
+	ensureAlways( GetNetMode() != ENetMode::NM_Client );
+
 	ItemCores.Add( ItemToAdd );
 
 	// Because OnRep_ItemCores won't fire in these net modes
@@ -43,6 +45,8 @@ void UInventory::AddItem( UItemCore* ItemToAdd )
 void UInventory::RemoveItem( UItemCore* ItemToRemove )
 {
 	ensureAlways( ItemToRemove );
+
+	ensureAlways( GetNetMode() != ENetMode::NM_Client );
 
 	ItemCores.Remove( ItemToRemove );
 
