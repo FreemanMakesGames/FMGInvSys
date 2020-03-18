@@ -285,7 +285,7 @@ void ABasicCharacter::Server_Equip_Implementation( UItemCore* ItemCore )
 
 	// Spawn and attach new item.
 	AItem* ItemToEquip = ItemCore->SpawnItem( FTransform::Identity );
-	ItemToEquip->SetActorEnableCollision( false );
+	ItemToEquip->SetCollisionEnabled_Networked( false );
 	ItemToEquip->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket" );
 
 	EquippedItem = ItemToEquip;
@@ -301,7 +301,7 @@ void ABasicCharacter::Server_Drop_Implementation( UItemCore* ItemCore )
 	{
 		EquippedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
 		EquippedItem->SetActorLocation( ItemDrop->GetComponentLocation() );
-		EquippedItem->SetActorEnableCollision( true ); // Re-enable collision, which was disabled when equipping this item.
+		EquippedItem->SetCollisionEnabled_Networked( true ); // Re-enable collision, which was disabled when equipping this item.
 
 		EquippedItem = nullptr;
 

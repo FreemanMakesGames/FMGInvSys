@@ -41,7 +41,24 @@ protected:
 	UPROPERTY( Replicated, BlueprintReadOnly, Category = "FMGInvSys" )
 	UItemCore* ItemCore;
 
-public:	
+public:
+
+	/**
+	 * Enable or disable collision in a replicated way.
+	 */
+	void SetCollisionEnabled_Networked( bool Enabled );
+
+protected:
+
+	UFUNCTION()
+	void OnRep_IsCollisionEnabled();
+
+protected:
+
+	UPROPERTY( ReplicatedUsing = OnRep_IsCollisionEnabled )
+	bool IsCollisionEnabled = true;
+
+public:
 
 	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
 

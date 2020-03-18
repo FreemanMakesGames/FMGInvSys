@@ -50,6 +50,21 @@ void AItem::SetItemCore( UItemCore* InItemCore )
 	ItemCore = InItemCore;
 }
 
+void AItem::SetCollisionEnabled_Networked( bool Enabled )
+{
+	ensureAlways( GetNetMode() != ENetMode::NM_Client );
+
+	SetActorEnableCollision( Enabled );
+
+	// This will trigger OnRep_IsCollisionEnabled on clients.
+	IsCollisionEnabled = Enabled;
+}
+
+void AItem::OnRep_IsCollisionEnabled()
+{
+	SetActorEnableCollision( IsCollisionEnabled );
+}
+
 bool AItem::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
 {
 	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
@@ -64,4 +79,5 @@ void AItem::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimePr
 	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
 
 	DOREPLIFETIME( AItem, ItemCore );
+	DOREPLIFETIME( AItem, IsCollisionEnabled );
 }
