@@ -46,17 +46,21 @@ public:
 	/**
 	 * Enable or disable collision in a replicated way.
 	 */
-	void SetCollisionEnabled_Networked( bool Enabled );
+	void SetPhysicsEnabled_FromServer( bool Enabled );
+
+protected:
+
+	void SetPhysicsEnabled( bool Enabled );
 
 protected:
 
 	UFUNCTION()
-	void OnRep_IsCollisionEnabled();
+	void OnRep_IsPhysicsEnabled();
 
 protected:
 
-	UPROPERTY( ReplicatedUsing = OnRep_IsCollisionEnabled )
-	bool IsCollisionEnabled = true;
+	UPROPERTY( ReplicatedUsing = OnRep_IsPhysicsEnabled )
+	bool IsPhysicsEnabled = true;
 
 public:
 

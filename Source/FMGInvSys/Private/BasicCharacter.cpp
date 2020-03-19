@@ -283,20 +283,9 @@ void ABasicCharacter::Server_Equip_Implementation( UItemCore* ItemCore )
 
 	if ( EquippedItem ) { EquippedItem->Destroy(); }
 
-#pragma region Spawn and attach item.
 	AItem* ItemToEquip = ItemCore->SpawnItem( FTransform::Identity );
-	
-	// Disable physics simulation and collision.
-	ItemToEquip->SetCollisionEnabled_Networked( false );
-	TArray<UPrimitiveComponent*> PrimitiveComponents;
-	ItemToEquip->GetComponents<UPrimitiveComponent>( PrimitiveComponents );
-	for ( UPrimitiveComponent* PrimitiveComponent : PrimitiveComponents )
-	{
-		PrimitiveComponent->SetSimulatePhysics( false );
-	}
-
+	ItemToEquip->SetPhysicsEnabled_FromServer( false );
 	ItemToEquip->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket" );
-#pragma endregion
 
 	EquippedItem = ItemToEquip;
 }
@@ -311,15 +300,7 @@ void ABasicCharacter::Server_Drop_Implementation( UItemCore* ItemCore )
 	{
 		EquippedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
 		EquippedItem->SetActorLocation( ItemDrop->GetComponentLocation() );
-		
-		// Re-enable physics simulation and collision, which was disabled when equipping this item.
-		EquippedItem->SetCollisionEnabled_Networked( true );
-		TArray<UPrimitiveComponent*> PrimitiveComponents;
-		EquippedItem->GetComponents<UPrimitiveComponent>( PrimitiveComponents );
-		for ( UPrimitiveComponent* PrimitiveComponent : PrimitiveComponents )
-		{
-			PrimitiveComponent->SetSimulatePhysics( true );
-		}
+		EquippedItem->SetPhysicsEnabled_FromServer( true );  // Re-enable physics, which was disabled when equipping this item.
 
 		EquippedItem = nullptr;
 

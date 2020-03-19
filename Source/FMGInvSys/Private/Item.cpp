@@ -3,6 +3,7 @@
 
 #include "Item.h"
 
+#include "Components/PrimitiveComponent.h"
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 
@@ -50,19 +51,37 @@ void AItem::SetItemCore( UItemCore* InItemCore )
 	ItemCore = InItemCore;
 }
 
-void AItem::SetCollisionEnabled_Networked( bool Enabled )
+void AItem::SetPhysicsEnabled_FromServer( bool Enabled )
 {
 	ensureAlways( GetNetMode() != ENetMode::NM_Client );
 
-	SetActorEnableCollision( Enabled );
+	SetPhysicsEnabled( Enabled );
 
-	// This will trigger OnRep_IsCollisionEnabled on clients.
-	IsCollisionEnabled = Enabled;
+	// This will trigger OnRep_IsPhysicsEnabled on clients.
+	IsPhysicsEnabled = Enabled;
 }
 
-void AItem::OnRep_IsCollisionEnabled()
+void AItem::OnRep_IsPhysicsEnabled()
 {
-	SetActorEnableCollision( IsCollisionEnabled );
+	SetPhysicsEnabled( IsPhysicsEnabled );
+}
+
+void AItem::SetPhysicsEnabled( bool Enabled )
+{
+	SetActorEnableCollision( Enabled );
+
+	TArray<UPrimitiveComponent*> PrimitiveComponents;
+	GetComponents<UPrimitiveComponent>( PrimitiveComponents );
+	for ( UPrimitiveComponent* PrimitiveComponent : PrimitiveComponents )
+	{
+		PrimitiveComponent->SetSimulatePhysics( Enabled );
+
+		// Turning on physics simulation seems to lose parent,
+		// So turning it off needs to re-attach to parent.
+		if ( !Enabled )
+			if ( PrimitiveComponent != GetRootComponent() )
+				PrimitiveComponent->AttachTo( GetRootComponent() );
+	}
 }
 
 bool AItem::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
@@ -79,5 +98,5 @@ void AItem::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimePr
 	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
 
 	DOREPLIFETIME( AItem, ItemCore );
-	DOREPLIFETIME( AItem, IsCollisionEnabled );
+	DOREPLIFETIME( AItem, IsPhysicsEnabled );
 }
