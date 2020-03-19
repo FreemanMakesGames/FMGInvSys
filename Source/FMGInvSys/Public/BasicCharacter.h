@@ -81,7 +81,7 @@ public:
 
 protected:
 
-	UPROPERTY( EditDefaultsOnly )
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	float ItemCollectionRange = 150;
 
 public:
