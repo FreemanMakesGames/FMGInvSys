@@ -13,7 +13,7 @@
 
 UInventory::UInventory()
 {
-	SetIsReplicated( true );
+	SetIsReplicatedByDefault( true );
 }
 
 TArray<UItemCore*> UInventory::GetItemCores()

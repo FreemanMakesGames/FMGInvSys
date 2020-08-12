@@ -15,7 +15,7 @@ AItem::AItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectIniti
 	PrimaryActorTick.bCanEverTick = true;
 
 	bReplicates = true;
-	bReplicateMovement = true;
+	SetReplicatingMovement( true );
 }
 
 void AItem::BeginPlay()
@@ -80,7 +80,7 @@ void AItem::SetPhysicsEnabled( bool Enabled )
 		// So turning it off needs to re-attach to parent.
 		if ( !Enabled )
 			if ( PrimitiveComponent != GetRootComponent() )
-				PrimitiveComponent->AttachTo( GetRootComponent() );
+				PrimitiveComponent->AttachToComponent( GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform );
 	}
 }
 
