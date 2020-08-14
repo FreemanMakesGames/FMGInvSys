@@ -223,9 +223,9 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 	}
 
 	APawn* ControlledPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( ControlledPawn ) )
+	if ( IInventoryOwner* inventoryOwner = Cast<IInventoryOwner>( ControlledPawn ) )
 	{
-		InventoryOwner->ApplyItemUsage( LatestClicked->GetItemCore(), ItemUsageButton->GetItemUsage() );
+		inventoryOwner->ApplyItemUsage( LatestClicked->GetItemCore(), ItemUsageButton->GetItemUsage() );
 	}
 	else
 	{
