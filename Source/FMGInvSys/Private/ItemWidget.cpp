@@ -16,7 +16,7 @@ void UItemWidget::NativePreConstruct()
 	ImageSlot->SetAutoSize( true );
 }
 
-void UItemWidget::SetItemCore( UItemCore* InItemCore )
+void UItemWidget::SetItemCore_Implementation( UItemCore* InItemCore )
 {
-	// TODO: ItemWidget: Find out if UItemWidget needs to know an UItemCore.
+	// Empty. This can be overriden in C++ subclasses, when needed.
 }
