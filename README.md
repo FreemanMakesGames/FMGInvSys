@@ -8,4 +8,4 @@ You can find demo videos [here](https://www.freemanmakesgames.pro/work/fmg-inv-s
 At the root directory of your project, create a new directory named `Plugins`, if it's not already there. Then put the plugin under the "Plugins" directory. The path to the plugin should look like this: `X:\...\YourUnrealProject\Plugins\FMGInvSys`.
 
 # Usage
-Coming soon.
+The docs are still WIP. They will be posted in [Wiki](https://github.com/FreemanMakesGames/FMGInvSys/wiki).
