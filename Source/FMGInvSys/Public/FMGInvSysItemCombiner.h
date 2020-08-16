@@ -6,34 +6,34 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "ItemCombiner.generated.h"
+#include "FMGInvSysItemCombiner.generated.h"
 
-class UItemCore;
+class UFMGInvSysItemCore;
 
 /**
  * It's actually an array of FName, which are names of the classes.
  */
 USTRUCT( BlueprintType )
-struct FItemCoreClassArray
+struct FFMGInvSysItemCoreClassArray
 {
 	GENERATED_BODY()
 
 public:
 
-	FItemCoreClassArray() {}
+	FFMGInvSysItemCoreClassArray() {}
 
-	FItemCoreClassArray( TArray<TSubclassOf<UItemCore>> InItemCoreClasses )
+	FFMGInvSysItemCoreClassArray( TArray<TSubclassOf<UFMGInvSysItemCore>> InItemCoreClasses )
 	{
 		ItemCoreClasses = InItemCoreClasses;
 	}
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
-	TArray<TSubclassOf<UItemCore>> ItemCoreClasses;
+	TArray<TSubclassOf<UFMGInvSysItemCore>> ItemCoreClasses;
 
 	// Equivalence means having the same number of each element, regardless of the order.
-	bool operator==( const FItemCoreClassArray& Other ) const
+	bool operator==( const FFMGInvSysItemCoreClassArray& Other ) const
 	{
-		for ( TSubclassOf<UItemCore> ItemCoreClass : ItemCoreClasses )
+		for ( TSubclassOf<UFMGInvSysItemCore> ItemCoreClass : ItemCoreClasses )
 		{
 			if ( Algo::Count( ItemCoreClasses, ItemCoreClass ) != Algo::Count( Other.ItemCoreClasses, ItemCoreClass ) )
 			{
@@ -41,7 +41,7 @@ public:
 			}
 		}
 
-		for ( TSubclassOf<UItemCore> ItemCoreClass : Other.ItemCoreClasses )
+		for ( TSubclassOf<UFMGInvSysItemCore> ItemCoreClass : Other.ItemCoreClasses )
 		{
 			if ( Algo::Count( ItemCoreClasses, ItemCoreClass ) != Algo::Count( Other.ItemCoreClasses, ItemCoreClass ) )
 			{
@@ -54,22 +54,22 @@ public:
 
 };
 
-FORCEINLINE uint32 GetTypeHash( const FItemCoreClassArray& ArrayOfItemCoreClasses )
+FORCEINLINE uint32 GetTypeHash( const FFMGInvSysItemCoreClassArray& ArrayOfItemCoreClasses )
 {
-	return FCrc::MemCrc_DEPRECATED( &ArrayOfItemCoreClasses, sizeof( FItemCoreClassArray ) );
+	return FCrc::MemCrc_DEPRECATED( &ArrayOfItemCoreClasses, sizeof( FFMGInvSysItemCoreClassArray ) );
 }
 
 
 USTRUCT()
-struct FItemCombinationResult
+struct FFMGInvSysItemCombinationResult
 {
 	GENERATED_BODY()
 
 public:
 
-	FItemCombinationResult() { Successful = false; }
+	FFMGInvSysItemCombinationResult() { Successful = false; }
 
-	FItemCombinationResult( bool InSuccessful, TArray<UItemCore*> InResultItems )
+	FFMGInvSysItemCombinationResult( bool InSuccessful, TArray<UFMGInvSysItemCore*> InResultItems )
 	{
 		Successful = InSuccessful;
 		ResultItems = InResultItems;
@@ -77,7 +77,7 @@ public:
 
 	bool Successful;
 
-	TArray<UItemCore*> ResultItems;
+	TArray<UFMGInvSysItemCore*> ResultItems;
 
 };
 
@@ -85,13 +85,13 @@ public:
  * 
  */
 UCLASS( Blueprintable, BlueprintType )
-class FMGINVSYS_API AItemCombiner : public AActor
+class FMGINVSYS_API AFMGInvSysItemCombiner : public AActor
 {
 	GENERATED_BODY()
 
 public:
 
-	typedef FItemCombinationResult( AItemCombiner::*FCombineFunction )( TArray<UItemCore*> );
+	typedef FFMGInvSysItemCombinationResult( AFMGInvSysItemCombiner::*FCombineFunction )( TArray<UFMGInvSysItemCore*> );
 
 protected:
 
@@ -99,7 +99,7 @@ protected:
 
 public:
 
-	FItemCombinationResult CombineItems( TArray<UItemCore*> SourceItems, bool Directional );
+	FFMGInvSysItemCombinationResult CombineItems( TArray<UFMGInvSysItemCore*> SourceItems, bool Directional );
 
 protected:
 
@@ -107,26 +107,26 @@ protected:
 	 * A map of simple combinations like A + B + C --> D
 	 */ 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TMap<FItemCoreClassArray, TSubclassOf<UItemCore>> ClassMap;
+	TMap<FFMGInvSysItemCoreClassArray, TSubclassOf<UFMGInvSysItemCore>> ClassMap;
 
 	/**
 	 * A map of combinations like A + B + C --> D + E + ...
 	 */
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TMap<FItemCoreClassArray, FItemCoreClassArray> ClassMap_Multiple;
+	TMap<FFMGInvSysItemCoreClassArray, FFMGInvSysItemCoreClassArray> ClassMap_Multiple;
 
 	/**
 	 * A map that defines combination with functions.
 	 * Those functions yield result items,
 	 * And perform extra logic after the combination.
 	 */ 
-	TMap<FItemCoreClassArray, FCombineFunction> FunctionMap;
+	TMap<FFMGInvSysItemCoreClassArray, FCombineFunction> FunctionMap;
 
 	//TMap<TSubclassOf<UItemCore>, FCombineFunction> FunctionMap_WildCards;
 
 // Combination functions
 protected:
 
-	FItemCombinationResult MakeWhiteGem( TArray<UItemCore*> SourceItems );
+	FFMGInvSysItemCombinationResult MakeWhiteGem( TArray<UFMGInvSysItemCore*> SourceItems );
 	
 };

@@ -1,6 +1,6 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "BasicCharacter.h"
+#include "FMGInvSysCharacter.h"
 
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
@@ -12,13 +12,13 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-#include "Inventory.h"
-#include "ItemDrop.h"
-#include "ItemCore.h"
-#include "Item.h"
-#include "ItemCombiner.h"
-#include "BasicGameMode.h"
-#include "BasicPlayerController.h"
+#include "FMGInvSysInventory.h"
+#include "FMGInvSysItemDrop.h"
+#include "FMGInvSysItemCore.h"
+#include "FMGInvSysItem.h"
+#include "FMGInvSysItemCombiner.h"
+#include "FMGInvSysGameMode.h"
+#include "FMGInvSysPlayerController.h"
 
 #include "Engine/EngineTypes.h"
 #include "Engine/ActorChannel.h"
@@ -27,7 +27,7 @@
 //////////////////////////////////////////////////////////////////////////
 // ABasicCharacter
 
-ABasicCharacter::ABasicCharacter()
+AFMGInvSysCharacter::AFMGInvSysCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize( 42.f, 96.0f );
@@ -61,72 +61,73 @@ ABasicCharacter::ABasicCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
-	Inventory = CreateDefaultSubobject<UInventory>( "Inventory" );
+	Inventory = CreateDefaultSubobject<UFMGInvSysInventory>( "Inventory" );
+	ensureAlways( Inventory );
 
-	ItemDrop = CreateDefaultSubobject<UItemDrop>( TEXT( "ItemDrop" ) );
+	ItemDrop = CreateDefaultSubobject<UFMGInvSysItemDrop>( TEXT( "ItemDrop" ) );
 	ItemDrop->SetupAttachment( RootComponent );
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void ABasicCharacter::SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent )
+void AFMGInvSysCharacter::SetupPlayerInputComponent( class UInputComponent* PlayerInputComponent )
 {
 	// Set up gameplay key bindings
 	check( PlayerInputComponent );
 	PlayerInputComponent->BindAction( "Jump", IE_Pressed, this, &ACharacter::Jump );
 	PlayerInputComponent->BindAction( "Jump", IE_Released, this, &ACharacter::StopJumping );
 
-	PlayerInputComponent->BindAxis( "MoveForward", this, &ABasicCharacter::MoveForward );
-	PlayerInputComponent->BindAxis( "MoveRight", this, &ABasicCharacter::MoveRight );
+	PlayerInputComponent->BindAxis( "MoveForward", this, &AFMGInvSysCharacter::MoveForward );
+	PlayerInputComponent->BindAxis( "MoveRight", this, &AFMGInvSysCharacter::MoveRight );
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis( "Turn", this, &APawn::AddControllerYawInput );
-	PlayerInputComponent->BindAxis( "TurnRate", this, &ABasicCharacter::TurnAtRate );
+	PlayerInputComponent->BindAxis( "TurnRate", this, &AFMGInvSysCharacter::TurnAtRate );
 	PlayerInputComponent->BindAxis( "LookUp", this, &APawn::AddControllerPitchInput );
-	PlayerInputComponent->BindAxis( "LookUpRate", this, &ABasicCharacter::LookUpAtRate );
+	PlayerInputComponent->BindAxis( "LookUpRate", this, &AFMGInvSysCharacter::LookUpAtRate );
 
 	// handle touch devices
-	PlayerInputComponent->BindTouch( IE_Pressed, this, &ABasicCharacter::TouchStarted );
-	PlayerInputComponent->BindTouch( IE_Released, this, &ABasicCharacter::TouchStopped );
+	PlayerInputComponent->BindTouch( IE_Pressed, this, &AFMGInvSysCharacter::TouchStarted );
+	PlayerInputComponent->BindTouch( IE_Released, this, &AFMGInvSysCharacter::TouchStopped );
 
 	// VR headset functionality
-	PlayerInputComponent->BindAction( "ResetVR", IE_Pressed, this, &ABasicCharacter::OnResetVR );
+	PlayerInputComponent->BindAction( "ResetVR", IE_Pressed, this, &AFMGInvSysCharacter::OnResetVR );
 
 
-	PlayerInputComponent->BindAction( "CollectItem", IE_Pressed, this, &ABasicCharacter::Server_CollectItem );
+	PlayerInputComponent->BindAction( "CollectItem", IE_Pressed, this, &AFMGInvSysCharacter::Server_CollectItem );
 }
 
-void ABasicCharacter::OnResetVR()
+void AFMGInvSysCharacter::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
-void ABasicCharacter::TouchStarted( ETouchIndex::Type FingerIndex, FVector Location )
+void AFMGInvSysCharacter::TouchStarted( ETouchIndex::Type FingerIndex, FVector Location )
 {
 	Jump();
 }
 
-void ABasicCharacter::TouchStopped( ETouchIndex::Type FingerIndex, FVector Location )
+void AFMGInvSysCharacter::TouchStopped( ETouchIndex::Type FingerIndex, FVector Location )
 {
 	StopJumping();
 }
 
-void ABasicCharacter::TurnAtRate( float Rate )
+void AFMGInvSysCharacter::TurnAtRate( float Rate )
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput( Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds() );
 }
 
-void ABasicCharacter::LookUpAtRate( float Rate )
+void AFMGInvSysCharacter::LookUpAtRate( float Rate )
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput( Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds() );
 }
 
-void ABasicCharacter::MoveForward( float Value )
+void AFMGInvSysCharacter::MoveForward( float Value )
 {
 	if ( ( Controller != NULL ) && ( Value != 0.0f ) )
 	{
@@ -140,7 +141,7 @@ void ABasicCharacter::MoveForward( float Value )
 	}
 }
 
-void ABasicCharacter::MoveRight( float Value )
+void AFMGInvSysCharacter::MoveRight( float Value )
 {
 	if ( ( Controller != NULL ) && ( Value != 0.0f ) )
 	{
@@ -155,29 +156,29 @@ void ABasicCharacter::MoveRight( float Value )
 	}
 }
 
-void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage )
+void AFMGInvSysCharacter::ApplyItemUsage( UFMGInvSysItemCore* ItemCore, EFMGInvSysItemUsage ItemUsage )
 {
 	switch ( ItemUsage )
 	{
-	case EItemUsage::Dismantle:
+	case EFMGInvSysItemUsage::Dismantle:
 
 		Server_Dismantle( ItemCore );
 
 		break;
 
-	case EItemUsage::Equip:
+	case EFMGInvSysItemUsage::Equip:
 
 		Server_Equip( ItemCore );
 
 		break;
 
-	case EItemUsage::Drop:
+	case EFMGInvSysItemUsage::Drop:
 
 		Server_Drop( ItemCore );
 
 		break;
 
-	case EItemUsage::Destroy:
+	case EFMGInvSysItemUsage::Destroy:
 
 		Server_Destroy( ItemCore );
 
@@ -190,7 +191,7 @@ void ABasicCharacter::ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage 
 	}
 }
 
-void ABasicCharacter::Server_CombineItems_Implementation( const TArray<UItemCore*>& SourceItemCores )
+void AFMGInvSysCharacter::Server_CombineItems_Implementation( const TArray<UFMGInvSysItemCore*>& SourceItemCores )
 {
 	///////////////////
 
@@ -208,29 +209,29 @@ void ABasicCharacter::Server_CombineItems_Implementation( const TArray<UItemCore
 	// And give a "blessed" AItemCombiner if the player has acquired a skill,
 	// Or has entered a special area.
 
-	AItemCombiner* ItemCombiner = GetWorld()->GetAuthGameMode<ABasicGameMode>()->GetItemCombiner();
+	AFMGInvSysItemCombiner* ItemCombiner = GetWorld()->GetAuthGameMode<AFMGInvSysGameMode>()->GetItemCombiner();
 
 	if ( !ItemCombiner ) { ensureAlways( false ); return; }
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	FItemCombinationResult Result = ItemCombiner->CombineItems( SourceItemCores, false );
+	FFMGInvSysItemCombinationResult Result = ItemCombiner->CombineItems( SourceItemCores, false );
 
 	if ( !Result.Successful ) { return; }
 
-	for ( UItemCore* ItemCore : SourceItemCores )
+	for ( UFMGInvSysItemCore* ItemCore : SourceItemCores )
 	{
 		Server_Destroy( ItemCore );
 	}
 
-	for ( UItemCore* ItemCore : Result.ResultItems )
+	for ( UFMGInvSysItemCore* ItemCore : Result.ResultItems )
 	{
 		Inventory->AddItem( ItemCore );
 	}
 }
-bool ABasicCharacter::Server_CombineItems_Validate( const TArray<UItemCore*>& SourceItemCores ) { return true; }
+bool AFMGInvSysCharacter::Server_CombineItems_Validate( const TArray<UFMGInvSysItemCore*>& SourceItemCores ) { return true; }
 
-void ABasicCharacter::Server_CollectItem_Implementation()
+void AFMGInvSysCharacter::Server_CollectItem_Implementation()
 {
 	// TODO: FMGInvSys: Think about what happens if a character tries to collect an item equipped by another character?
 	//                  It works now and won't "rob" that item. But why? Because SphereOverlapActors rely on collision enabled? Or..?
@@ -238,11 +239,11 @@ void ABasicCharacter::Server_CollectItem_Implementation()
 	TArray<TEnumAsByte<EObjectTypeQuery>> Filter;
 	TArray<AActor*> Ignoring;
 	TArray<AActor*> AdjacentActors;
-	UKismetSystemLibrary::SphereOverlapActors( GetWorld(), GetActorLocation(), ItemCollectionRange, Filter, AItem::StaticClass(), Ignoring, AdjacentActors );
+	UKismetSystemLibrary::SphereOverlapActors( GetWorld(), GetActorLocation(), ItemCollectionRange, Filter, AFMGInvSysItem::StaticClass(), Ignoring, AdjacentActors );
 
 	for ( AActor* AdjacentActor : AdjacentActors )
 	{
-		UItemCore* ItemCore = Cast<AItem>( AdjacentActor )->GetItemCore();
+		UFMGInvSysItemCore* ItemCore = Cast<AFMGInvSysItem>( AdjacentActor )->GetItemCore();
 
 		//ItemCore->Rename( nullptr, this );
 
@@ -251,15 +252,15 @@ void ABasicCharacter::Server_CollectItem_Implementation()
 		AdjacentActor->Destroy();
 	}
 }
-bool ABasicCharacter::Server_CollectItem_Validate() { return true; }
+bool AFMGInvSysCharacter::Server_CollectItem_Validate() { return true; }
 
-void ABasicCharacter::Server_Dismantle_Implementation( UItemCore* ItemCore )
+void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* ItemCore )
 {
-	for ( TPair<TSubclassOf<UItemCore>, int> DismantleResult : ItemCore->GetDismantleResults() )
+	for ( TPair<TSubclassOf<UFMGInvSysItemCore>, int> DismantleResult : ItemCore->GetDismantleResults() )
 	{
 		for ( int i = 0; i < DismantleResult.Value; i++ )
 		{
-			UItemCore* Result = NewObject<UItemCore>( this, DismantleResult.Key );
+			UFMGInvSysItemCore* Result = NewObject<UFMGInvSysItemCore>( this, DismantleResult.Key );
 
 			Inventory->AddItem( Result );
 		}
@@ -272,26 +273,26 @@ void ABasicCharacter::Server_Dismantle_Implementation( UItemCore* ItemCore )
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool ABasicCharacter::Server_Dismantle_Validate( UItemCore* ItemCore ) { return true; }
+bool AFMGInvSysCharacter::Server_Dismantle_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 // For now, only support to equip one item at a time.
 // To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
-void ABasicCharacter::Server_Equip_Implementation( UItemCore* ItemCore )
+void AFMGInvSysCharacter::Server_Equip_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	// Do nothing if the item is already equipped.
 	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore ) { return; }
 
 	if ( EquippedItem ) { EquippedItem->Destroy(); }
 
-	AItem* ItemToEquip = ItemCore->SpawnItem( FTransform::Identity );
+	AFMGInvSysItem* ItemToEquip = ItemCore->SpawnItem( FTransform::Identity );
 	ItemToEquip->SetPhysicsEnabled_FromServer( false );
 	ItemToEquip->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket" );
 
 	EquippedItem = ItemToEquip;
 }
-bool ABasicCharacter::Server_Equip_Validate( UItemCore* ItemCore ) { return true; }
+bool AFMGInvSysCharacter::Server_Equip_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
-void ABasicCharacter::Server_Drop_Implementation( UItemCore* ItemCore )
+void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	// If the item to drop is equipped,
 	// Simply detach it and relocate it to item drop component,
@@ -314,9 +315,9 @@ void ABasicCharacter::Server_Drop_Implementation( UItemCore* ItemCore )
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool ABasicCharacter::Server_Drop_Validate( UItemCore* ItemCore ) { return true; }
+bool AFMGInvSysCharacter::Server_Drop_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
-void ABasicCharacter::Server_Destroy_Implementation( UItemCore* ItemCore )
+void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
 	{
@@ -325,7 +326,7 @@ void ABasicCharacter::Server_Destroy_Implementation( UItemCore* ItemCore )
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool ABasicCharacter::Server_Destroy_Validate( UItemCore* ItemCore ) { return true; }
+bool AFMGInvSysCharacter::Server_Destroy_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 // bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
 // {
@@ -341,9 +342,9 @@ bool ABasicCharacter::Server_Destroy_Validate( UItemCore* ItemCore ) { return tr
 //  	return bWroteSomething;
 // }
 
-void ABasicCharacter::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+void AFMGInvSysCharacter::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
 {
 	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
 
-	DOREPLIFETIME( ABasicCharacter, Inventory );
+	DOREPLIFETIME( AFMGInvSysCharacter, Inventory );
 }

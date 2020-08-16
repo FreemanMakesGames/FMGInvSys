@@ -4,23 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
-#include "ItemDrop.generated.h"
+#include "FMGInvSysItemDrop.generated.h"
 
-class UItemCore;
-class AItem;
+class UFMGInvSysItemCore;
+class AFMGInvSysItem;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class FMGINVSYS_API UItemDrop : public USceneComponent
+class FMGINVSYS_API UFMGInvSysItemDrop : public USceneComponent
 {
 	GENERATED_BODY()
 
 public:	
 
-	UItemDrop();
+	UFMGInvSysItemDrop();
 
 public:
 
-	void DropItem( UItemCore* ItemCore );
+	void DropItem( UFMGInvSysItemCore* ItemCore );
 
 };
 // TODO: Consider adding a visual mark.

@@ -2,22 +2,22 @@
 
 #pragma once
 
-#include "ItemUsage.h"
+#include "FMGInvSysItemUsage.h"
 
 #include "CoreMinimal.h"
 #include "Components/Button.h"
-#include "ItemUsageButton.generated.h"
+#include "FMGInvSysItemUsageButton.generated.h"
 
 class UButton;
 class UTextBlock;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnClickedExt, UItemUsageButton*, ItemUsageButton );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnClickedExt, UFMGInvSysItemUsageButton*, ItemUsageButton );
 
 /**
  * 
  */
 UCLASS()
-class FMGINVSYS_API UItemUsageButton : public UUserWidget
+class FMGINVSYS_API UFMGInvSysItemUsageButton : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -39,13 +39,13 @@ protected:
 
 public:
 
-	EItemUsage GetItemUsage();
+	EFMGInvSysItemUsage GetItemUsage();
 
-	void SetItemUsage( EItemUsage InItemUsage );
+	void SetItemUsage( EFMGInvSysItemUsage InItemUsage );
 
 protected:
 
-	EItemUsage ItemUsage;
+	EFMGInvSysItemUsage ItemUsage;
 
 protected:
 

@@ -2,42 +2,42 @@
 
 #pragma once
 
-#include "ItemUsage.h"
+#include "FMGInvSysItemUsage.h"
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "ItemCore.generated.h"
+#include "FMGInvSysItemCore.generated.h"
 
-class AItem;
-class UItemWidget;
+class AFMGInvSysItem;
+class UFMGInvSysItemWidget;
 
 /**
  * 
  */
 UCLASS( Blueprintable, BlueprintType )
-class FMGINVSYS_API UItemCore : public UObject
+class FMGINVSYS_API UFMGInvSysItemCore : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
-	UItemCore( const FObjectInitializer& ObjectInitializer );
+	UFMGInvSysItemCore( const FObjectInitializer& ObjectInitializer );
 
 	virtual bool IsSupportedForNetworking() const override { return true; }
 
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TSubclassOf<AItem> GetItemClass() { return ItemClass; }
+	TSubclassOf<AFMGInvSysItem> GetItemClass() { return ItemClass; }
 
 	UFUNCTION()
-	TSubclassOf<UItemWidget> GetItemWidgetClass() { return ItemWidgetClass; }
+	TSubclassOf<UFMGInvSysItemWidget> GetItemWidgetClass() { return ItemWidgetClass; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TArray<EItemUsage> GetItemUsages() { return ItemUsages; }
+	TArray<EFMGInvSysItemUsage> GetItemUsages() { return ItemUsages; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TMap<TSubclassOf<UItemCore>, int> GetDismantleResults()
+	TMap<TSubclassOf<UFMGInvSysItemCore>, int> GetDismantleResults()
 	{
 		ensureAlwaysMsgf( DismantleResults.Num() > 0, TEXT( "This item core's dismantle results aren't setup, but it's being dismantled?" ) );
 
@@ -47,21 +47,21 @@ public:
 protected:
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
-	TSubclassOf<AItem> ItemClass;
+	TSubclassOf<AFMGInvSysItem> ItemClass;
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemWidget> ItemWidgetClass;
+	TSubclassOf<UFMGInvSysItemWidget> ItemWidgetClass;
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TArray<EItemUsage> ItemUsages;
+	TArray<EFMGInvSysItemUsage> ItemUsages;
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TMap<TSubclassOf<UItemCore>, int> DismantleResults;
+	TMap<TSubclassOf<UFMGInvSysItemCore>, int> DismantleResults;
 
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	AItem* SpawnItem( const FTransform& SpawnTransform );
+	AFMGInvSysItem* SpawnItem( const FTransform& SpawnTransform );
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	FText Describe();

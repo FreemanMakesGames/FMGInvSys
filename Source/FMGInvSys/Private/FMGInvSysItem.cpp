@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Item.h"
+#include "FMGInvSysItem.h"
 
 #include "Components/PrimitiveComponent.h"
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 
-#include "ItemCore.h"
-#include "ItemWidget.h"
+#include "FMGInvSysItemCore.h"
+#include "FMGInvSysItemWidget.h"
 
-AItem::AItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
+AFMGInvSysItem::AFMGInvSysItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
 {
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -18,7 +18,7 @@ AItem::AItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectIniti
 	SetReplicatingMovement( true );
 }
 
-void AItem::BeginPlay()
+void AFMGInvSysItem::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -27,16 +27,16 @@ void AItem::BeginPlay()
 	// This is for cases like when a level designer placed an AItem into the level manually.
 	if ( !ItemCore )
 	{
-		ItemCore = NewObject<UItemCore>( this, ItemCoreClass );
+		ItemCore = NewObject<UFMGInvSysItemCore>( this, ItemCoreClass );
 	}
 }
 
-UItemCore* AItem::GetItemCore()
+UFMGInvSysItemCore* AFMGInvSysItem::GetItemCore()
 {
 	return ItemCore;
 }
 
-void AItem::SetItemCore( UItemCore* InItemCore )
+void AFMGInvSysItem::SetItemCore( UFMGInvSysItemCore* InItemCore )
 {
 // 	if ( !ItemCore )
 // 	{
@@ -51,7 +51,7 @@ void AItem::SetItemCore( UItemCore* InItemCore )
 	ItemCore = InItemCore;
 }
 
-void AItem::SetPhysicsEnabled_FromServer( bool Enabled )
+void AFMGInvSysItem::SetPhysicsEnabled_FromServer( bool Enabled )
 {
 	ensureAlways( GetNetMode() != ENetMode::NM_Client );
 
@@ -61,12 +61,12 @@ void AItem::SetPhysicsEnabled_FromServer( bool Enabled )
 	IsPhysicsEnabled = Enabled;
 }
 
-void AItem::OnRep_IsPhysicsEnabled()
+void AFMGInvSysItem::OnRep_IsPhysicsEnabled()
 {
 	SetPhysicsEnabled( IsPhysicsEnabled );
 }
 
-void AItem::SetPhysicsEnabled( bool Enabled )
+void AFMGInvSysItem::SetPhysicsEnabled( bool Enabled )
 {
 	SetActorEnableCollision( Enabled );
 
@@ -84,7 +84,7 @@ void AItem::SetPhysicsEnabled( bool Enabled )
 	}
 }
 
-bool AItem::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
+bool AFMGInvSysItem::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
 {
 	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
 
@@ -93,10 +93,10 @@ bool AItem::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* 
 	return bWroteSomething;
 }
 
-void AItem::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+void AFMGInvSysItem::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
 {
 	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
 
-	DOREPLIFETIME( AItem, ItemCore );
-	DOREPLIFETIME( AItem, IsPhysicsEnabled );
+	DOREPLIFETIME( AFMGInvSysItem, ItemCore );
+	DOREPLIFETIME( AFMGInvSysItem, IsPhysicsEnabled );
 }

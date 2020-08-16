@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "ItemUsage.generated.h"
+#include "FMGInvSysItemUsage.generated.h"
 
 UENUM( BlueprintType )
-enum class EItemUsage : uint8
+enum class EFMGInvSysItemUsage : uint8
 {
 	Use			UMETA( DisplayName = "Use" ),
 

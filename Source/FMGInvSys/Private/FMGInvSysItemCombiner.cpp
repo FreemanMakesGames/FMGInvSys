@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ItemCombiner.h"
+#include "FMGInvSysItemCombiner.h"
 
-#include "ItemCore.h"
+#include "FMGInvSysItemCore.h"
 
-void AItemCombiner::BeginPlay()
+void AFMGInvSysItemCombiner::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -13,9 +13,9 @@ void AItemCombiner::BeginPlay()
 
 }
 
-FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceItems, bool Directional )
+FFMGInvSysItemCombinationResult AFMGInvSysItemCombiner::CombineItems( TArray<UFMGInvSysItemCore*> SourceItems, bool Directional )
 {
-	FItemCombinationResult Result;
+	FFMGInvSysItemCombinationResult Result;
 
 // 	if ( Directional && SourceItems.Num() > 2 )
 // 	{
@@ -26,17 +26,17 @@ FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 	// TODO: FMGInvSys: Prevent combining with an item itself.
 
 	// Gather UItemCore classes.
-	FItemCoreClassArray SourceItemClassArray;
-	for ( UItemCore* Item : SourceItems )
+	FFMGInvSysItemCoreClassArray SourceItemClassArray;
+	for ( UFMGInvSysItemCore* Item : SourceItems )
 	{
 		SourceItemClassArray.ItemCoreClasses.Add( Item->GetClass() );
 	}
 
 	// Search in ClassMap
-	TSubclassOf<UItemCore>* pOutputClass = ClassMap.Find( SourceItemClassArray );
+	TSubclassOf<UFMGInvSysItemCore>* pOutputClass = ClassMap.Find( SourceItemClassArray );
 	if ( pOutputClass )
 	{
-		UItemCore* Output = NewObject<UItemCore>( this, *pOutputClass );
+		UFMGInvSysItemCore* Output = NewObject<UFMGInvSysItemCore>( this, *pOutputClass );
 
 		Result.ResultItems.Add( Output );
 		Result.Successful = true;
@@ -45,12 +45,12 @@ FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 	}
 
 	// Search in ClassMap_Multiple
-	FItemCoreClassArray* pOutputClassArray = ClassMap_Multiple.Find( SourceItemClassArray );
+	FFMGInvSysItemCoreClassArray* pOutputClassArray = ClassMap_Multiple.Find( SourceItemClassArray );
 	if ( pOutputClassArray )
 	{
-		for ( TSubclassOf<UItemCore> OutputClass : ( *pOutputClassArray ).ItemCoreClasses )
+		for ( TSubclassOf<UFMGInvSysItemCore> OutputClass : ( *pOutputClassArray ).ItemCoreClasses )
 		{
-			UItemCore* Output = NewObject<UItemCore>( this, OutputClass );
+			UFMGInvSysItemCore* Output = NewObject<UFMGInvSysItemCore>( this, OutputClass );
 
 			Result.ResultItems.Add( Output );
 		}
@@ -81,9 +81,9 @@ FItemCombinationResult AItemCombiner::CombineItems( TArray<UItemCore*> SourceIte
 // 	}
 }
 
-FItemCombinationResult AItemCombiner::MakeWhiteGem( TArray<UItemCore*> SourceItems )
+FFMGInvSysItemCombinationResult AFMGInvSysItemCombiner::MakeWhiteGem( TArray<UFMGInvSysItemCore*> SourceItems )
 {
-	FItemCombinationResult Result;
+	FFMGInvSysItemCombinationResult Result;
 
 	UE_LOG( LogTemp, Warning, TEXT( "Make white gem!" ) );
 

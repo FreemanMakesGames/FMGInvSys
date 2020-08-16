@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ItemWidget.h"
+#include "FMGInvSysItemWidget.h"
 
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
 
-void UItemWidget::NativePreConstruct()
+void UFMGInvSysItemWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
@@ -16,7 +16,7 @@ void UItemWidget::NativePreConstruct()
 	ImageSlot->SetAutoSize( true );
 }
 
-void UItemWidget::SetItemCore_Implementation( UItemCore* InItemCore )
+void UFMGInvSysItemWidget::SetItemCore_Implementation( UFMGInvSysItemCore* InItemCore )
 {
 	// Empty. This can be overriden in C++ subclasses, when needed.
 }

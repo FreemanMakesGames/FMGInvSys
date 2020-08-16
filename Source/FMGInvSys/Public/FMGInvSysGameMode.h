@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "BasicGameMode.generated.h"
+#include "FMGInvSysGameMode.generated.h"
 
-class AItemCombiner;
+class AFMGInvSysItemCombiner;
 
 /**
  * 
  */
 UCLASS( Blueprintable )
-class FMGINVSYS_API ABasicGameMode : public AGameModeBase
+class FMGINVSYS_API AFMGInvSysGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
@@ -22,13 +22,13 @@ protected:
 	
 public:
 
-	AItemCombiner* GetItemCombiner();
+	AFMGInvSysItemCombiner* GetItemCombiner();
 
 protected:
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<AItemCombiner> ItemCombinerClass;
+	TSubclassOf<AFMGInvSysItemCombiner> ItemCombinerClass;
 
-	AItemCombiner* ItemCombiner;
+	AFMGInvSysItemCombiner* ItemCombiner;
 
 };

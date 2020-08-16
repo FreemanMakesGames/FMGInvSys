@@ -2,20 +2,20 @@
 
 #pragma once
 
-#include "ItemUsage.h"
+#include "FMGInvSysItemUsage.h"
 
-#include "InventoryOwner.h"
+#include "FMGInvSysInventoryOwner.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "BasicCharacter.generated.h"
+#include "FMGInvSysCharacter.generated.h"
 
-class UInventory;
-class UItemDrop;
-class AItem;
+class UFMGInvSysInventory;
+class UFMGInvSysItemDrop;
+class AFMGInvSysItem;
 
 UCLASS( config = Game )
-class ABasicCharacter : public ACharacter, public IInventoryOwner
+class AFMGInvSysCharacter : public ACharacter, public IFMGInvSysInventoryOwner
 {
 	GENERATED_BODY()
 
@@ -29,7 +29,7 @@ class ABasicCharacter : public ACharacter, public IInventoryOwner
 
 public:
 
-	ABasicCharacter();
+	AFMGInvSysCharacter();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = Camera )
@@ -86,22 +86,22 @@ protected:
 
 public:
 
-	virtual UInventory* GetInventory() override { return Inventory; }
+	virtual UFMGInvSysInventory* GetInventory() override { return Inventory; }
 
 	// Note: Although each method called by ApplyItemUsage is RPC, probably don't make itself RPC.
 	//       What if there needs to be non-RPC code later?
-	virtual void ApplyItemUsage( UItemCore* ItemCore, EItemUsage ItemUsage ) override;
+	virtual void ApplyItemUsage( UFMGInvSysItemCore* ItemCore, EFMGInvSysItemUsage ItemUsage ) override;
 
 	UFUNCTION( Server, Reliable, WithValidation )
-	virtual void Server_CombineItems( const TArray<UItemCore*>& SourceItemCores ) override;
+	virtual void Server_CombineItems( const TArray<UFMGInvSysItemCore*>& SourceItemCores ) override;
 
 protected:
 
 	UPROPERTY( Replicated, BlueprintReadOnly, Category = "FMGInvSys" )
-	UInventory* Inventory;
+	UFMGInvSysInventory* Inventory;
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "FMGInvSys" )
-	UItemDrop* ItemDrop;
+	UFMGInvSysItemDrop* ItemDrop;
 
 protected:
 
@@ -109,16 +109,16 @@ protected:
 	void Server_CollectItem();
 
 	UFUNCTION( Server, Reliable, WithValidation )
-	void Server_Dismantle( UItemCore* ItemCore );
+	void Server_Dismantle( UFMGInvSysItemCore* ItemCore );
 
 	UFUNCTION( Server, Reliable, WithValidation )
-	void Server_Equip( UItemCore* ItemCore );
+	void Server_Equip( UFMGInvSysItemCore* ItemCore );
 
 	UFUNCTION( Server, Reliable, WithValidation )
-	void Server_Drop( UItemCore* ItemCore );
+	void Server_Drop( UFMGInvSysItemCore* ItemCore );
 
 	UFUNCTION( Server, Reliable, WithValidation )
-	void Server_Destroy( UItemCore* ItemCore );
+	void Server_Destroy( UFMGInvSysItemCore* ItemCore );
 
 // public:
 // 
@@ -127,7 +127,7 @@ protected:
 // Global tracking variables
 protected:
 
-	AItem* EquippedItem;
+	AFMGInvSysItem* EquippedItem;
 
 };
 

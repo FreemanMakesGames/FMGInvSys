@@ -2,22 +2,22 @@
 
 #pragma once
 
-#include "ItemUsage.h"
+#include "FMGInvSysItemUsage.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Item.generated.h"
+#include "FMGInvSysItem.generated.h"
 
-class UItemCore;
+class UFMGInvSysItemCore;
 
 UCLASS( Blueprintable, BlueprintType )
-class FMGINVSYS_API AItem : public AActor
+class FMGINVSYS_API AFMGInvSysItem : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 
-	AItem( const FObjectInitializer& ObjectInitializer );
+	AFMGInvSysItem( const FObjectInitializer& ObjectInitializer );
 
 protected:
 
@@ -26,20 +26,20 @@ protected:
 protected:
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemCore> ItemCoreClass;
+	TSubclassOf<UFMGInvSysItemCore> ItemCoreClass;
 
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	UItemCore* GetItemCore();
+	UFMGInvSysItemCore* GetItemCore();
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void SetItemCore( UItemCore* InItemCore );
+	void SetItemCore( UFMGInvSysItemCore* InItemCore );
 
 protected:
 
 	UPROPERTY( Replicated, BlueprintReadOnly, Category = "FMGInvSys" )
-	UItemCore* ItemCore;
+	UFMGInvSysItemCore* ItemCore;
 
 public:
 

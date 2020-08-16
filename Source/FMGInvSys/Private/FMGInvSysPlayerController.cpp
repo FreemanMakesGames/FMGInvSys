@@ -1,15 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BasicPlayerController.h"
+#include "FMGInvSysPlayerController.h"
 
-#include "InventoryMenu.h"
-#include "InventoryOwner.h"
+#include "FMGInvSysInventoryMenu.h"
+#include "FMGInvSysInventoryOwner.h"
 
 /**
  * On server, this happens before OnPossess, for remote player controllers.
  */
-void ABasicPlayerController::BeginPlay()
+void AFMGInvSysPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -23,40 +23,40 @@ void ABasicPlayerController::BeginPlay()
 
 		if ( InventoryMenuClass )
 		{
-			InventoryMenu = CreateWidget<UInventoryMenu>( this, InventoryMenuClass );
+			InventoryMenu = CreateWidget<UFMGInvSysInventoryMenu>( this, InventoryMenuClass );
 
-			InventoryMenu->Setup( Cast<IInventoryOwner>( GetPawn() ) );
+			InventoryMenu->Setup( Cast<IFMGInvSysInventoryOwner>( GetPawn() ) );
 		}
 		else { ensureAlways( false ); }
 	}
 }
 
-void ABasicPlayerController::SetupInputComponent()
+void AFMGInvSysPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
 	if ( IsLocalController() )
-		InputComponent->BindAction( "OpenInventory", IE_Pressed, this, &ABasicPlayerController::ToggleInventoryMenu );
+		InputComponent->BindAction( "OpenInventory", IE_Pressed, this, &AFMGInvSysPlayerController::ToggleInventoryMenu );
 }
 
 /**
  * This isn't fired on clients.
  */
-void ABasicPlayerController::OnPossess( APawn* PawnToPossess )
+void AFMGInvSysPlayerController::OnPossess( APawn* PawnToPossess )
 {
 	Super::OnPossess( PawnToPossess );
 
 	if ( !IsLocalController() )
 		return;
 
-	if ( IInventoryOwner* InventoryOwner = Cast<IInventoryOwner>( PawnToPossess ) )
+	if ( IFMGInvSysInventoryOwner* InventoryOwner = Cast<IFMGInvSysInventoryOwner>( PawnToPossess ) )
 	{
 		// On server, OnPossess happens before BeginPlay.
 		if ( !InventoryMenu )
 		{
 			if ( InventoryMenuClass )
 			{
-				InventoryMenu = CreateWidget<UInventoryMenu>( this, InventoryMenuClass );
+				InventoryMenu = CreateWidget<UFMGInvSysInventoryMenu>( this, InventoryMenuClass );
 
 				InventoryMenu->Setup( InventoryOwner );
 			}
@@ -70,7 +70,7 @@ void ABasicPlayerController::OnPossess( APawn* PawnToPossess )
 	}
 }
 
-void ABasicPlayerController::ToggleInventoryMenu()
+void AFMGInvSysPlayerController::ToggleInventoryMenu()
 {
 	if ( InventoryMenu->IsInViewport() )
 	{

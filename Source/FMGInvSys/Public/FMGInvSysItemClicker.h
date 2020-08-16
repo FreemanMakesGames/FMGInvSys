@@ -4,20 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "ItemClicker.generated.h"
+#include "FMGInvSysItemClicker.generated.h"
 
-class UItemCore;
-class UItemWidget;
+class UFMGInvSysItemCore;
+class UFMGInvSysItemWidget;
 class UButton;
 class UNamedSlot;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnButtonClicked, UItemClicker*, Clicker );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnButtonClicked, UFMGInvSysItemClicker*, Clicker );
 
 /**
  * 
  */
 UCLASS( Blueprintable )
-class FMGINVSYS_API UItemClicker : public UUserWidget
+class FMGINVSYS_API UFMGInvSysItemClicker : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -33,10 +33,10 @@ public:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	UItemCore* GetItemCore();
+	UFMGInvSysItemCore* GetItemCore();
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void SetItemCore( UItemCore* InItemCore );
+	void SetItemCore( UFMGInvSysItemCore* InItemCore );
 
 protected:
 
@@ -47,7 +47,7 @@ protected:
 	UNamedSlot* ItemWidgetSlot;
 
 	UPROPERTY()
-	UItemCore* ItemCore;
+	UFMGInvSysItemCore* ItemCore;
 
 public:
 

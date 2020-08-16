@@ -2,25 +2,25 @@
 
 #pragma once
 
-#include "ItemUsage.h"
+#include "FMGInvSysItemUsage.h"
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Inventory.generated.h"
+#include "FMGInvSysInventory.generated.h"
 
-class UItemCore;
-class AItemCombiner;
+class UFMGInvSysItemCore;
+class AFMGInvSysItemCombiner;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FOnItemCoresUpdated, TArray<UItemCore*>, Added, TArray<UItemCore*>, Removed );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FOnItemCoresUpdated, TArray<UFMGInvSysItemCore*>, Added, TArray<UFMGInvSysItemCore*>, Removed );
 
 UCLASS( Blueprintable, BlueprintType, ClassGroup=( Custom ), meta=( BlueprintSpawnableComponent ) )
-class FMGINVSYS_API UInventory : public UActorComponent
+class FMGINVSYS_API UFMGInvSysInventory : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 
-	UInventory();
+	UFMGInvSysInventory();
 
 public:
 
@@ -34,22 +34,22 @@ public:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TArray<UItemCore*> GetItemCores();
+	TArray<UFMGInvSysItemCore*> GetItemCores();
 
 protected:
 
 	UPROPERTY( ReplicatedUsing=OnRep_ItemCores, VisibleInstanceOnly, Category = "FMGInvSys" )
-	TArray<UItemCore*> ItemCores;
+	TArray<UFMGInvSysItemCore*> ItemCores;
 
 public:
 
 	int CountItems();
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void AddItem( UItemCore* ItemToAdd );
+	void AddItem( UFMGInvSysItemCore* ItemToAdd );
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void RemoveItem( UItemCore* ItemToRemove );
+	void RemoveItem( UFMGInvSysItemCore* ItemToRemove );
 
 protected:
 
@@ -60,7 +60,7 @@ protected:
 protected:
 
 	/** Used to tell added and removed items when ItemCores is replicated. */
-	TArray<UItemCore*> LastItemCores;
+	TArray<UFMGInvSysItemCore*> LastItemCores;
 
 public:
 

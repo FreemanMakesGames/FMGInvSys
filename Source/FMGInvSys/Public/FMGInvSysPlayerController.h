@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "BasicPlayerController.generated.h"
+#include "FMGInvSysPlayerController.generated.h"
 
-class UInventoryMenu;
+class UFMGInvSysInventoryMenu;
 
 /**
  * 
  */
 UCLASS()
-class FMGINVSYS_API ABasicPlayerController : public APlayerController
+class FMGINVSYS_API AFMGInvSysPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 
@@ -27,10 +27,10 @@ protected:
 protected:
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UInventoryMenu> InventoryMenuClass;
+	TSubclassOf<UFMGInvSysInventoryMenu> InventoryMenuClass;
 
 	UPROPERTY()
-	UInventoryMenu* InventoryMenu;
+	UFMGInvSysInventoryMenu* InventoryMenu;
 
 protected:
 

@@ -2,17 +2,17 @@
 
 #pragma once
 
-#include "ItemUsage.h"
+#include "FMGInvSysItemUsage.h"
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "InventoryMenu.generated.h"
+#include "FMGInvSysInventoryMenu.generated.h"
 
-class UInventory;
-class UItemClicker;
-class UItemWidget;
-class UItemCore;
-class IInventoryOwner;
+class UFMGInvSysInventory;
+class UFMGInvSysItemClicker;
+class UFMGInvSysItemWidget;
+class UFMGInvSysItemCore;
+class IFMGInvSysInventoryOwner;
 
 class UWrapBox;
 class UVerticalBox;
@@ -23,7 +23,7 @@ class UTextBlock;
  *
  */
 UCLASS( Blueprintable )
-class FMGINVSYS_API UInventoryMenu : public UUserWidget
+class FMGINVSYS_API UFMGInvSysInventoryMenu : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -34,10 +34,10 @@ protected:
 protected:
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemClicker> ItemClickerClass;
+	TSubclassOf<UFMGInvSysItemClicker> ItemClickerClass;
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UItemUsageButton> ItemUsageButtonClass;
+	TSubclassOf<UFMGInvSysItemUsageButton> ItemUsageButtonClass;
 
 	UPROPERTY( meta = ( BindWidget ) )
 	UWrapBox* WrapBox_Clickers;
@@ -65,7 +65,7 @@ protected:
 
 public:
 
-	void Setup( IInventoryOwner* NewInventoryOwner );
+	void Setup( IFMGInvSysInventoryOwner* NewInventoryOwner );
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void Show();
@@ -77,28 +77,28 @@ protected:
 
 	void SetupItemMenu();
 
-	UItemUsageButton* InitItemUsageButton( EItemUsage ItemUsage );
+	UFMGInvSysItemUsageButton* InitItemUsageButton( EFMGInvSysItemUsage ItemUsage );
 
 	void Redraw();
 
-	UItemClicker* AddNewItemClicker( UItemCore* ItemCore );
+	UFMGInvSysItemClicker* AddNewItemClicker( UFMGInvSysItemCore* ItemCore );
 
-	void DisplayItemMenu( UItemCore* ItemCore );
+	void DisplayItemMenu( UFMGInvSysItemCore* ItemCore );
 
-	void RemoveItemClicker( UItemCore* ItemCore );
+	void RemoveItemClicker( UFMGInvSysItemCore* ItemCore );
 
 	void ResetLatestClicked();
 
 protected:
 
 	UFUNCTION()
-	void HandleOnInventoryUpdated( TArray<UItemCore*> Added, TArray<UItemCore*> Removed );
+	void HandleOnInventoryUpdated( TArray<UFMGInvSysItemCore*> Added, TArray<UFMGInvSysItemCore*> Removed );
 
 	UFUNCTION()
-	virtual void HandleOnItemClickerClicked( UItemClicker* Clicked );
+	virtual void HandleOnItemClickerClicked( UFMGInvSysItemClicker* Clicked );
 
 	UFUNCTION()
-	void HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton );
+	void HandleOnItemUsageButtonClicked( UFMGInvSysItemUsageButton* ItemUsageButton );
 
 	UFUNCTION()
 	void HandleOnButtonAddToCombinationClicked();
@@ -115,15 +115,15 @@ protected:
 // Global variables for tracking
 protected:
 
-	IInventoryOwner* InventoryOwner;
+	IFMGInvSysInventoryOwner* InventoryOwner;
 
 	UPROPERTY( BlueprintReadOnly, Category = "FMGInvSys" )
-	TMap<UItemCore*, UItemClicker*> ItemToClicker;
+	TMap<UFMGInvSysItemCore*, UFMGInvSysItemClicker*> ItemToClicker;
 
 	UPROPERTY()
-	TMap<EItemUsage, UItemUsageButton*> AllItemUsagesToButtons;
+	TMap<EFMGInvSysItemUsage, UFMGInvSysItemUsageButton*> AllItemUsagesToButtons;
 
 	UPROPERTY( BlueprintReadOnly, VisibleAnywhere, Category = "FMGInvSys" )
-	UItemClicker* LatestClicked;
+	UFMGInvSysItemClicker* LatestClicked;
 
 };

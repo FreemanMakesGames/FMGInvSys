@@ -1,15 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "InventoryMenu.h"
+#include "FMGInvSysInventoryMenu.h"
 
-#include "ItemClicker.h"
-#include "ItemUsageButton.h"
-#include "Inventory.h"
-#include "InventoryOwner.h"
-#include "ItemCore.h"
-#include "ItemWidget.h"
-#include "Item.h"
+#include "FMGInvSysItemClicker.h"
+#include "FMGInvSysItemUsageButton.h"
+#include "FMGInvSysInventory.h"
+#include "FMGInvSysInventoryOwner.h"
+#include "FMGInvSysItemCore.h"
+#include "FMGInvSysItemWidget.h"
+#include "FMGInvSysItem.h"
 
 #include "Components/WrapBox.h"
 #include "Components/VerticalBox.h"
@@ -17,7 +17,7 @@
 #include "Components/TextBlock.h"
 #include "Components/NamedSlot.h"
 
-void UInventoryMenu::NativeOnInitialized()
+void UFMGInvSysInventoryMenu::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
@@ -26,13 +26,13 @@ void UInventoryMenu::NativeOnInitialized()
 
 	SetupItemMenu();
 
-	Button_AddToCombination->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonAddToCombinationClicked );
-	Button_RemoveFromCombination->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked );
-	Button_Combine->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonCombineClicked );
-	Button_Hide->OnClicked.AddDynamic( this, &UInventoryMenu::HandleOnButtonHideClicked );
+	Button_AddToCombination->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonAddToCombinationClicked );
+	Button_RemoveFromCombination->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonRemoveFromCombinationClicked );
+	Button_Combine->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonCombineClicked );
+	Button_Hide->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonHideClicked );
 }
 
-void UInventoryMenu::Setup( IInventoryOwner* NewInventoryOwner )
+void UFMGInvSysInventoryMenu::Setup( IFMGInvSysInventoryOwner* NewInventoryOwner )
 {
 	if ( InventoryOwner == NewInventoryOwner )
 	{
@@ -41,45 +41,45 @@ void UInventoryMenu::Setup( IInventoryOwner* NewInventoryOwner )
 	}
 
 	if ( InventoryOwner )
-		InventoryOwner->GetInventory()->OnItemCoresUpdated.RemoveDynamic( this, &UInventoryMenu::HandleOnInventoryUpdated );
+		InventoryOwner->GetInventory()->OnItemCoresUpdated.RemoveDynamic( this, &UFMGInvSysInventoryMenu::HandleOnInventoryUpdated );
 	InventoryOwner = NewInventoryOwner;
-	InventoryOwner->GetInventory()->OnItemCoresUpdated.AddDynamic( this, &UInventoryMenu::HandleOnInventoryUpdated );
+	InventoryOwner->GetInventory()->OnItemCoresUpdated.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnInventoryUpdated );
 
 	// Clean up old display.
 	ResetLatestClicked();
 	WrapBox_Clickers->ClearChildren();
 	WrapBox_Clickers_Combining->ClearChildren();
 
-	for ( UItemCore* ItemCore : InventoryOwner->GetInventory()->GetItemCores() )
+	for ( UFMGInvSysItemCore* ItemCore : InventoryOwner->GetInventory()->GetItemCores() )
 	{
 		AddNewItemClicker( ItemCore );
 	}
 }
 
-void UInventoryMenu::Show()
+void UFMGInvSysInventoryMenu::Show()
 {
 	AddToViewport();
 
 	ResetLatestClicked();
 }
 
-void UInventoryMenu::Hide()
+void UFMGInvSysInventoryMenu::Hide()
 {
 	ResetLatestClicked();
 
 	RemoveFromParent();
 }
 
-void UInventoryMenu::SetupItemMenu()
+void UFMGInvSysInventoryMenu::SetupItemMenu()
 {
-	EItemUsage AllItemUsages[] = { EItemUsage::Equip, EItemUsage::Dismantle, EItemUsage::Drop, EItemUsage::Destroy };
+	EFMGInvSysItemUsage AllItemUsages[] = { EFMGInvSysItemUsage::Equip, EFMGInvSysItemUsage::Dismantle, EFMGInvSysItemUsage::Drop, EFMGInvSysItemUsage::Destroy };
 
 	// Create one button for each item usage. They should always be reused and never be destroyed.
-	for ( EItemUsage ItemUsage : AllItemUsages )
+	for ( EFMGInvSysItemUsage ItemUsage : AllItemUsages )
 	{
-		UItemUsageButton* ItemUsageButton = InitItemUsageButton( ItemUsage );
+		UFMGInvSysItemUsageButton* ItemUsageButton = InitItemUsageButton( ItemUsage );
 
-		ItemUsageButton->OnClickedExt.AddDynamic( this, &UInventoryMenu::HandleOnItemUsageButtonClicked );
+		ItemUsageButton->OnClickedExt.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnItemUsageButtonClicked );
 
 		AllItemUsagesToButtons.Add( ItemUsage, ItemUsageButton );
 	}
@@ -87,22 +87,22 @@ void UInventoryMenu::SetupItemMenu()
 	ItemMenu->ClearChildren();
 }
 
-UItemUsageButton* UInventoryMenu::InitItemUsageButton( EItemUsage ItemUsage )
+UFMGInvSysItemUsageButton* UFMGInvSysInventoryMenu::InitItemUsageButton( EFMGInvSysItemUsage ItemUsage )
 {
-	UItemUsageButton* ItemUsageButton = CreateWidget<UItemUsageButton>( this, ItemUsageButtonClass );
+	UFMGInvSysItemUsageButton* ItemUsageButton = CreateWidget<UFMGInvSysItemUsageButton>( this, ItemUsageButtonClass );
 
 	ItemUsageButton->SetItemUsage( ItemUsage );
 
 	return ItemUsageButton;
 }
 
-UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
+UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker( UFMGInvSysItemCore* ItemCore )
 {
-	UItemClicker* ItemClicker = CreateWidget<UItemClicker>( this, ItemClickerClass );
+	UFMGInvSysItemClicker* ItemClicker = CreateWidget<UFMGInvSysItemClicker>( this, ItemClickerClass );
 
 	ItemClicker->SetItemCore( ItemCore );
 
-	ItemClicker->OnButtonClicked.AddDynamic( this, &UInventoryMenu::HandleOnItemClickerClicked );
+	ItemClicker->OnButtonClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnItemClickerClicked );
 
 	WrapBox_Clickers->AddChildToWrapBox( ItemClicker );
 
@@ -111,13 +111,13 @@ UItemClicker* UInventoryMenu::AddNewItemClicker( UItemCore* ItemCore )
 	return ItemClicker;
 }
 
-void UInventoryMenu::DisplayItemMenu( UItemCore* ItemCore )
+void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
 {
 	ItemMenu->ClearChildren();
 
-	for ( EItemUsage ItemUsage : ItemCore->GetItemUsages() )
+	for ( EFMGInvSysItemUsage ItemUsage : ItemCore->GetItemUsages() )
 	{
-		if ( UItemUsageButton** pItemUsageButton = AllItemUsagesToButtons.Find( ItemUsage ) )
+		if ( UFMGInvSysItemUsageButton** pItemUsageButton = AllItemUsagesToButtons.Find( ItemUsage ) )
 		{
 			ItemMenu->AddChildToVerticalBox( *pItemUsageButton );
 		}
@@ -128,9 +128,9 @@ void UInventoryMenu::DisplayItemMenu( UItemCore* ItemCore )
 	}
 }
 
-void UInventoryMenu::RemoveItemClicker( UItemCore* ItemCore )
+void UFMGInvSysInventoryMenu::RemoveItemClicker( UFMGInvSysItemCore* ItemCore )
 {
-	UItemClicker** pItemClicker = ItemToClicker.Find( ItemCore );
+	UFMGInvSysItemClicker** pItemClicker = ItemToClicker.Find( ItemCore );
 
 	if ( pItemClicker )
 	{
@@ -149,7 +149,7 @@ void UInventoryMenu::RemoveItemClicker( UItemCore* ItemCore )
 	}
 }
 
-void UInventoryMenu::ResetLatestClicked()
+void UFMGInvSysInventoryMenu::ResetLatestClicked()
 {
 	TextBlock_Description->SetText( FText::GetEmpty() );
 
@@ -166,24 +166,24 @@ void UInventoryMenu::ResetLatestClicked()
 	}
 }
 
-void UInventoryMenu::HandleOnInventoryUpdated( TArray<UItemCore*> Added, TArray<UItemCore*> Removed )
+void UFMGInvSysInventoryMenu::HandleOnInventoryUpdated( TArray<UFMGInvSysItemCore*> Added, TArray<UFMGInvSysItemCore*> Removed )
 {
-	for ( UItemCore* ItemCore : Removed )
+	for ( UFMGInvSysItemCore* ItemCore : Removed )
 	{
 		RemoveItemClicker( ItemCore );
 	}
 
-	for ( UItemCore* ItemCore : Added )
+	for ( UFMGInvSysItemCore* ItemCore : Added )
 	{
-		UItemClicker* NewItemClicker = AddNewItemClicker( ItemCore );
+		UFMGInvSysItemClicker* NewItemClicker = AddNewItemClicker( ItemCore );
 
 		NewItemClicker->HighlightForAddition();
 	}
 }
 
-void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
+void UFMGInvSysInventoryMenu::HandleOnItemClickerClicked( UFMGInvSysItemClicker* Clicked )
 {
-	UItemCore* Core = Clicked->GetItemCore();
+	UFMGInvSysItemCore* Core = Clicked->GetItemCore();
 
 	DisplayItemMenu( Core );
 
@@ -214,7 +214,7 @@ void UInventoryMenu::HandleOnItemClickerClicked( UItemClicker* Clicked )
  * Be careful. Calling an item removal from the inventory here will cause
  * HandleOnItemRemoval to be invoked by the inventory.
  */
-void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsageButton )
+void UFMGInvSysInventoryMenu::HandleOnItemUsageButtonClicked( UFMGInvSysItemUsageButton* ItemUsageButton )
 {
 	if ( !LatestClicked )
 	{
@@ -223,7 +223,7 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 	}
 
 	APawn* ControlledPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if ( IInventoryOwner* inventoryOwner = Cast<IInventoryOwner>( ControlledPawn ) )
+	if ( IFMGInvSysInventoryOwner* inventoryOwner = Cast<IFMGInvSysInventoryOwner>( ControlledPawn ) )
 	{
 		inventoryOwner->ApplyItemUsage( LatestClicked->GetItemCore(), ItemUsageButton->GetItemUsage() );
 	}
@@ -234,7 +234,7 @@ void UInventoryMenu::HandleOnItemUsageButtonClicked( UItemUsageButton* ItemUsage
 	}
 }
 
-void UInventoryMenu::HandleOnButtonAddToCombinationClicked()
+void UFMGInvSysInventoryMenu::HandleOnButtonAddToCombinationClicked()
 {
 	if ( LatestClicked )
 	{
@@ -250,7 +250,7 @@ void UInventoryMenu::HandleOnButtonAddToCombinationClicked()
 	ResetLatestClicked();
 }
 
-void UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
+void UFMGInvSysInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
 {
 	if ( LatestClicked )
 	{
@@ -266,17 +266,17 @@ void UInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
 	ResetLatestClicked();
 }
 
-void UInventoryMenu::HandleOnButtonCombineClicked()
+void UFMGInvSysInventoryMenu::HandleOnButtonCombineClicked()
 {
 	// LatestClicked = nullptr;
 
 	if ( WrapBox_Clickers_Combining->GetChildrenCount() >= 2 )
 	{
-		TArray<UItemCore*> SourceItemCores;
+		TArray<UFMGInvSysItemCore*> SourceItemCores;
 
 		for ( UWidget* Widget : WrapBox_Clickers_Combining->GetAllChildren() )
 		{
-			UItemClicker* ItemClicker = Cast<UItemClicker>( Widget );
+			UFMGInvSysItemClicker* ItemClicker = Cast<UFMGInvSysItemClicker>( Widget );
 
 			SourceItemCores.Add( ItemClicker->GetItemCore() );
 		}
@@ -285,7 +285,7 @@ void UInventoryMenu::HandleOnButtonCombineClicked()
 	}
 }
 
-void UInventoryMenu::HandleOnButtonHideClicked()
+void UFMGInvSysInventoryMenu::HandleOnButtonHideClicked()
 {
 	Hide();
 }

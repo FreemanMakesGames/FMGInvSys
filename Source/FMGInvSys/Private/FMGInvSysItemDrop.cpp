@@ -1,18 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ItemDrop.h"
+#include "FMGInvSysItemDrop.h"
 
-#include "ItemCore.h"
-#include "Item.h"
+#include "FMGInvSysItemCore.h"
+#include "FMGInvSysItem.h"
 
 // Sets default values for this component's properties
-UItemDrop::UItemDrop()
+UFMGInvSysItemDrop::UFMGInvSysItemDrop()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 }
 
-void UItemDrop::DropItem( UItemCore* ItemCore )
+void UFMGInvSysItemDrop::DropItem( UFMGInvSysItemCore* ItemCore )
 {
 	ItemCore->SpawnItem( GetComponentTransform() );
 }

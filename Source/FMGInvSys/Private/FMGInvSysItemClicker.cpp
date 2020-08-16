@@ -1,27 +1,27 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "ItemClicker.h"
+#include "FMGInvSysItemClicker.h"
 
-#include "ItemCore.h"
-#include "ItemWidget.h"
+#include "FMGInvSysItemCore.h"
+#include "FMGInvSysItemWidget.h"
 
 #include "Components/Button.h"
 #include "Components/NamedSlot.h"
 
-void UItemClicker::NativeOnInitialized()
+void UFMGInvSysItemClicker::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	Clicker->OnClicked.AddDynamic( this, &UItemClicker::HandleOnButtonClicked );
+	Clicker->OnClicked.AddDynamic( this, &UFMGInvSysItemClicker::HandleOnButtonClicked );
 }
 
-UItemCore* UItemClicker::GetItemCore()
+UFMGInvSysItemCore* UFMGInvSysItemClicker::GetItemCore()
 {
 	return ItemCore;
 }
 
-void UItemClicker::SetItemCore( UItemCore* InItemCore )
+void UFMGInvSysItemClicker::SetItemCore( UFMGInvSysItemCore* InItemCore )
 {
 	ItemCore = InItemCore;
 
@@ -33,13 +33,13 @@ void UItemClicker::SetItemCore( UItemCore* InItemCore )
 		ItemWidgetSlot->ClearChildren();
 	}
 
-	UItemWidget* ItemWidget = CreateWidget<UItemWidget>( this, ItemCore->GetItemWidgetClass() );
+	UFMGInvSysItemWidget* ItemWidget = CreateWidget<UFMGInvSysItemWidget>( this, ItemCore->GetItemWidgetClass() );
 	ItemWidget->SetItemCore( ItemCore );
 
 	ItemWidgetSlot->AddChild( ItemWidget );
 }
 
-void UItemClicker::HandleOnButtonClicked()
+void UFMGInvSysItemClicker::HandleOnButtonClicked()
 {
 	OnButtonClicked.Broadcast( this );
 }

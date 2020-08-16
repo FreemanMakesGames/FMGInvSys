@@ -5,9 +5,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "ItemWidget.generated.h"
+#include "FMGInvSysItemWidget.generated.h"
 
-class UItemCore;
+class UFMGInvSysItemCore;
 
 class UImage;
 
@@ -15,7 +15,7 @@ class UImage;
  * 
  */
 UCLASS()
-class FMGINVSYS_API UItemWidget : public UUserWidget
+class FMGINVSYS_API UFMGInvSysItemWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -37,7 +37,7 @@ public:
 
 	/** Initialize ItemWidget with ItemCore here. */
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
-	void SetItemCore( UItemCore* InItemCore );
-	virtual void SetItemCore_Implementation( UItemCore* InItemCore );
+	void SetItemCore( UFMGInvSysItemCore* InItemCore );
+	virtual void SetItemCore_Implementation( UFMGInvSysItemCore* InItemCore );
 
 };
