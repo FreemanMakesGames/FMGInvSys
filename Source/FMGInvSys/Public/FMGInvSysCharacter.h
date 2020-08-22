@@ -92,6 +92,8 @@ public:
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	virtual void Server_CombineItems( const TArray<UFMGInvSysItemCore*>& SourceItemCores ) override;
+	virtual void Server_CombineItems_Implementation( const TArray<UFMGInvSysItemCore*>& SourceItemCores );
+	virtual bool Server_CombineItems_Validate( const TArray<UFMGInvSysItemCore*>& SourceItemCores ) { return true; }
 
 protected:
 
@@ -105,18 +107,28 @@ protected:
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_CollectItem();
+	virtual void Server_CollectItem_Implementation();
+	virtual bool Server_CollectItem_Validate() { return true; }
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_Dismantle( UFMGInvSysItemCore* ItemCore );
+	virtual void Server_Dismantle_Implementation( UFMGInvSysItemCore* ItemCore );
+	virtual bool Server_Dismantle_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_Equip( UFMGInvSysItemCore* ItemCore );
+	virtual void Server_Equip_Implementation( UFMGInvSysItemCore* ItemCore );
+	virtual bool Server_Equip_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_Drop( UFMGInvSysItemCore* ItemCore );
+	virtual void Server_Drop_Implementation( UFMGInvSysItemCore* ItemCore );
+	virtual bool Server_Drop_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_Destroy( UFMGInvSysItemCore* ItemCore );
+	virtual void Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore );
+	virtual bool Server_Destroy_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 // public:
 // 

@@ -205,7 +205,6 @@ void AFMGInvSysCharacter::Server_CombineItems_Implementation( const TArray<UFMGI
 		Inventory->AddItem( ItemCore );
 	}
 }
-bool AFMGInvSysCharacter::Server_CombineItems_Validate( const TArray<UFMGInvSysItemCore*>& SourceItemCores ) { return true; }
 
 void AFMGInvSysCharacter::Server_CollectItem_Implementation()
 {
@@ -228,7 +227,6 @@ void AFMGInvSysCharacter::Server_CollectItem_Implementation()
 		AdjacentActor->Destroy();
 	}
 }
-bool AFMGInvSysCharacter::Server_CollectItem_Validate() { return true; }
 
 void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* ItemCore )
 {
@@ -249,7 +247,6 @@ void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* I
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool AFMGInvSysCharacter::Server_Dismantle_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 // For now, only support to equip one item at a time.
 // To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
@@ -266,7 +263,6 @@ void AFMGInvSysCharacter::Server_Equip_Implementation( UFMGInvSysItemCore* ItemC
 
 	EquippedItem = ItemToEquip;
 }
-bool AFMGInvSysCharacter::Server_Equip_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCore )
 {
@@ -291,7 +287,6 @@ void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCo
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool AFMGInvSysCharacter::Server_Drop_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore )
 {
@@ -302,7 +297,6 @@ void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* Ite
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool AFMGInvSysCharacter::Server_Destroy_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 // bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
 // {
