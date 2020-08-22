@@ -5,8 +5,11 @@
 #include "Algo/Count.h"
 
 #include "CoreMinimal.h"
+#include "FMGInvSysItemCore.h"
 #include "UObject/NoExportTypes.h"
 #include "FMGInvSysItemCombiner.generated.h"
+
+DECLARE_DELEGATE_RetVal_OneParam( FFMGInvSysCombineResult, FFMGInvSysCombineDelegate, TArray<UFMGInvSysItemCore*> );
 
 class UFMGInvSysItemCore;
 
@@ -61,15 +64,15 @@ FORCEINLINE uint32 GetTypeHash( const FFMGInvSysItemCoreClassArray& ArrayOfItemC
 
 
 USTRUCT()
-struct FFMGInvSysItemCombinationResult
+struct FFMGInvSysCombineResult
 {
 	GENERATED_BODY()
 
 public:
 
-	FFMGInvSysItemCombinationResult() { Successful = false; }
+	FFMGInvSysCombineResult() { Successful = false; }
 
-	FFMGInvSysItemCombinationResult( bool InSuccessful, TArray<UFMGInvSysItemCore*> InResultItems )
+	FFMGInvSysCombineResult( bool InSuccessful, TArray<UFMGInvSysItemCore*> InResultItems )
 	{
 		Successful = InSuccessful;
 		ResultItems = InResultItems;
@@ -89,17 +92,13 @@ class FMGINVSYS_API AFMGInvSysItemCombiner : public AActor
 {
 	GENERATED_BODY()
 
-public:
-
-	typedef FFMGInvSysItemCombinationResult( AFMGInvSysItemCombiner::*FCombineFunction )( TArray<UFMGInvSysItemCore*> );
-
 protected:
 
 	virtual void BeginPlay() override;
 
 public:
 
-	FFMGInvSysItemCombinationResult CombineItems( TArray<UFMGInvSysItemCore*> SourceItems, bool Directional );
+	FFMGInvSysCombineResult CombineItems( TArray<UFMGInvSysItemCore*> SourceItems );
 
 protected:
 
@@ -117,16 +116,10 @@ protected:
 
 	/**
 	 * A map that defines combination with functions.
-	 * Those functions yield result items,
-	 * And perform extra logic after the combination.
+	 * Those functions can perform custom logic during or after the combination.
 	 */ 
-	TMap<FFMGInvSysItemCoreClassArray, FCombineFunction> FunctionMap;
+	TMap<FFMGInvSysItemCoreClassArray, FFMGInvSysCombineDelegate> FunctionMap;
 
 	//TMap<TSubclassOf<UItemCore>, FCombineFunction> FunctionMap_WildCards;
-
-// Combination functions
-protected:
-
-	FFMGInvSysItemCombinationResult MakeWhiteGem( TArray<UFMGInvSysItemCore*> SourceItems );
 	
 };

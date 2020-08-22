@@ -215,7 +215,7 @@ void AFMGInvSysCharacter::Server_CombineItems_Implementation( const TArray<UFMGI
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 
-	FFMGInvSysItemCombinationResult Result = ItemCombiner->CombineItems( SourceItemCores, false );
+	FFMGInvSysCombineResult Result = ItemCombiner->CombineItems( SourceItemCores );
 
 	if ( !Result.Successful ) { return; }
 

@@ -13,15 +13,9 @@ void AFMGInvSysItemCombiner::BeginPlay()
 
 }
 
-FFMGInvSysItemCombinationResult AFMGInvSysItemCombiner::CombineItems( TArray<UFMGInvSysItemCore*> SourceItems, bool Directional )
+FFMGInvSysCombineResult AFMGInvSysItemCombiner::CombineItems( TArray<UFMGInvSysItemCore*> SourceItems )
 {
-	FFMGInvSysItemCombinationResult Result;
-
-// 	if ( Directional && SourceItems.Num() > 2 )
-// 	{
-// 		ensureAlwaysMsgf( false, TEXT( "Directional combine is to click an item, click a usage button, then click a secondary item." ) );
-// 		return Result;
-// 	}
+	FFMGInvSysCombineResult Result;
 
 	// TODO: FMGInvSys: Prevent combining with an item itself.
 
@@ -61,31 +55,20 @@ FFMGInvSysItemCombinationResult AFMGInvSysItemCombiner::CombineItems( TArray<UFM
 	}
 
 	// Search in FunctionMap
-	FCombineFunction* pCombineFunction = FunctionMap.Find( SourceItemClassArray );
-	if ( pCombineFunction )
+	FFMGInvSysCombineDelegate* pCombineDelegate = FunctionMap.Find( SourceItemClassArray );
+	if ( pCombineDelegate )
 	{
-		FCombineFunction CombineFunction = *pCombineFunction;
+		FFMGInvSysCombineDelegate CombineDelegate = *pCombineDelegate;
 
-		Result = ( this->*( CombineFunction ) )( SourceItems );
+		Result = CombineDelegate.Execute( SourceItems );
 
 		return Result;
 	}
 	else
-	{
 		return Result; // Empty unsuccessful result.
-	}
 
 // 	if ( !pCombineFunction )
 // 	{
 // 		pCombineFunction = FunctionMap_WildCards.Find( SourceItemClassArrays)
 // 	}
-}
-
-FFMGInvSysItemCombinationResult AFMGInvSysItemCombiner::MakeWhiteGem( TArray<UFMGInvSysItemCore*> SourceItems )
-{
-	FFMGInvSysItemCombinationResult Result;
-
-	UE_LOG( LogTemp, Warning, TEXT( "Make white gem!" ) );
-
-	return Result;
 }
