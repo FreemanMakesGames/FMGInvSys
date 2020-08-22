@@ -8,8 +8,8 @@
 #include "GameFramework/Character.h"
 #include "FMGInvSysCharacter.generated.h"
 
+class USceneComponent;
 class UFMGInvSysInventory;
-class UFMGInvSysItemDrop;
 class AFMGInvSysItem;
 
 UCLASS( config = Game )
@@ -99,7 +99,7 @@ protected:
 	UFMGInvSysInventory* Inventory;
 
 	UPROPERTY( VisibleAnywhere, BlueprintReadOnly, Category = "FMGInvSys" )
-	UFMGInvSysItemDrop* ItemDrop;
+	USceneComponent* ItemDropSpot;
 
 protected:
 
