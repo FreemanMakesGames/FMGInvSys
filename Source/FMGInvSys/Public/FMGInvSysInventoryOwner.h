@@ -4,8 +4,6 @@
 #include "UObject/ScriptMacros.h"
 #include "UObject/Interface.h"
 
-#include "FMGInvSysItemUsage.h"
-
 #include "FMGInvSysInventoryOwner.generated.h"
 
 class UFMGInvSysInventory;
@@ -25,7 +23,7 @@ public:
 
 	virtual UFMGInvSysInventory* GetInventory() PURE_VIRTUAL( , return nullptr; );
 
-	virtual void ApplyItemUsage( UFMGInvSysItemCore* ItemCore, EFMGInvSysItemUsage ItemUsage ) PURE_VIRTUAL( , );
+	virtual void ApplyItemUsage( UFMGInvSysItemCore* ItemCore, FString ItemUsage ) PURE_VIRTUAL( , );
 
 	virtual void Server_CombineItems( const TArray<UFMGInvSysItemCore*>& SourceItemCores ) PURE_VIRTUAL( , );
 

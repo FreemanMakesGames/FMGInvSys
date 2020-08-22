@@ -13,17 +13,11 @@ void UFMGInvSysItemUsageButton::NativeOnInitialized()
 	Button_ItemUsage->OnClicked.AddDynamic( this, &UFMGInvSysItemUsageButton::HandleOnClicked );
 }
 
-EFMGInvSysItemUsage UFMGInvSysItemUsageButton::GetItemUsage()
-{
-	return ItemUsage;
-}
-
-void UFMGInvSysItemUsageButton::SetItemUsage( EFMGInvSysItemUsage InItemUsage )
+void UFMGInvSysItemUsageButton::SetItemUsage( FString InItemUsage )
 {
 	ItemUsage = InItemUsage;
-
-	FText ItemUsageName = StaticEnum<EFMGInvSysItemUsage>()->GetDisplayNameTextByIndex( ( int32 )ItemUsage );
-	TextBlock_ItemUsage->SetText( ItemUsageName );
+	
+	TextBlock_ItemUsage->SetText( FText::FromString( ItemUsage ) );
 }
 
 void UFMGInvSysItemUsageButton::HandleOnClicked()

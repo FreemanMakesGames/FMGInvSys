@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "FMGInvSysItemUsage.h"
-
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "FMGInvSysItem.generated.h"

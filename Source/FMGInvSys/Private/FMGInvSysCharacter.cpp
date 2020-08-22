@@ -156,39 +156,18 @@ void AFMGInvSysCharacter::MoveRight( float Value )
 	}
 }
 
-void AFMGInvSysCharacter::ApplyItemUsage( UFMGInvSysItemCore* ItemCore, EFMGInvSysItemUsage ItemUsage )
+void AFMGInvSysCharacter::ApplyItemUsage( UFMGInvSysItemCore* ItemCore, FString ItemUsage )
 {
-	switch ( ItemUsage )
-	{
-	case EFMGInvSysItemUsage::Dismantle:
-
+	if ( ItemUsage == "Dismantle" )
 		Server_Dismantle( ItemCore );
-
-		break;
-
-	case EFMGInvSysItemUsage::Equip:
-
+	else if ( ItemUsage == "Equip" )
 		Server_Equip( ItemCore );
-
-		break;
-
-	case EFMGInvSysItemUsage::Drop:
-
+	else if ( ItemUsage == "Drop" )
 		Server_Drop( ItemCore );
-
-		break;
-
-	case EFMGInvSysItemUsage::Destroy:
-
+	else if ( ItemUsage == "Destroy" )
 		Server_Destroy( ItemCore );
-
-		break;
-
-	default:
-
+	else
 		ensureAlways( false );
-
-	}
 }
 
 void AFMGInvSysCharacter::Server_CombineItems_Implementation( const TArray<UFMGInvSysItemCore*>& SourceItemCores )

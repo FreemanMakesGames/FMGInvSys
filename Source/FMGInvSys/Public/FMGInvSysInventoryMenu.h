@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "FMGInvSysItemUsage.h"
-
 #include "CoreMinimal.h"
 #include "FMGInvSysItemUsageButton.h"
 #include "Blueprint/UserWidget.h"
@@ -76,9 +74,7 @@ public:
 
 protected:
 
-	virtual void SetupItemMenu();
-
-	UFMGInvSysItemUsageButton* InitItemUsageButton( EFMGInvSysItemUsage ItemUsage );
+	UFMGInvSysItemUsageButton* InitItemUsageButton( FString ItemUsage );
 
 	virtual UFMGInvSysItemClicker* AddNewItemClicker( UFMGInvSysItemCore* ItemCore );
 
@@ -120,7 +116,7 @@ protected:
 	TMap<UFMGInvSysItemCore*, UFMGInvSysItemClicker*> ItemToClicker;
 
 	UPROPERTY()
-	TMap<EFMGInvSysItemUsage, UFMGInvSysItemUsageButton*> AllItemUsagesToButtons;
+	TMap<FString, UFMGInvSysItemUsageButton*> AllItemUsagesToButtons;
 
 	UPROPERTY( BlueprintReadOnly, VisibleAnywhere, Category = "FMGInvSys" )
 	UFMGInvSysItemClicker* LatestClicked;

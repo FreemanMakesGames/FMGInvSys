@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "FMGInvSysItemUsage.h"
-
 #include "CoreMinimal.h"
 #include "Components/Button.h"
 #include "FMGInvSysItemUsageButton.generated.h"
@@ -39,13 +37,13 @@ protected:
 
 public:
 
-	EFMGInvSysItemUsage GetItemUsage();
+	FString GetItemUsage() { return ItemUsage; }
 
-	virtual void SetItemUsage( EFMGInvSysItemUsage InItemUsage );
+	virtual void SetItemUsage( FString InItemUsage );
 
 protected:
 
-	EFMGInvSysItemUsage ItemUsage;
+	FString ItemUsage;
 
 protected:
 

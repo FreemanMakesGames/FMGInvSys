@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "FMGInvSysItemUsage.h"
-
 #include "FMGInvSysInventoryOwner.h"
 
 #include "CoreMinimal.h"
@@ -90,7 +88,7 @@ public:
 
 	// Note: Although each method called by ApplyItemUsage is RPC, probably don't make itself RPC.
 	//       What if there needs to be non-RPC code later?
-	virtual void ApplyItemUsage( UFMGInvSysItemCore* ItemCore, EFMGInvSysItemUsage ItemUsage ) override;
+	virtual void ApplyItemUsage( UFMGInvSysItemCore* ItemCore, FString ItemUsage ) override;
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	virtual void Server_CombineItems( const TArray<UFMGInvSysItemCore*>& SourceItemCores ) override;

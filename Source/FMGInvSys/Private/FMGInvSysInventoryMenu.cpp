@@ -24,8 +24,6 @@ void UFMGInvSysInventoryMenu::NativeOnInitialized()
 	ensureAlways( ItemClickerClass );
 	ensureAlways( ItemUsageButtonClass );
 
-	SetupItemMenu();
-
 	Button_AddToCombination->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonAddToCombinationClicked );
 	Button_RemoveFromCombination->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonRemoveFromCombinationClicked );
 	Button_Combine->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonCombineClicked );
@@ -70,30 +68,6 @@ void UFMGInvSysInventoryMenu::Hide()
 	RemoveFromParent();
 }
 
-void UFMGInvSysInventoryMenu::SetupItemMenu()
-{
-	EFMGInvSysItemUsage AllItemUsages[] = { EFMGInvSysItemUsage::Equip, EFMGInvSysItemUsage::Dismantle, EFMGInvSysItemUsage::Drop, EFMGInvSysItemUsage::Destroy };
-
-	// Create one button for each item usage. They should always be reused and never be destroyed.
-	for ( EFMGInvSysItemUsage ItemUsage : AllItemUsages )
-	{
-		UFMGInvSysItemUsageButton* ItemUsageButton = InitItemUsageButton( ItemUsage );
-
-		ItemUsageButton->OnClickedExt.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnItemUsageButtonClicked );
-
-		AllItemUsagesToButtons.Add( ItemUsage, ItemUsageButton );
-	}
-
-	ItemMenu->ClearChildren();
-}
-
-UFMGInvSysItemUsageButton* UFMGInvSysInventoryMenu::InitItemUsageButton( EFMGInvSysItemUsage ItemUsage )
-{
-	UFMGInvSysItemUsageButton* ItemUsageButton = CreateWidget<UFMGInvSysItemUsageButton>( this, ItemUsageButtonClass );
-	ItemUsageButton->SetItemUsage( ItemUsage );
-	return ItemUsageButton;
-}
-
 UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker( UFMGInvSysItemCore* ItemCore )
 {
 	UFMGInvSysItemClicker* ItemClicker = CreateWidget<UFMGInvSysItemClicker>( this, ItemClickerClass );
@@ -113,15 +87,31 @@ void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
 {
 	ItemMenu->ClearChildren();
 
-	for ( EFMGInvSysItemUsage ItemUsage : ItemCore->GetItemUsages() )
+	for ( FString ItemUsage : ItemCore->GetItemUsages() )
 	{
 		if ( UFMGInvSysItemUsageButton** pItemUsageButton = AllItemUsagesToButtons.Find( ItemUsage ) )
 		{
 			ItemMenu->AddChildToVerticalBox( *pItemUsageButton );
 		}
+		// Lazy instantiation if not found in map
 		else
-			UE_LOG( LogTemp, Error, TEXT( "UInventoryMenu found an EItemUsage from a UItemCore, that doesn't match any UItemUsageButton in the TMap." ) );
+		{
+			UFMGInvSysItemUsageButton* ItemUsageButton = InitItemUsageButton( ItemUsage );
+
+			ItemUsageButton->OnClickedExt.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnItemUsageButtonClicked );
+
+			ItemMenu->AddChildToVerticalBox( ItemUsageButton );
+			
+			AllItemUsagesToButtons.Add( ItemUsage, ItemUsageButton );
+		}
 	}
+}
+
+UFMGInvSysItemUsageButton* UFMGInvSysInventoryMenu::InitItemUsageButton( FString ItemUsage )
+{
+	UFMGInvSysItemUsageButton* ItemUsageButton = CreateWidget<UFMGInvSysItemUsageButton>( this, ItemUsageButtonClass );
+	ItemUsageButton->SetItemUsage( ItemUsage );
+	return ItemUsageButton;
 }
 
 void UFMGInvSysInventoryMenu::RemoveItemClicker( UFMGInvSysItemCore* ItemCore )

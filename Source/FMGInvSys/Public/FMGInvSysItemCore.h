@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "FMGInvSysItemUsage.h"
-
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "FMGInvSysItemCore.generated.h"
@@ -34,7 +32,7 @@ public:
 	TSubclassOf<UFMGInvSysItemWidget> GetItemWidgetClass() { return ItemWidgetClass; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TArray<EFMGInvSysItemUsage> GetItemUsages() { return ItemUsages; }
+	TArray<FString> GetItemUsages() { return ItemUsages; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	TMap<TSubclassOf<UFMGInvSysItemCore>, int> GetDismantleResults()
@@ -53,7 +51,7 @@ protected:
 	TSubclassOf<UFMGInvSysItemWidget> ItemWidgetClass;
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TArray<EFMGInvSysItemUsage> ItemUsages;
+	TArray<FString> ItemUsages;
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TMap<TSubclassOf<UFMGInvSysItemCore>, int> DismantleResults;
