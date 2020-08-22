@@ -31,11 +31,6 @@ void AFMGInvSysItem::BeginPlay()
 	}
 }
 
-UFMGInvSysItemCore* AFMGInvSysItem::GetItemCore()
-{
-	return ItemCore;
-}
-
 void AFMGInvSysItem::SetItemCore( UFMGInvSysItemCore* InItemCore )
 {
 // 	if ( !ItemCore )

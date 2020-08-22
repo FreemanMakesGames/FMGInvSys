@@ -33,7 +33,7 @@ public:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	UFMGInvSysItemCore* GetItemCore();
+	UFMGInvSysItemCore* GetItemCore() { return ItemCore; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void SetItemCore( UFMGInvSysItemCore* InItemCore );
@@ -63,6 +63,6 @@ public:
 protected:
 
 	UFUNCTION()
-	void HandleOnButtonClicked();
+	virtual void HandleOnButtonClicked();
 
 };

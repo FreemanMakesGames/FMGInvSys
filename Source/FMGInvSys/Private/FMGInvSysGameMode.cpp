@@ -15,8 +15,3 @@ void AFMGInvSysGameMode::StartPlay()
 
 	Super::StartPlay();
 }
-
-AFMGInvSysItemCombiner* AFMGInvSysGameMode::GetItemCombiner()
-{
-	return ItemCombiner;
-}

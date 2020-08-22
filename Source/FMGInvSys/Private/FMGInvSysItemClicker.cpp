@@ -16,11 +16,6 @@ void UFMGInvSysItemClicker::NativeOnInitialized()
 	Clicker->OnClicked.AddDynamic( this, &UFMGInvSysItemClicker::HandleOnButtonClicked );
 }
 
-UFMGInvSysItemCore* UFMGInvSysItemClicker::GetItemCore()
-{
-	return ItemCore;
-}
-
 void UFMGInvSysItemClicker::SetItemCore( UFMGInvSysItemCore* InItemCore )
 {
 	ItemCore = InItemCore;

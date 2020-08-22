@@ -34,6 +34,6 @@ protected:
 
 protected:
 
-	void ToggleInventoryMenu();
+	virtual void ToggleInventoryMenu();
 	
 };

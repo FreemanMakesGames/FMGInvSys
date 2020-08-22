@@ -22,7 +22,7 @@ protected:
 	
 public:
 
-	AFMGInvSysItemCombiner* GetItemCombiner();
+	AFMGInvSysItemCombiner* GetItemCombiner() { return ItemCombiner; }
 
 protected:
 

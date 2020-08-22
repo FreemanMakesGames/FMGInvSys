@@ -27,9 +27,7 @@ AFMGInvSysItem* UFMGInvSysItemCore::SpawnItem( const FTransform& SpawnTransform 
 		Item->SetItemCore( this );
 	}
 	else
-	{
 		ensureAlways( false );
-	}
 
 	return Item;
 }

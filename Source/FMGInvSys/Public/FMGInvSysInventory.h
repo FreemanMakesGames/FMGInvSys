@@ -32,7 +32,7 @@ public:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TArray<UFMGInvSysItemCore*> GetItemCores();
+	TArray<UFMGInvSysItemCore*> GetItemCores() { return ItemCores; }
 
 protected:
 
@@ -41,7 +41,7 @@ protected:
 
 public:
 
-	int CountItems();
+	int CountItems() { return ItemCores.Num(); }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void AddItem( UFMGInvSysItemCore* ItemToAdd );

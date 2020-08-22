@@ -98,7 +98,7 @@ protected:
 
 public:
 
-	FFMGInvSysCombineResult CombineItems( TArray<UFMGInvSysItemCore*> SourceItems );
+	virtual FFMGInvSysCombineResult CombineItems( TArray<UFMGInvSysItemCore*> SourceItems );
 
 protected:
 

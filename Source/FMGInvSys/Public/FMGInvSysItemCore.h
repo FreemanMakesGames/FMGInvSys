@@ -63,5 +63,6 @@ public:
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	FText Describe();
+	virtual FText Describe_Implementation();
 
 };

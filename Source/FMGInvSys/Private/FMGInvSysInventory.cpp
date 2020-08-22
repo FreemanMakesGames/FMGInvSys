@@ -7,23 +7,11 @@
 #include "Net/UnrealNetwork.h"
 
 #include "FMGInvSysItemCore.h"
-#include "FMGInvSysItemDrop.h"
 #include "FMGInvSysItemCombiner.h"
-#include "FMGInvSysGameMode.h"
 
 UFMGInvSysInventory::UFMGInvSysInventory()
 {
 	SetIsReplicatedByDefault( true );
-}
-
-TArray<UFMGInvSysItemCore*> UFMGInvSysInventory::GetItemCores()
-{
-	return ItemCores;
-}
-
-int UFMGInvSysInventory::CountItems()
-{
-	return ItemCores.Num();
 }
 
 void UFMGInvSysInventory::AddItem( UFMGInvSysItemCore* ItemToAdd )

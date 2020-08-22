@@ -29,7 +29,7 @@ protected:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	UFMGInvSysItemCore* GetItemCore();
+	UFMGInvSysItemCore* GetItemCore() { return ItemCore; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void SetItemCore( UFMGInvSysItemCore* InItemCore );
@@ -43,12 +43,15 @@ public:
 
 	/**
 	 * Enable or disable collision in a replicated way.
+	 * 
+	 * This is mainly used for equipping and dropping items.
+	 * Plugin user is free to write their own physics handling.
 	 */
 	void SetPhysicsEnabled_FromServer( bool Enabled );
 
 protected:
 
-	void SetPhysicsEnabled( bool Enabled );
+	virtual void SetPhysicsEnabled( bool Enabled );
 
 protected:
 
