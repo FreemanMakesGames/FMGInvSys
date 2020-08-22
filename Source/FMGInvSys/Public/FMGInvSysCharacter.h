@@ -130,9 +130,9 @@ protected:
 	virtual void Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore );
 	virtual bool Server_Destroy_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
-// public:
-// 
-// 	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
+public:
+ 
+	virtual bool ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags ) override;
 
 // Global tracking variables
 protected:

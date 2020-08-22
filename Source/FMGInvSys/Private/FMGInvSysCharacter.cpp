@@ -298,19 +298,19 @@ void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* Ite
 	Inventory->RemoveItem( ItemCore );
 }
 
-// bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
-// {
-// 	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
-// 
-// 	bWroteSomething |= Channel->ReplicateSubobject( Inventory, *Bunch, *RepFlags );
-// 
-// 	for ( UItemCore* ItemCore : Inventory->GetItemCores() )
-// 	{
-// 		bWroteSomething |= Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags );
-// 	}
-// 
-//  	return bWroteSomething;
-// }
+bool AFMGInvSysCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
+{
+	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
+
+	bWroteSomething |= Channel->ReplicateSubobject( Inventory, *Bunch, *RepFlags );
+
+	for ( UFMGInvSysItemCore* ItemCore : Inventory->GetItemCores() )
+	{
+		bWroteSomething |= Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags );
+	}
+
+	return bWroteSomething;
+}
 
 void AFMGInvSysCharacter::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
 {
