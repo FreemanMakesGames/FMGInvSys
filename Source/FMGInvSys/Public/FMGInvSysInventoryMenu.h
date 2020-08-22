@@ -5,6 +5,7 @@
 #include "FMGInvSysItemUsage.h"
 
 #include "CoreMinimal.h"
+#include "FMGInvSysItemUsageButton.h"
 #include "Blueprint/UserWidget.h"
 #include "FMGInvSysInventoryMenu.generated.h"
 
@@ -65,52 +66,50 @@ protected:
 
 public:
 
-	void Setup( IFMGInvSysInventoryOwner* NewInventoryOwner );
+	virtual void Setup( IFMGInvSysInventoryOwner* NewInventoryOwner );
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void Show();
+	virtual void Show();
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	virtual void Hide();
 
 protected:
 
-	void SetupItemMenu();
+	virtual void SetupItemMenu();
 
 	UFMGInvSysItemUsageButton* InitItemUsageButton( EFMGInvSysItemUsage ItemUsage );
 
-	void Redraw();
+	virtual UFMGInvSysItemClicker* AddNewItemClicker( UFMGInvSysItemCore* ItemCore );
 
-	UFMGInvSysItemClicker* AddNewItemClicker( UFMGInvSysItemCore* ItemCore );
+	virtual void DisplayItemMenu( UFMGInvSysItemCore* ItemCore );
 
-	void DisplayItemMenu( UFMGInvSysItemCore* ItemCore );
+	virtual void RemoveItemClicker( UFMGInvSysItemCore* ItemCore );
 
-	void RemoveItemClicker( UFMGInvSysItemCore* ItemCore );
-
-	void ResetLatestClicked();
+	virtual void ResetLatestClicked();
 
 protected:
 
 	UFUNCTION()
-	void HandleOnInventoryUpdated( TArray<UFMGInvSysItemCore*> Added, TArray<UFMGInvSysItemCore*> Removed );
+	virtual void HandleOnInventoryUpdated( TArray<UFMGInvSysItemCore*> Added, TArray<UFMGInvSysItemCore*> Removed );
 
 	UFUNCTION()
 	virtual void HandleOnItemClickerClicked( UFMGInvSysItemClicker* Clicked );
 
 	UFUNCTION()
-	void HandleOnItemUsageButtonClicked( UFMGInvSysItemUsageButton* ItemUsageButton );
+	virtual void HandleOnItemUsageButtonClicked( UFMGInvSysItemUsageButton* ItemUsageButton );
 
 	UFUNCTION()
 	void HandleOnButtonAddToCombinationClicked();
 
 	UFUNCTION()
-	void HandleOnButtonRemoveFromCombinationClicked();
+	virtual void HandleOnButtonRemoveFromCombinationClicked();
 
 	UFUNCTION()
-	void HandleOnButtonCombineClicked();
+	virtual void HandleOnButtonCombineClicked();
 
 	UFUNCTION()
-	void HandleOnButtonHideClicked();
+	virtual void HandleOnButtonHideClicked();
 
 // Global variables for tracking
 protected:

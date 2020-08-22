@@ -41,7 +41,7 @@ public:
 
 	EFMGInvSysItemUsage GetItemUsage();
 
-	void SetItemUsage( EFMGInvSysItemUsage InItemUsage );
+	virtual void SetItemUsage( EFMGInvSysItemUsage InItemUsage );
 
 protected:
 
@@ -50,6 +50,6 @@ protected:
 protected:
 
 	UFUNCTION()
-	void HandleOnClicked();
+	virtual void HandleOnClicked();
 
 };

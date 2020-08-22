@@ -90,9 +90,7 @@ void UFMGInvSysInventoryMenu::SetupItemMenu()
 UFMGInvSysItemUsageButton* UFMGInvSysInventoryMenu::InitItemUsageButton( EFMGInvSysItemUsage ItemUsage )
 {
 	UFMGInvSysItemUsageButton* ItemUsageButton = CreateWidget<UFMGInvSysItemUsageButton>( this, ItemUsageButtonClass );
-
 	ItemUsageButton->SetItemUsage( ItemUsage );
-
 	return ItemUsageButton;
 }
 
@@ -122,9 +120,7 @@ void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
 			ItemMenu->AddChildToVerticalBox( *pItemUsageButton );
 		}
 		else
-		{
 			UE_LOG( LogTemp, Error, TEXT( "UInventoryMenu found an EItemUsage from a UItemCore, that doesn't match any UItemUsageButton in the TMap." ) );
-		}
 	}
 }
 
@@ -144,9 +140,7 @@ void UFMGInvSysInventoryMenu::RemoveItemClicker( UFMGInvSysItemCore* ItemCore )
 		ItemToClicker.Remove( ItemCore );
 	}
 	else
-	{
 		ensureAlways( false );
-	}
 }
 
 void UFMGInvSysInventoryMenu::ResetLatestClicked()
