@@ -5,7 +5,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/SkeletalMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
@@ -13,12 +13,10 @@
 #include "Kismet/KismetSystemLibrary.h"
 
 #include "FMGInvSysInventory.h"
-#include "FMGInvSysItemDrop.h"
 #include "FMGInvSysItemCore.h"
 #include "FMGInvSysItem.h"
 #include "FMGInvSysItemCombiner.h"
 #include "FMGInvSysGameMode.h"
-#include "FMGInvSysPlayerController.h"
 
 #include "Engine/EngineTypes.h"
 #include "Engine/ActorChannel.h"
@@ -62,10 +60,9 @@ AFMGInvSysCharacter::AFMGInvSysCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
 	Inventory = CreateDefaultSubobject<UFMGInvSysInventory>( "Inventory" );
-	ensureAlways( Inventory );
 
-	ItemDrop = CreateDefaultSubobject<UFMGInvSysItemDrop>( TEXT( "ItemDrop" ) );
-	ItemDrop->SetupAttachment( RootComponent );
+	ItemDropSpot = CreateDefaultSubobject<USceneComponent>( TEXT( "ItemDropSpot" ) );
+	ItemDropSpot->SetupAttachment( RootComponent );
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -208,7 +205,6 @@ void AFMGInvSysCharacter::Server_CombineItems_Implementation( const TArray<UFMGI
 		Inventory->AddItem( ItemCore );
 	}
 }
-bool AFMGInvSysCharacter::Server_CombineItems_Validate( const TArray<UFMGInvSysItemCore*>& SourceItemCores ) { return true; }
 
 void AFMGInvSysCharacter::Server_CollectItem_Implementation()
 {
@@ -231,7 +227,6 @@ void AFMGInvSysCharacter::Server_CollectItem_Implementation()
 		AdjacentActor->Destroy();
 	}
 }
-bool AFMGInvSysCharacter::Server_CollectItem_Validate() { return true; }
 
 void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* ItemCore )
 {
@@ -252,7 +247,6 @@ void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* I
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool AFMGInvSysCharacter::Server_Dismantle_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 // For now, only support to equip one item at a time.
 // To support multiple item equipment, maybe make a new struct to hold socket name, and other info like attack and defense.
@@ -269,7 +263,6 @@ void AFMGInvSysCharacter::Server_Equip_Implementation( UFMGInvSysItemCore* ItemC
 
 	EquippedItem = ItemToEquip;
 }
-bool AFMGInvSysCharacter::Server_Equip_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCore )
 {
@@ -279,7 +272,7 @@ void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCo
 	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
 	{
 		EquippedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
-		EquippedItem->SetActorLocation( ItemDrop->GetComponentLocation() );
+		EquippedItem->SetActorLocation( ItemDropSpot->GetComponentLocation() );
 		EquippedItem->SetPhysicsEnabled_FromServer( true );  // Re-enable physics, which was disabled when equipping this item.
 
 		EquippedItem = nullptr;
@@ -290,11 +283,10 @@ void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCo
 	}
 
 	// If the item to drop isn't equipped, spawn it at the item drop component.
-	ItemCore->SpawnItem( ItemDrop->GetComponentTransform() );
+	ItemCore->SpawnItem( ItemDropSpot->GetComponentTransform() );
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool AFMGInvSysCharacter::Server_Drop_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore )
 {
@@ -305,7 +297,6 @@ void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* Ite
 
 	Inventory->RemoveItem( ItemCore );
 }
-bool AFMGInvSysCharacter::Server_Destroy_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 // bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
 // {
