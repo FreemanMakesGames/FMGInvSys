@@ -65,4 +65,15 @@ public:
 	FText Describe();
 	virtual FText Describe_Implementation();
 
+// This section is for changing outer object on client side manually.
+protected:
+
+	void SetOuterItem( AFMGInvSysItem* NewOuterItem );
+
+	UPROPERTY( ReplicatedUsing = OnRep_OuterItem )
+	AFMGInvSysItem* OuterItem = nullptr;
+
+	UFUNCTION()
+	void OnRep_OuterItem();
+
 };

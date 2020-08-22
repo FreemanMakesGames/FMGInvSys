@@ -22,7 +22,7 @@ AFMGInvSysItem* UFMGInvSysItemCore::SpawnItem( const FTransform& SpawnTransform 
 	{
 		Item = World->SpawnActor<AFMGInvSysItem>( ItemClass, SpawnTransform );
 
-		//this->Rename( nullptr, Item );
+		SetOuterItem( Item );
 
 		Item->SetItemCore( this );
 	}
@@ -36,4 +36,24 @@ FText UFMGInvSysItemCore::Describe_Implementation()
 {
 	//ensureAlways( false );
 	return NSLOCTEXT( "", "", "Description is not overriden!" );
+}
+
+void UFMGInvSysItemCore::SetOuterItem( AFMGInvSysItem* NewOuterItem )
+{
+	this->Rename( nullptr, NewOuterItem );
+
+	// Trigger OnRep_OuterItem on client.
+	OuterItem = NewOuterItem;
+}
+
+void UFMGInvSysItemCore::OnRep_OuterItem()
+{
+	this->Rename( nullptr, OuterItem );
+}
+
+void UFMGInvSysItemCore::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( UFMGInvSysItemCore, OuterItem );
 }

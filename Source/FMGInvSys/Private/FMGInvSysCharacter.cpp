@@ -224,7 +224,7 @@ void AFMGInvSysCharacter::Server_CollectItem_Implementation()
 	{
 		UFMGInvSysItemCore* ItemCore = Cast<AFMGInvSysItem>( AdjacentActor )->GetItemCore();
 
-		//ItemCore->Rename( nullptr, this );
+		ItemCore->Rename( nullptr, this );
 
 		Inventory->AddItem( ItemCore );
 
