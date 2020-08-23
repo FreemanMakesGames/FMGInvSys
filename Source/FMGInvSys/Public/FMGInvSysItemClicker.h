@@ -36,7 +36,7 @@ public:
 	UFMGInvSysItemCore* GetItemCore() { return ItemCore; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void SetItemCore( UFMGInvSysItemCore* InItemCore );
+	virtual void SetItemCore( UFMGInvSysItemCore* InItemCore );
 
 protected:
 
