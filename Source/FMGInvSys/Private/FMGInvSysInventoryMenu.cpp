@@ -174,7 +174,6 @@ void UFMGInvSysInventoryMenu::HandleOnItemClickerClicked( UFMGInvSysItemClicker*
 	{
 		LatestClicked->Unhighlight();
 	}
-	Clicked->StopAllAnimations();
 	Clicked->HighlightForClicking();
 
 	if ( WrapBox_Clickers->GetAllChildren().Contains( Clicked ) )
