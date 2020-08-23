@@ -20,29 +20,23 @@ AFMGInvSysItem::AFMGInvSysItem( const FObjectInitializer& ObjectInitializer ) : 
 
 void AFMGInvSysItem::BeginPlay()
 {
-	Super::BeginPlay();
-
 	ensureAlways( ItemCoreClass );
 
 	// This is for cases like when a level designer placed an AItem into the level manually.
-	if ( !ItemCore )
+	// Item core may be needed in BP BeginPlay.
+	// If this item is spawned from an existing item core,
+	// Then the following new item core will be replaced in SetItemCore soon after.
+	if ( !ItemCore && HasAuthority() )
 	{
 		ItemCore = NewObject<UFMGInvSysItemCore>( this, ItemCoreClass );
 	}
+
+	// This will execute BP BeginPlay.
+	Super::BeginPlay();
 }
 
 void AFMGInvSysItem::SetItemCore( UFMGInvSysItemCore* InItemCore )
 {
-// 	if ( !ItemCore )
-// 	{
-// 		ItemCore = InItemCore;
-// 	}
-// 	else
-// 	{
-// 		ensureAlways( false );
-// 		return;
-// 	}
-
 	ItemCore = InItemCore;
 }
 
