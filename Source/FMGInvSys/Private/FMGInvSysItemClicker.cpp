@@ -20,12 +20,21 @@ void UFMGInvSysItemClicker::SetItemCore_Implementation( UFMGInvSysItemCore* InIt
 
 	// Give plugin user the convenience to have button image setup automatically.
 	// But don't do it if they'll be using custom images for button's different states.
-	if ( !bUseCustomIcons )
+	if ( !bCustomButtonStyle )
 	{
-		Clicker->WidgetStyle.Normal.SetResourceObject( ItemCore->GetIcon() );
-		Clicker->WidgetStyle.Hovered.SetResourceObject( ItemCore->GetIcon() );
-		Clicker->WidgetStyle.Pressed.SetResourceObject( ItemCore->GetIcon() );
-		Clicker->WidgetStyle.Disabled.SetResourceObject( ItemCore->GetIcon() );
+		UTexture2D* Icon = ItemCore->GetIcon();
+		
+		Clicker->WidgetStyle.Normal.SetResourceObject( Icon );
+		Clicker->WidgetStyle.Normal.DrawAs = ESlateBrushDrawType::Image;
+		
+		Clicker->WidgetStyle.Hovered.SetResourceObject( Icon );
+		Clicker->WidgetStyle.Hovered.DrawAs = ESlateBrushDrawType::Image;
+		
+		Clicker->WidgetStyle.Pressed.SetResourceObject( Icon );
+		Clicker->WidgetStyle.Pressed.DrawAs = ESlateBrushDrawType::Image;
+		
+		Clicker->WidgetStyle.Disabled.SetResourceObject( Icon );
+		Clicker->WidgetStyle.Disabled.DrawAs = ESlateBrushDrawType::Image;
 	}
 }
 

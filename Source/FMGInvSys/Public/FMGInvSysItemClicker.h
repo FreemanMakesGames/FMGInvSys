@@ -61,8 +61,11 @@ protected:
 
 protected:
 
+	/**
+	 * Set this to true if you want to do custom style for the button.
+	 */
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
-	bool bUseCustomIcons;
+	bool bCustomButtonStyle = false;
 
 public:
 
