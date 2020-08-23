@@ -31,6 +31,10 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	UFMGInvSysItemCore* GetItemCore() { return ItemCore; }
 
+	/**
+	 * This is supposed to always replace an item core,
+	 * Because an item core will be created in BeginPlay.
+	 */
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void SetItemCore( UFMGInvSysItemCore* InItemCore );
 
