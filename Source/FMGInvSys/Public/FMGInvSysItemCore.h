@@ -7,7 +7,7 @@
 #include "FMGInvSysItemCore.generated.h"
 
 class AFMGInvSysItem;
-class UFMGInvSysItemWidget;
+class UFMGInvSysItemClicker;
 
 /**
  * 
@@ -28,8 +28,11 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	TSubclassOf<AFMGInvSysItem> GetItemClass() { return ItemClass; }
 
-	UFUNCTION()
-	TSubclassOf<UFMGInvSysItemWidget> GetItemWidgetClass() { return ItemWidgetClass; }
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
+	TSubclassOf<UFMGInvSysItemClicker> GetItemClickerClass() { return ItemClickerClass; }
+
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
+	UTexture2D* GetIcon() { return Icon; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	TArray<FString> GetItemUsages() { return ItemUsages; }
@@ -48,7 +51,10 @@ protected:
 	TSubclassOf<AFMGInvSysItem> ItemClass;
 
 	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
-	TSubclassOf<UFMGInvSysItemWidget> ItemWidgetClass;
+	TSubclassOf<UFMGInvSysItemClicker> ItemClickerClass;
+
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
+	UTexture2D* Icon;
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TArray<FString> ItemUsages;

@@ -8,20 +8,17 @@
 #include "FMGInvSysInventory.h"
 #include "FMGInvSysInventoryOwner.h"
 #include "FMGInvSysItemCore.h"
-#include "FMGInvSysItemWidget.h"
-#include "FMGInvSysItem.h"
 
 #include "Components/WrapBox.h"
 #include "Components/VerticalBox.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
-#include "Components/NamedSlot.h"
 
 void UFMGInvSysInventoryMenu::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	ensureAlways( ItemClickerClass );
+	ensureAlways( DefaultItemClickerClass );
 	ensureAlways( ItemUsageButtonClass );
 
 	Button_AddToCombination->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonAddToCombinationClicked );
@@ -70,9 +67,15 @@ void UFMGInvSysInventoryMenu::Hide()
 
 UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker( UFMGInvSysItemCore* ItemCore )
 {
-	UFMGInvSysItemClicker* ItemClicker = CreateWidget<UFMGInvSysItemClicker>( this, ItemClickerClass );
-
-	ItemClicker->SetItemCore( ItemCore );
+	UFMGInvSysItemClicker* ItemClicker;
+	if ( TSubclassOf<UFMGInvSysItemClicker> CustomClickerClass = ItemCore->GetItemClickerClass() )
+	{
+		ItemClicker = UFMGInvSysItemClicker::InitItemClicker( this, CustomClickerClass, ItemCore );
+	}
+	else
+	{
+		ItemClicker = UFMGInvSysItemClicker::InitItemClicker( this, DefaultItemClickerClass, ItemCore );
+	}
 
 	ItemClicker->OnButtonClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnItemClickerClicked );
 
@@ -96,7 +99,8 @@ void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
 		// Lazy instantiation if not found in map
 		else
 		{
-			UFMGInvSysItemUsageButton* ItemUsageButton = InitItemUsageButton( ItemUsage );
+			UFMGInvSysItemUsageButton* ItemUsageButton = UFMGInvSysItemUsageButton::InitItemUsageButton(
+				this, ItemUsageButtonClass, ItemUsage );
 
 			ItemUsageButton->OnClickedExt.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnItemUsageButtonClicked );
 
@@ -105,13 +109,6 @@ void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
 			AllItemUsagesToButtons.Add( ItemUsage, ItemUsageButton );
 		}
 	}
-}
-
-UFMGInvSysItemUsageButton* UFMGInvSysInventoryMenu::InitItemUsageButton( FString ItemUsage )
-{
-	UFMGInvSysItemUsageButton* ItemUsageButton = CreateWidget<UFMGInvSysItemUsageButton>( this, ItemUsageButtonClass );
-	ItemUsageButton->SetItemUsage( ItemUsage );
-	return ItemUsageButton;
 }
 
 void UFMGInvSysInventoryMenu::RemoveItemClicker( UFMGInvSysItemCore* ItemCore )

@@ -2,14 +2,14 @@
 
 #pragma once
 
+#include "FMGInvSysItemCore.h"
+
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "FMGInvSysItemClicker.generated.h"
 
 class UFMGInvSysItemCore;
-class UFMGInvSysItemWidget;
 class UButton;
-class UNamedSlot;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnButtonClicked, UFMGInvSysItemClicker*, Clicker );
 
@@ -27,6 +27,17 @@ protected:
 
 public:
 
+	template <typename WidgetT = UFMGInvSysItemClicker, typename OwnerT = UObject>
+	static WidgetT* InitItemClicker( OwnerT* OwningObject,
+		TSubclassOf<UFMGInvSysItemClicker> ItemClickerClass, UFMGInvSysItemCore* ItemCore )
+	{
+		WidgetT* ItemClicker = CreateWidget<WidgetT>( OwningObject, ItemClickerClass );
+		ItemClicker->SetItemCore( ItemCore );
+		return ItemClicker;
+	}
+
+public:
+
 	UPROPERTY( BlueprintAssignable )
 	FOnButtonClicked OnButtonClicked;
 
@@ -35,19 +46,23 @@ public:
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	UFMGInvSysItemCore* GetItemCore() { return ItemCore; }
 
-	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	virtual void SetItemCore( UFMGInvSysItemCore* InItemCore );
+	/**
+	 * Override this method, either in C++ or BP,
+	 * To also set up custom appearance based on the item core,
+	 */
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void SetItemCore( UFMGInvSysItemCore* InItemCore );
+	virtual void SetItemCore_Implementation( UFMGInvSysItemCore* InItemCore );
 
 protected:
 
 	UPROPERTY( meta = ( BindWidget ), BlueprintReadOnly, Category = "FMGInvSys" )
 	UButton* Clicker;
 
-	UPROPERTY( meta = ( BindWidget ) )
-	UNamedSlot* ItemWidgetSlot;
+protected:
 
-	UPROPERTY()
-	UFMGInvSysItemCore* ItemCore;
+	UPROPERTY( EditDefaultsOnly, BlueprintReadOnly, Category = "FMGInvSys" )
+	bool bUseCustomIcons;
 
 public:
 
@@ -59,6 +74,11 @@ public:
 
 	UFUNCTION( BlueprintImplementableEvent )
 	void Unhighlight();
+
+protected:
+
+	UPROPERTY()
+	UFMGInvSysItemCore* ItemCore;
 
 protected:
 

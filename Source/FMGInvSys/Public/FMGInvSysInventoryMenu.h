@@ -9,7 +9,6 @@
 
 class UFMGInvSysInventory;
 class UFMGInvSysItemClicker;
-class UFMGInvSysItemWidget;
 class UFMGInvSysItemCore;
 class IFMGInvSysInventoryOwner;
 
@@ -33,7 +32,7 @@ protected:
 protected:
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UFMGInvSysItemClicker> ItemClickerClass;
+	TSubclassOf<UFMGInvSysItemClicker> DefaultItemClickerClass;
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UFMGInvSysItemUsageButton> ItemUsageButtonClass;
@@ -73,8 +72,6 @@ public:
 	virtual void Hide();
 
 protected:
-
-	UFMGInvSysItemUsageButton* InitItemUsageButton( FString ItemUsage );
 
 	virtual UFMGInvSysItemClicker* AddNewItemClicker( UFMGInvSysItemCore* ItemCore );
 
