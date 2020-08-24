@@ -69,18 +69,21 @@ protected:
 
 public:
 
-	UFUNCTION( BlueprintImplementableEvent )
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	void HighlightForClicking();
+	virtual void HighlightForClicking_Implementation() { }
 
-	UFUNCTION( BlueprintImplementableEvent )
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	void HighlightForAddition();
+	virtual void HighlightForAddition_Implementation() { }
 
-	UFUNCTION( BlueprintImplementableEvent )
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	void Unhighlight();
+	virtual void Unhighlight_Implementation() { }
 
 protected:
 
-	UPROPERTY()
+	UPROPERTY( BlueprintReadWrite, Category = "FMGInvSys" )
 	UFMGInvSysItemCore* ItemCore;
 
 protected:

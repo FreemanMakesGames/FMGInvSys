@@ -51,21 +51,21 @@ void UFMGInvSysInventoryMenu::Setup( IFMGInvSysInventoryOwner* NewInventoryOwner
 	}
 }
 
-void UFMGInvSysInventoryMenu::Show()
+void UFMGInvSysInventoryMenu::Show_Implementation()
 {
 	AddToViewport();
 
 	ResetLatestClicked();
 }
 
-void UFMGInvSysInventoryMenu::Hide()
+void UFMGInvSysInventoryMenu::Hide_Implementation()
 {
 	ResetLatestClicked();
 
 	RemoveFromParent();
 }
 
-UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker( UFMGInvSysItemCore* ItemCore )
+UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	UFMGInvSysItemClicker* ItemClicker;
 	if ( TSubclassOf<UFMGInvSysItemClicker> CustomClickerClass = ItemCore->GetItemClickerClass() )
@@ -86,7 +86,7 @@ UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker( UFMGInvSysIte
 	return ItemClicker;
 }
 
-void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
+void UFMGInvSysInventoryMenu::DisplayItemMenu_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	ItemMenu->ClearChildren();
 
@@ -111,7 +111,7 @@ void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
 	}
 }
 
-void UFMGInvSysInventoryMenu::RemoveItemClicker( UFMGInvSysItemCore* ItemCore )
+void UFMGInvSysInventoryMenu::RemoveItemClicker_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	UFMGInvSysItemClicker** pItemClicker = ItemToClicker.Find( ItemCore );
 
@@ -130,7 +130,7 @@ void UFMGInvSysInventoryMenu::RemoveItemClicker( UFMGInvSysItemCore* ItemCore )
 		ensureAlways( false );
 }
 
-void UFMGInvSysInventoryMenu::ResetLatestClicked()
+void UFMGInvSysInventoryMenu::ResetLatestClicked_Implementation()
 {
 	TextBlock_Description->SetText( FText::GetEmpty() );
 
