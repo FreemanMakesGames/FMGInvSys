@@ -246,6 +246,8 @@ void UFMGInvSysInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
 	ResetLatestClicked();
 }
 
+// This is a plugin made by Freeman. freeman at freemanmakesgames.pro
+
 void UFMGInvSysInventoryMenu::HandleOnButtonCombineClicked()
 {
 	// LatestClicked = nullptr;
