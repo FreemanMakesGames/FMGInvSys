@@ -8,7 +8,6 @@
 #include "Net/UnrealNetwork.h"
 
 #include "FMGInvSysItemCore.h"
-#include "FMGInvSysItemWidget.h"
 
 AFMGInvSysItem::AFMGInvSysItem( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
 {

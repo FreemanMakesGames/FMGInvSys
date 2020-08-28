@@ -29,6 +29,7 @@ protected:
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<AFMGInvSysItemCombiner> ItemCombinerClass;
 
+	UPROPERTY()
 	AFMGInvSysItemCombiner* ItemCombiner;
 
 };

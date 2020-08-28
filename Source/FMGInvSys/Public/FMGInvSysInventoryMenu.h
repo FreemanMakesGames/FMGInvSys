@@ -9,7 +9,6 @@
 
 class UFMGInvSysInventory;
 class UFMGInvSysItemClicker;
-class UFMGInvSysItemWidget;
 class UFMGInvSysItemCore;
 class IFMGInvSysInventoryOwner;
 
@@ -33,7 +32,7 @@ protected:
 protected:
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
-	TSubclassOf<UFMGInvSysItemClicker> ItemClickerClass;
+	TSubclassOf<UFMGInvSysItemClicker> DefaultItemClickerClass;
 
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TSubclassOf<UFMGInvSysItemUsageButton> ItemUsageButtonClass;
@@ -63,26 +62,34 @@ protected:
 	UButton* Button_Hide;
 
 public:
-
+	
 	virtual void Setup( IFMGInvSysInventoryOwner* NewInventoryOwner );
 
-	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	virtual void Show();
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void Show();
+	virtual void Show_Implementation();
 
-	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	virtual void Hide();
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void Hide();
+	virtual void Hide_Implementation();
 
 protected:
 
-	UFMGInvSysItemUsageButton* InitItemUsageButton( FString ItemUsage );
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	UFMGInvSysItemClicker* AddNewItemClicker( UFMGInvSysItemCore* ItemCore );
+	virtual UFMGInvSysItemClicker* AddNewItemClicker_Implementation( UFMGInvSysItemCore* ItemCore );
 
-	virtual UFMGInvSysItemClicker* AddNewItemClicker( UFMGInvSysItemCore* ItemCore );
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void DisplayItemMenu( UFMGInvSysItemCore* ItemCore );
+	virtual void DisplayItemMenu_Implementation( UFMGInvSysItemCore* ItemCore );
 
-	virtual void DisplayItemMenu( UFMGInvSysItemCore* ItemCore );
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void RemoveItemClicker( UFMGInvSysItemCore* ItemCore );
+	virtual void RemoveItemClicker_Implementation( UFMGInvSysItemCore* ItemCore );
 
-	virtual void RemoveItemClicker( UFMGInvSysItemCore* ItemCore );
-
-	virtual void ResetLatestClicked();
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void ResetLatestClicked();
+	virtual void ResetLatestClicked_Implementation();
 
 protected:
 
@@ -96,7 +103,7 @@ protected:
 	virtual void HandleOnItemUsageButtonClicked( UFMGInvSysItemUsageButton* ItemUsageButton );
 
 	UFUNCTION()
-	void HandleOnButtonAddToCombinationClicked();
+	virtual void HandleOnButtonAddToCombinationClicked();
 
 	UFUNCTION()
 	virtual void HandleOnButtonRemoveFromCombinationClicked();

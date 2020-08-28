@@ -240,7 +240,7 @@ void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* I
 		}
 	}
 
-	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
+	if ( IsValid( EquippedItem ) && EquippedItem->GetItemCore() == ItemCore )
 	{
 		EquippedItem->Destroy();
 	}
@@ -253,9 +253,9 @@ void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* I
 void AFMGInvSysCharacter::Server_Equip_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	// Do nothing if the item is already equipped.
-	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore ) { return; }
+	if ( IsValid( EquippedItem ) && EquippedItem->GetItemCore() == ItemCore ) { return; }
 
-	if ( EquippedItem ) { EquippedItem->Destroy(); }
+	if ( IsValid( EquippedItem ) ) { EquippedItem->Destroy(); }
 
 	AFMGInvSysItem* ItemToEquip = ItemCore->SpawnItem( FTransform::Identity );
 	ItemToEquip->SetPhysicsEnabled_FromServer( false );
@@ -269,7 +269,7 @@ void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCo
 	// If the item to drop is equipped,
 	// Simply detach it and relocate it to item drop component,
 	// And remove it from the inventory.
-	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
+	if ( IsValid( EquippedItem ) && EquippedItem->GetItemCore() == ItemCore )
 	{
 		EquippedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
 		EquippedItem->SetActorLocation( ItemDropSpot->GetComponentLocation() );
@@ -290,7 +290,7 @@ void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCo
 
 void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore )
 {
-	if ( EquippedItem && EquippedItem->GetItemCore() == ItemCore )
+	if ( IsValid( EquippedItem ) && EquippedItem->GetItemCore() == ItemCore )
 	{
 		EquippedItem->Destroy();
 	}

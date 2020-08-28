@@ -137,6 +137,7 @@ public:
 // Global tracking variables
 protected:
 
+	UPROPERTY()
 	AFMGInvSysItem* EquippedItem;
 
 };

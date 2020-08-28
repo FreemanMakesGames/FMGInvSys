@@ -3,7 +3,6 @@
 #include "FMGInvSysItemCore.h"
 
 #include "FMGInvSysItem.h"
-#include "FMGInvSysItemWidget.h"
 
 UFMGInvSysItemCore::UFMGInvSysItemCore( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
 {

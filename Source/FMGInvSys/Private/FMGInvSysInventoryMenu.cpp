@@ -8,20 +8,17 @@
 #include "FMGInvSysInventory.h"
 #include "FMGInvSysInventoryOwner.h"
 #include "FMGInvSysItemCore.h"
-#include "FMGInvSysItemWidget.h"
-#include "FMGInvSysItem.h"
 
 #include "Components/WrapBox.h"
 #include "Components/VerticalBox.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
-#include "Components/NamedSlot.h"
 
 void UFMGInvSysInventoryMenu::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	ensureAlways( ItemClickerClass );
+	ensureAlways( DefaultItemClickerClass );
 	ensureAlways( ItemUsageButtonClass );
 
 	Button_AddToCombination->OnClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnButtonAddToCombinationClicked );
@@ -54,25 +51,31 @@ void UFMGInvSysInventoryMenu::Setup( IFMGInvSysInventoryOwner* NewInventoryOwner
 	}
 }
 
-void UFMGInvSysInventoryMenu::Show()
+void UFMGInvSysInventoryMenu::Show_Implementation()
 {
 	AddToViewport();
 
 	ResetLatestClicked();
 }
 
-void UFMGInvSysInventoryMenu::Hide()
+void UFMGInvSysInventoryMenu::Hide_Implementation()
 {
 	ResetLatestClicked();
 
 	RemoveFromParent();
 }
 
-UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker( UFMGInvSysItemCore* ItemCore )
+UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker_Implementation( UFMGInvSysItemCore* ItemCore )
 {
-	UFMGInvSysItemClicker* ItemClicker = CreateWidget<UFMGInvSysItemClicker>( this, ItemClickerClass );
-
-	ItemClicker->SetItemCore( ItemCore );
+	UFMGInvSysItemClicker* ItemClicker;
+	if ( TSubclassOf<UFMGInvSysItemClicker> CustomClickerClass = ItemCore->GetItemClickerClass() )
+	{
+		ItemClicker = UFMGInvSysItemClicker::InitItemClicker( this, CustomClickerClass, ItemCore );
+	}
+	else
+	{
+		ItemClicker = UFMGInvSysItemClicker::InitItemClicker( this, DefaultItemClickerClass, ItemCore );
+	}
 
 	ItemClicker->OnButtonClicked.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnItemClickerClicked );
 
@@ -83,7 +86,7 @@ UFMGInvSysItemClicker* UFMGInvSysInventoryMenu::AddNewItemClicker( UFMGInvSysIte
 	return ItemClicker;
 }
 
-void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
+void UFMGInvSysInventoryMenu::DisplayItemMenu_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	ItemMenu->ClearChildren();
 
@@ -96,7 +99,8 @@ void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
 		// Lazy instantiation if not found in map
 		else
 		{
-			UFMGInvSysItemUsageButton* ItemUsageButton = InitItemUsageButton( ItemUsage );
+			UFMGInvSysItemUsageButton* ItemUsageButton = UFMGInvSysItemUsageButton::InitItemUsageButton(
+				this, ItemUsageButtonClass, ItemUsage );
 
 			ItemUsageButton->OnClickedExt.AddDynamic( this, &UFMGInvSysInventoryMenu::HandleOnItemUsageButtonClicked );
 
@@ -107,14 +111,7 @@ void UFMGInvSysInventoryMenu::DisplayItemMenu( UFMGInvSysItemCore* ItemCore )
 	}
 }
 
-UFMGInvSysItemUsageButton* UFMGInvSysInventoryMenu::InitItemUsageButton( FString ItemUsage )
-{
-	UFMGInvSysItemUsageButton* ItemUsageButton = CreateWidget<UFMGInvSysItemUsageButton>( this, ItemUsageButtonClass );
-	ItemUsageButton->SetItemUsage( ItemUsage );
-	return ItemUsageButton;
-}
-
-void UFMGInvSysInventoryMenu::RemoveItemClicker( UFMGInvSysItemCore* ItemCore )
+void UFMGInvSysInventoryMenu::RemoveItemClicker_Implementation( UFMGInvSysItemCore* ItemCore )
 {
 	UFMGInvSysItemClicker** pItemClicker = ItemToClicker.Find( ItemCore );
 
@@ -133,7 +130,7 @@ void UFMGInvSysInventoryMenu::RemoveItemClicker( UFMGInvSysItemCore* ItemCore )
 		ensureAlways( false );
 }
 
-void UFMGInvSysInventoryMenu::ResetLatestClicked()
+void UFMGInvSysInventoryMenu::ResetLatestClicked_Implementation()
 {
 	TextBlock_Description->SetText( FText::GetEmpty() );
 
@@ -177,7 +174,6 @@ void UFMGInvSysInventoryMenu::HandleOnItemClickerClicked( UFMGInvSysItemClicker*
 	{
 		LatestClicked->Unhighlight();
 	}
-	Clicked->StopAllAnimations();
 	Clicked->HighlightForClicking();
 
 	if ( WrapBox_Clickers->GetAllChildren().Contains( Clicked ) )
@@ -249,6 +245,8 @@ void UFMGInvSysInventoryMenu::HandleOnButtonRemoveFromCombinationClicked()
 
 	ResetLatestClicked();
 }
+
+// This is a plugin made by Freeman. freeman at freemanmakesgames.pro
 
 void UFMGInvSysInventoryMenu::HandleOnButtonCombineClicked()
 {

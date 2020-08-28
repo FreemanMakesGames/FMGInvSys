@@ -4,10 +4,8 @@
 #include "FMGInvSysItemClicker.h"
 
 #include "FMGInvSysItemCore.h"
-#include "FMGInvSysItemWidget.h"
 
 #include "Components/Button.h"
-#include "Components/NamedSlot.h"
 
 void UFMGInvSysItemClicker::NativeOnInitialized()
 {
@@ -16,22 +14,28 @@ void UFMGInvSysItemClicker::NativeOnInitialized()
 	Clicker->OnClicked.AddDynamic( this, &UFMGInvSysItemClicker::HandleOnButtonClicked );
 }
 
-void UFMGInvSysItemClicker::SetItemCore( UFMGInvSysItemCore* InItemCore )
+void UFMGInvSysItemClicker::SetItemCore_Implementation( UFMGInvSysItemCore* InItemCore )
 {
 	ItemCore = InItemCore;
 
-	// Check and clear Named Slot's content.
-	if ( ItemWidgetSlot->HasAnyChildren() )
+	// Give plugin user the convenience to have button image setup automatically.
+	// But don't do it if they'll be using custom images for button's different states.
+	if ( !bCustomButtonStyle )
 	{
-		UE_LOG( LogTemp, Warning, TEXT( "An ItemClicker's ItemCore is being replaced. Is it intended?" ) );
-
-		ItemWidgetSlot->ClearChildren();
+		UTexture2D* Icon = ItemCore->GetIcon();
+		
+		Clicker->WidgetStyle.Normal.SetResourceObject( Icon );
+		Clicker->WidgetStyle.Normal.DrawAs = ESlateBrushDrawType::Image;
+		
+		Clicker->WidgetStyle.Hovered.SetResourceObject( Icon );
+		Clicker->WidgetStyle.Hovered.DrawAs = ESlateBrushDrawType::Image;
+		
+		Clicker->WidgetStyle.Pressed.SetResourceObject( Icon );
+		Clicker->WidgetStyle.Pressed.DrawAs = ESlateBrushDrawType::Image;
+		
+		Clicker->WidgetStyle.Disabled.SetResourceObject( Icon );
+		Clicker->WidgetStyle.Disabled.DrawAs = ESlateBrushDrawType::Image;
 	}
-
-	UFMGInvSysItemWidget* ItemWidget = CreateWidget<UFMGInvSysItemWidget>( this, ItemCore->GetItemWidgetClass() );
-	ItemWidget->SetItemCore( ItemCore );
-
-	ItemWidgetSlot->AddChild( ItemWidget );
 }
 
 void UFMGInvSysItemClicker::HandleOnButtonClicked()
