@@ -10,7 +10,8 @@ class AFMGInvSysItem;
 class UFMGInvSysItemClicker;
 
 /**
- * 
+ * Because item core may be duplicated sometimes,
+ * It's best to not give it any pointer member var that can differ between instances.
  */
 UCLASS( Blueprintable, BlueprintType )
 class FMGINVSYS_API UFMGInvSysItemCore : public UObject
@@ -20,6 +21,10 @@ class FMGINVSYS_API UFMGInvSysItemCore : public UObject
 public:
 
 	UFMGInvSysItemCore( const FObjectInitializer& ObjectInitializer );
+
+public:
+
+	virtual bool operator==( const UFMGInvSysItemCore& Other ) { return GetClass() == Other.GetClass(); }
 
 	virtual bool IsSupportedForNetworking() const override { return true; }
 
@@ -64,8 +69,24 @@ protected:
 
 public:
 
-	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	AFMGInvSysItem* SpawnItem( const FTransform& SpawnTransform );
+	UFUNCTION( BlueprintCallable )
+	int GetCount() { return Count; }
+
+	UFUNCTION( BlueprintCallable )
+	void SetCount( int InCount ) { Count = InCount; }
+
+	UFUNCTION( BlueprintCallable )
+	void AddCount( int Addition ) { Count += Addition; }
+	
+protected:
+
+	int Count = 1;
+
+public:
+
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable , Category = "FMGInvSys" )
+	AFMGInvSysItem* SpawnItem( UWorld* World, const FTransform& SpawnTransform );
+	virtual AFMGInvSysItem* SpawnItem_Implementation( UWorld* World, const FTransform& SpawnTransform );
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	FText Describe();

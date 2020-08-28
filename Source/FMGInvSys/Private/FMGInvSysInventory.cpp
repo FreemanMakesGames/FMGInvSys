@@ -20,58 +20,74 @@ void UFMGInvSysInventory::AddItem( UFMGInvSysItemCore* ItemToAdd )
 
 	ensureAlways( GetNetMode() != ENetMode::NM_Client );
 
-	ItemCores.Add( ItemToAdd );
+	bool bStacking = false;
+	for ( UFMGInvSysItemCore* ExistingCore : ItemCores )
+	{
+		if ( *ExistingCore == *ItemToAdd )
+		{
+			ExistingCore->AddCount( ItemToAdd->GetCount() );
+
+			ChangedItemCore = ExistingCore;
+			
+			bStacking = true;
+			break;
+		}
+	}
+	if ( !bStacking )
+	{
+		ItemCores.Add( ItemToAdd );
+
+		ChangedItemCore = ItemToAdd;
+	}
 
 	// Because OnRep_ItemCores won't fire in these net modes
 	if ( GetNetMode() == ENetMode::NM_ListenServer || GetNetMode() == ENetMode::NM_Standalone )
 	{
-		TArray<UFMGInvSysItemCore*> Added; Added.Add( ItemToAdd ); TArray<UFMGInvSysItemCore*> Removed;
-		OnItemCoresUpdated.Broadcast( Added, Removed );
+		OnItemCoresUpdated.Broadcast( ChangedItemCore );
 	}
 }
 
-void UFMGInvSysInventory::RemoveItem( UFMGInvSysItemCore* ItemToRemove )
+void UFMGInvSysInventory::RemoveItem( UFMGInvSysItemCore* TargetItem, int Amount )
 {
-	ensureAlways( ItemToRemove );
+	ensureAlways( TargetItem );
 
 	ensureAlways( GetNetMode() != ENetMode::NM_Client );
 
-	ItemCores.Remove( ItemToRemove );
+	ensureAlways( ItemCores.Contains( TargetItem ) );
+	
+	TargetItem->AddCount( -Amount );
+
+	if ( TargetItem->GetCount() == 0 )
+		ItemCores.Remove( TargetItem );
+	else if ( TargetItem->GetCount() < 0 )
+		ensureAlways( false );
+
+	ChangedItemCore = TargetItem;
 
 	// Because OnRep_ItemCores won't fire in these net modes
 	if ( GetNetMode() == ENetMode::NM_ListenServer || GetNetMode() == ENetMode::NM_Standalone )
 	{
-		TArray<UFMGInvSysItemCore*> Added; TArray<UFMGInvSysItemCore*> Removed; Removed.Add( ItemToRemove );
-		OnItemCoresUpdated.Broadcast( Added, Removed );
+		OnItemCoresUpdated.Broadcast( ChangedItemCore );
 	}
 }
 
-void UFMGInvSysInventory::OnRep_ItemCores()
+void UFMGInvSysInventory::OnRep_ChangedItemCore()
 {
-	TArray<UFMGInvSysItemCore*> Added;
-	TArray<UFMGInvSysItemCore*> Removed;
+	int idx;
+	if ( ItemCores.Find( ChangedItemCore, idx ) )
+	{
+		ItemCores.RemoveAt( idx );
+	}
+	ItemCores.Add( ChangedItemCore );
 
-	for ( UFMGInvSysItemCore* ItemCore : ItemCores )
-		if ( !LastItemCores.Contains( ItemCore ) )
-			Added.Add( ItemCore );
-
-	for ( UFMGInvSysItemCore* ItemCore : LastItemCores )
-		if ( !ItemCores.Contains( ItemCore ) )
-			Removed.Add( ItemCore );
-
-	OnItemCoresUpdated.Broadcast( Added, Removed );
-
-	LastItemCores = ItemCores;
+	OnItemCoresUpdated.Broadcast( ChangedItemCore );
 }
 
 bool UFMGInvSysInventory::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )
 {
 	bool bWroteSomething = Super::ReplicateSubobjects( Channel, Bunch, RepFlags );
 
-	for ( UFMGInvSysItemCore* ItemCore : ItemCores )
-	{
-		bWroteSomething |= Channel->ReplicateSubobject( ItemCore, *Bunch, *RepFlags );
-	}
+	bWroteSomething |= Channel->ReplicateSubobject( ChangedItemCore, *Bunch, *RepFlags );
 
 	return bWroteSomething;
 }
@@ -80,5 +96,5 @@ void UFMGInvSysInventory::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>&
 {
 	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
 
-	DOREPLIFETIME( UFMGInvSysInventory, ItemCores );
+	DOREPLIFETIME( UFMGInvSysInventory, ChangedItemCore );
 }

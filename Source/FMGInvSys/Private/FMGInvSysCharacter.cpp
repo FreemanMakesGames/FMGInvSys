@@ -245,7 +245,7 @@ void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* I
 		EquippedItem->Destroy();
 	}
 
-	Inventory->RemoveItem( ItemCore );
+	Inventory->RemoveItem( ItemCore, 1 );
 }
 
 // For now, only support to equip one item at a time.
@@ -257,35 +257,28 @@ void AFMGInvSysCharacter::Server_Equip_Implementation( UFMGInvSysItemCore* ItemC
 
 	if ( IsValid( EquippedItem ) ) { EquippedItem->Destroy(); }
 
-	AFMGInvSysItem* ItemToEquip = ItemCore->SpawnItem( FTransform::Identity );
+	AFMGInvSysItem* ItemToEquip = ItemCore->SpawnItem( GetWorld(), FTransform::Identity );
 	ItemToEquip->SetPhysicsEnabled_FromServer( false );
 	ItemToEquip->AttachToComponent( GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "RightHandSocket" );
 
 	EquippedItem = ItemToEquip;
 }
 
-void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCore )
+void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCore, int Amount )
 {
-	// If the item to drop is equipped,
-	// Simply detach it and relocate it to item drop component,
-	// And remove it from the inventory.
 	if ( IsValid( EquippedItem ) && EquippedItem->GetItemCore() == ItemCore )
 	{
-		EquippedItem->DetachAllSceneComponents( GetMesh(), FDetachmentTransformRules::KeepRelativeTransform );
-		EquippedItem->SetActorLocation( ItemDropSpot->GetComponentLocation() );
-		EquippedItem->SetPhysicsEnabled_FromServer( true );  // Re-enable physics, which was disabled when equipping this item.
-
-		EquippedItem = nullptr;
-
-		Inventory->RemoveItem( ItemCore );
-
-		return;
+		EquippedItem->Destroy();
 	}
+	
+	// DuplicateObject may give a shallow copy.
+	UFMGInvSysItemCore* NewItemCore = DuplicateObject( ItemCore, this );
+	NewItemCore->SetCount( Amount );
+	
+	AFMGInvSysItem* NewItem = NewItemCore->SpawnItem( GetWorld(), ItemDropSpot->GetComponentTransform() );
+	//NewItemCore->Rename( nullptr, NewItem );
 
-	// If the item to drop isn't equipped, spawn it at the item drop component.
-	ItemCore->SpawnItem( ItemDropSpot->GetComponentTransform() );
-
-	Inventory->RemoveItem( ItemCore );
+	Inventory->RemoveItem( ItemCore, Amount );
 }
 
 void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore )
@@ -295,7 +288,7 @@ void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* Ite
 		EquippedItem->Destroy();
 	}
 
-	Inventory->RemoveItem( ItemCore );
+	Inventory->RemoveItem( ItemCore, 1 );
 }
 
 // bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )

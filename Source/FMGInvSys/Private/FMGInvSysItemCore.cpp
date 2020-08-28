@@ -11,22 +11,15 @@ UFMGInvSysItemCore::UFMGInvSysItemCore( const FObjectInitializer& ObjectInitiali
 	ItemUsages.Add( "Destroy" );
 }
 
-AFMGInvSysItem* UFMGInvSysItemCore::SpawnItem( const FTransform& SpawnTransform )
+AFMGInvSysItem* UFMGInvSysItemCore::SpawnItem_Implementation( UWorld* World, const FTransform& SpawnTransform )
 {
 	//ensureAlways( GetNetMode() != ENetMode::NM_Client );
 
-	AFMGInvSysItem* Item = nullptr;
+	AFMGInvSysItem* Item = World->SpawnActor<AFMGInvSysItem>( ItemClass, SpawnTransform );
 
-	if ( UWorld* World = GetWorld() )
-	{
-		Item = World->SpawnActor<AFMGInvSysItem>( ItemClass, SpawnTransform );
+	//this->Rename( nullptr, Item );
 
-		//this->Rename( nullptr, Item );
-
-		Item->SetItemCore( this );
-	}
-	else
-		ensureAlways( false );
+	Item->SetItemCore( this );
 
 	return Item;
 }

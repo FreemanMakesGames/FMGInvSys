@@ -121,9 +121,9 @@ protected:
 	virtual bool Server_Equip_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
 
 	UFUNCTION( Server, Reliable, WithValidation )
-	void Server_Drop( UFMGInvSysItemCore* ItemCore );
-	virtual void Server_Drop_Implementation( UFMGInvSysItemCore* ItemCore );
-	virtual bool Server_Drop_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
+	void Server_Drop( UFMGInvSysItemCore* ItemCore, int Amount = 1 );
+	virtual void Server_Drop_Implementation( UFMGInvSysItemCore* ItemCore, int Amount = 1 );
+	virtual bool Server_Drop_Validate( UFMGInvSysItemCore* ItemCore, int Amount = 1 ) { return true; }
 
 	UFUNCTION( Server, Reliable, WithValidation )
 	void Server_Destroy( UFMGInvSysItemCore* ItemCore );

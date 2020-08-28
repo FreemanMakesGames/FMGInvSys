@@ -9,7 +9,9 @@
 #include "FMGInvSysItemClicker.generated.h"
 
 class UFMGInvSysItemCore;
+
 class UButton;
+class UTextBlock;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnButtonClicked, UFMGInvSysItemClicker*, Clicker );
 
@@ -59,6 +61,9 @@ protected:
 	UPROPERTY( meta = ( BindWidget ), BlueprintReadOnly, Category = "FMGInvSys" )
 	UButton* Clicker;
 
+	UPROPERTY( meta = ( BindWidget ), BlueprintReadOnly, Category = "FMGInvSys" )
+	UTextBlock* Text_Count;
+
 protected:
 
 	/**
@@ -70,12 +75,24 @@ protected:
 public:
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void UpdateCountText();
+	virtual void UpdateCountText_Implementation();
+
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	void HighlightForClicking();
 	virtual void HighlightForClicking_Implementation() { }
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void HighlightForNewClicker();
+	virtual void HighlightForNewClicker_Implementation() { }
+
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	void HighlightForAddition();
 	virtual void HighlightForAddition_Implementation() { }
+	
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void HighlightForSubtraction();
+	virtual void HighlightForSubtraction_Implementation() { }
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	void Unhighlight();

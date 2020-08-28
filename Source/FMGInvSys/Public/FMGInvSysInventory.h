@@ -9,7 +9,7 @@
 class UFMGInvSysItemCore;
 class AFMGInvSysItemCombiner;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FOnItemCoresUpdated, TArray<UFMGInvSysItemCore*>, Added, TArray<UFMGInvSysItemCore*>, Removed );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnItemCoresUpdated, UFMGInvSysItemCore*, ChangedItemCore );
 
 UCLASS( Blueprintable, BlueprintType, ClassGroup=( Custom ), meta=( BlueprintSpawnableComponent ) )
 class FMGINVSYS_API UFMGInvSysInventory : public UActorComponent
@@ -36,7 +36,7 @@ public:
 
 protected:
 
-	UPROPERTY( ReplicatedUsing=OnRep_ItemCores, VisibleInstanceOnly, Category = "FMGInvSys" )
+	UPROPERTY( VisibleInstanceOnly, Category = "FMGInvSys" )
 	TArray<UFMGInvSysItemCore*> ItemCores;
 
 public:
@@ -47,18 +47,17 @@ public:
 	void AddItem( UFMGInvSysItemCore* ItemToAdd );
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void RemoveItem( UFMGInvSysItemCore* ItemToRemove );
+	void RemoveItem( UFMGInvSysItemCore* ItemToRemove, int Amount );
 
 protected:
 
+	UPROPERTY( ReplicatedUsing = OnRep_ChangedItemCore )
+	UFMGInvSysItemCore* ChangedItemCore;
+
+protected:
+	
 	UFUNCTION()
-	void OnRep_ItemCores();
-
-// Global tracking variables
-protected:
-
-	/** Used to tell added and removed items when ItemCores is replicated. */
-	TArray<UFMGInvSysItemCore*> LastItemCores;
+	void OnRep_ChangedItemCore();
 
 public:
 
