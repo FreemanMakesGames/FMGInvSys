@@ -18,7 +18,11 @@ void UFMGInvSysItemClicker::NativeOnInitialized()
 
 void UFMGInvSysItemClicker::SetItemCore_Implementation( UFMGInvSysItemCore* InItemCore )
 {
+	ensureAlwaysMsgf( !ItemCore, TEXT( "Replacing an item core in an existing clicker?!" ) );
+	
 	ItemCore = InItemCore;
+
+	ItemCore->OnDataChanged.AddDynamic( this, &UFMGInvSysItemClicker::HandleOnItemCoreDataChanged );
 
 	UpdateCountText();
 
@@ -61,9 +65,3 @@ void UFMGInvSysItemClicker::UpdateCountText_Implementation()
 			HighlightForSubtraction();
 	}	
 }
-
-void UFMGInvSysItemClicker::HandleOnButtonClicked()
-{
-	OnButtonClicked.Broadcast( this );
-}
-

@@ -147,23 +147,17 @@ void UFMGInvSysInventoryMenu::ResetLatestClicked_Implementation()
 	}
 }
 
-void UFMGInvSysInventoryMenu::HandleOnInventoryUpdated( UFMGInvSysItemCore* ChangedItemCore )
+void UFMGInvSysInventoryMenu::HandleOnInventoryUpdated( TArray<UFMGInvSysItemCore*> Added, TArray<UFMGInvSysItemCore*> Removed )
 {
-	// Found existing clicker, may be addition or removal.
-	if ( UFMGInvSysItemClicker** ExistingClicker = ItemToClicker.Find( ChangedItemCore ) )
+	for ( UFMGInvSysItemCore* AddedItemCore : Added )
 	{
-		if ( ChangedItemCore->GetCount() > 0 )
-		{
-			( *ExistingClicker )->UpdateCountText();
-		}
-		else
-		{
-			RemoveItemClicker( ChangedItemCore );
-		}
+		AddNewItemClicker( AddedItemCore );
 	}
-	// Can't find existing clicker, must be addition.
-	else
-		AddNewItemClicker( ChangedItemCore );
+
+	for ( UFMGInvSysItemCore* RemovedItemCore : Removed )
+	{
+		RemoveItemClicker( RemovedItemCore );
+	}
 }
 
 void UFMGInvSysInventoryMenu::HandleOnItemClickerClicked( UFMGInvSysItemClicker* Clicked )

@@ -4,6 +4,8 @@
 
 #include "FMGInvSysItem.h"
 
+#include "Net/UnrealNetwork.h"
+
 UFMGInvSysItemCore::UFMGInvSysItemCore( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
 {
 	// Add some common default EItemUsage, so the item designer doesn't have to add them manually for all kinds of UItemCore.
@@ -28,4 +30,11 @@ FText UFMGInvSysItemCore::Describe_Implementation()
 {
 	//ensureAlways( false );
 	return NSLOCTEXT( "", "", "Description is not overriden!" );
+}
+
+void UFMGInvSysItemCore::GetLifetimeReplicatedProps( TArray<FLifetimeProperty>& OutLifetimeProps ) const
+{
+	Super::GetLifetimeReplicatedProps( OutLifetimeProps );
+
+	DOREPLIFETIME( UFMGInvSysItemCore, Count );
 }

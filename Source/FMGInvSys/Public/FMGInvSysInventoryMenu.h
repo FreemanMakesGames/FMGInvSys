@@ -94,7 +94,7 @@ protected:
 protected:
 
 	UFUNCTION()
-	virtual void HandleOnInventoryUpdated( UFMGInvSysItemCore* ChangedItemCore );
+	virtual void HandleOnInventoryUpdated( TArray<UFMGInvSysItemCore*> Added, TArray<UFMGInvSysItemCore*> Removed );
 
 	UFUNCTION()
 	virtual void HandleOnItemClickerClicked( UFMGInvSysItemClicker* Clicked );

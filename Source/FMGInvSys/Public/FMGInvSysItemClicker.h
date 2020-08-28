@@ -75,6 +75,10 @@ protected:
 public:
 
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void Redraw();
+	virtual void Redraw_Implementation() { UpdateCountText(); }
+
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	void UpdateCountText();
 	virtual void UpdateCountText_Implementation();
 
@@ -106,6 +110,9 @@ protected:
 protected:
 
 	UFUNCTION()
-	virtual void HandleOnButtonClicked();
+	virtual void HandleOnButtonClicked() { OnButtonClicked.Broadcast( this ); }
+
+	UFUNCTION()
+	virtual void HandleOnItemCoreDataChanged() { Redraw(); }
 
 };

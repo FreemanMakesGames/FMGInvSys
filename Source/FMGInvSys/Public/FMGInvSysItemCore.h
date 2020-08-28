@@ -9,6 +9,8 @@
 class AFMGInvSysItem;
 class UFMGInvSysItemClicker;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE( FOnDataChanged );
+
 /**
  * Because item core may be duplicated sometimes,
  * It's best to not give it any pointer member var that can differ between instances.
@@ -27,6 +29,11 @@ public:
 	virtual bool operator==( const UFMGInvSysItemCore& Other ) { return GetClass() == Other.GetClass(); }
 
 	virtual bool IsSupportedForNetworking() const override { return true; }
+
+public:
+
+	UPROPERTY( BlueprintAssignable, Category = "FMGInvSys" )
+	FOnDataChanged OnDataChanged;
 
 public:
 
@@ -73,13 +80,19 @@ public:
 	int GetCount() { return Count; }
 
 	UFUNCTION( BlueprintCallable )
-	void SetCount( int InCount ) { Count = InCount; }
+	void SetCount( int InCount )
+	{
+		Count = InCount;
+
+		OnDataChanged.Broadcast();
+	}
 
 	UFUNCTION( BlueprintCallable )
-	void AddCount( int Addition ) { Count += Addition; }
+	void AddCount( int Addition ) { SetCount( Count + Addition ); }
 	
 protected:
 
+	UPROPERTY( ReplicatedUsing = OnRep_AnyData )
 	int Count = 1;
 
 public:
@@ -91,5 +104,10 @@ public:
 	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
 	FText Describe();
 	virtual FText Describe_Implementation();
+
+protected:
+
+	UFUNCTION()
+	void OnRep_AnyData() { OnDataChanged.Broadcast(); }
 
 };

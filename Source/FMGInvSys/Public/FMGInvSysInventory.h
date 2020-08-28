@@ -9,7 +9,8 @@
 class UFMGInvSysItemCore;
 class AFMGInvSysItemCombiner;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam( FOnItemCoresUpdated, UFMGInvSysItemCore*, ChangedItemCore );
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams( FOnItemCoresUpdated, TArray<UFMGInvSysItemCore*>, Added,
+	TArray<UFMGInvSysItemCore*>, Removed );
 
 UCLASS( Blueprintable, BlueprintType, ClassGroup=( Custom ), meta=( BlueprintSpawnableComponent ) )
 class FMGINVSYS_API UFMGInvSysInventory : public UActorComponent
@@ -36,12 +37,13 @@ public:
 
 protected:
 
-	UPROPERTY( VisibleInstanceOnly, Category = "FMGInvSys" )
+	UPROPERTY( ReplicatedUsing = OnRep_ItemCores, VisibleInstanceOnly, Category = "FMGInvSys" )
 	TArray<UFMGInvSysItemCore*> ItemCores;
 
-public:
+	/** Used for checking new and deleted item cores after a replication. */
+	TArray<UFMGInvSysItemCore*> LastItemCores;
 
-	int CountItems() { return ItemCores.Num(); }
+public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void AddItem( UFMGInvSysItemCore* ItemToAdd );
@@ -51,13 +53,8 @@ public:
 
 protected:
 
-	UPROPERTY( ReplicatedUsing = OnRep_ChangedItemCore )
-	UFMGInvSysItemCore* ChangedItemCore;
-
-protected:
-	
 	UFUNCTION()
-	void OnRep_ChangedItemCore();
+	void OnRep_ItemCores();
 
 public:
 
