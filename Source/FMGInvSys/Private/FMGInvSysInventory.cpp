@@ -22,15 +22,16 @@ void UFMGInvSysInventory::AddItem( UFMGInvSysItemCore* ItemToAdd )
 
 	// Try to stack.
 	// If it stacks, let item clicker's OnRep handle redrawing the display.
-	for ( UFMGInvSysItemCore* ExistingCore : ItemCores )
-	{
-		if ( *ExistingCore == *ItemToAdd )
+	if ( ItemToAdd->IsStackable() )
+		for ( UFMGInvSysItemCore* ExistingCore : ItemCores )
 		{
-			ExistingCore->AddCount( ItemToAdd->GetCount() );
-			
-			return;
+			if ( *ExistingCore == *ItemToAdd )
+			{
+				ExistingCore->AddCount( ItemToAdd->GetCount() );
+				
+				return;
+			}
 		}
-	}
 
 	// If it doesn't stack
 	

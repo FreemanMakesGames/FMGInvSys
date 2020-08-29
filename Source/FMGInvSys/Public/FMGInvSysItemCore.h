@@ -74,12 +74,15 @@ protected:
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	TMap<TSubclassOf<UFMGInvSysItemCore>, int> DismantleResults;
 
+	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
+	bool bStackable = false;
+
 public:
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	int GetCount() { return Count; }
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void SetCount( int InCount )
 	{
 		Count = InCount;
@@ -87,8 +90,11 @@ public:
 		OnDataChanged.Broadcast();
 	}
 
-	UFUNCTION( BlueprintCallable )
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void AddCount( int Addition ) { SetCount( Count + Addition ); }
+
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
+	bool IsStackable() { return bStackable; }
 	
 protected:
 

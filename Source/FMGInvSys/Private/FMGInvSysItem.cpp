@@ -20,14 +20,17 @@ AFMGInvSysItem::AFMGInvSysItem( const FObjectInitializer& ObjectInitializer ) : 
 void AFMGInvSysItem::BeginPlay()
 {
 	ensureAlways( ItemCoreClass );
-
-	// This is for cases like when a level designer placed an AItem into the level manually.
-	// Item core may be needed in BP BeginPlay.
+	
+	// Item core may be needed in BP BeginPlay, so call this before Super::BeginPlay.
+	// 
 	// If this item is spawned from an existing item core,
 	// Then the following new item core will be replaced in SetItemCore soon after.
-	if ( !ItemCore && HasAuthority() )
-	{
+	if ( HasAuthority() )
+	{	
 		ItemCore = NewObject<UFMGInvSysItemCore>( this, ItemCoreClass );
+
+		if ( !ItemCore->IsStackable() )
+			ensureAlwaysMsgf( InitialCount == 1, TEXT( "It's not supported to have an unstackable item with a more than 1 initial amount." ) );
 
 		ItemCore->SetCount( InitialCount );
 	}
