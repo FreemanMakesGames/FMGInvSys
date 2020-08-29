@@ -43,6 +43,10 @@ protected:
 	UPROPERTY( Replicated, BlueprintReadOnly, Category = "FMGInvSys" )
 	UFMGInvSysItemCore* ItemCore;
 
+	/** This is only for initial amount, and should be set in the editor. */
+	UPROPERTY( EditAnywhere, BlueprintReadOnly, Category = "FMGInvSys" )
+	int InitialCount = 1;
+
 public:
 
 	/**

@@ -28,6 +28,8 @@ void AFMGInvSysItem::BeginPlay()
 	if ( !ItemCore && HasAuthority() )
 	{
 		ItemCore = NewObject<UFMGInvSysItemCore>( this, ItemCoreClass );
+
+		ItemCore->SetCount( InitialCount );
 	}
 
 	// This will execute BP BeginPlay.
