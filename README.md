@@ -1,5 +1,5 @@
 # FMGInvSys
-FMG Inventory System, or FMGInvSys, is an Unreal Engine plugin, that features uniquely flexible item combinations.
+FMG Inventory System, or FMGInvSys, is an Unreal Engine plugin, that features uniquely flexible item combinations and item widget setup.
 
 # Demo
 You can find demo videos [here](https://www.freemanmakesgames.pro/work/fmg-inv-sys).
