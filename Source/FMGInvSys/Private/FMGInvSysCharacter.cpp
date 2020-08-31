@@ -169,15 +169,11 @@ void AFMGInvSysCharacter::ApplyItemUsage( UFMGInvSysItemCore* ItemCore, FString 
 
 void AFMGInvSysCharacter::Server_CombineItems_Implementation( const TArray<UFMGInvSysItemCore*>& SourceItemCores )
 {
-	///////////////////
-
-	// TODO FMGInvSys:
-
 	// As the author I'm not creating one AItemCombiner per inventory, simply because it's unnecessary.
 	// I provided an ABasicGameMode, which holds an AItemCombiner,
 	// So it can be easily found and referenced from other classes, like the sample code below.
 
-	// But this may contradict with your game, or you may want to do it in other ways.
+	// But you may want to do it in other ways.
 	// You likely need to write your own code here to find the AItemCombiner in the game.
 
 	// Note that you can have more than one AItemCombiner. For example,
@@ -189,20 +185,30 @@ void AFMGInvSysCharacter::Server_CombineItems_Implementation( const TArray<UFMGI
 
 	if ( !ItemCombiner ) { ensureAlways( false ); return; }
 
-	////////////////////////////////////////////////////////////////////////////////////////////////
-
 	FFMGInvSysCombineResult Result = ItemCombiner->CombineItems( SourceItemCores );
 
-	if ( !Result.Successful ) { return; }
+	if ( !Result.Successful )
+		return;
 
 	for ( UFMGInvSysItemCore* ItemCore : SourceItemCores )
 	{
 		Server_Destroy( ItemCore );
 	}
 
+	bool bNotifiedInvFull = false;
 	for ( UFMGInvSysItemCore* ItemCore : Result.ResultItems )
 	{
-		Inventory->AddItem( ItemCore );
+		// If inventory's full, notify it once, and drop every following item.
+		if ( !TryCollectItemCore( ItemCore ) )
+		{
+			if ( !bNotifiedInvFull )
+			{
+				Client_NotifyInvFull();
+				bNotifiedInvFull = true;
+			}
+
+			ItemCore->SpawnItem( GetWorld(), ItemDropSpot->GetComponentTransform() );
+		}
 	}
 }
 
@@ -210,33 +216,53 @@ void AFMGInvSysCharacter::Server_CollectItem_Implementation()
 {
 	// TODO: FMGInvSys: Think about what happens if a character tries to collect an item equipped by another character?
 	//                  It works now and won't "rob" that item. But why? Because SphereOverlapActors rely on collision enabled? Or..?
-
+	
 	TArray<TEnumAsByte<EObjectTypeQuery>> Filter;
 	TArray<AActor*> Ignoring;
 	TArray<AActor*> AdjacentActors;
-	UKismetSystemLibrary::SphereOverlapActors( GetWorld(), GetActorLocation(), ItemCollectionRange, Filter, AFMGInvSysItem::StaticClass(), Ignoring, AdjacentActors );
+	UKismetSystemLibrary::SphereOverlapActors( GetWorld(), GetActorLocation(), ItemCollectionRange, Filter,
+		AFMGInvSysItem::StaticClass(), Ignoring, AdjacentActors );
 
+	bool HasNotifiedInvFull = false;
 	for ( AActor* AdjacentActor : AdjacentActors )
 	{
-		UFMGInvSysItemCore* ItemCore = Cast<AFMGInvSysItem>( AdjacentActor )->GetItemCore();
+		AFMGInvSysItem* Item = Cast<AFMGInvSysItem>( AdjacentActor );
 
-		//ItemCore->Rename( nullptr, this );
-
-		Inventory->AddItem( ItemCore );
-
-		AdjacentActor->Destroy();
+		if ( TryCollectItemCore( Item->GetItemCore() ) )
+		{
+			Item->Destroy();
+		}
+		else
+		{
+			if ( !HasNotifiedInvFull )
+			{
+				Client_NotifyInvFull();
+				HasNotifiedInvFull = true;
+			}
+		}
 	}
 }
 
 void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* ItemCore )
 {
+	bool bNotifiedInvFull = false;
 	for ( TPair<TSubclassOf<UFMGInvSysItemCore>, int> DismantleResult : ItemCore->GetDismantleResults() )
 	{
 		for ( int i = 0; i < DismantleResult.Value; i++ )
 		{
-			UFMGInvSysItemCore* Result = NewObject<UFMGInvSysItemCore>( this, DismantleResult.Key );
+			UFMGInvSysItemCore* ResultCore = NewObject<UFMGInvSysItemCore>( this, DismantleResult.Key );
 
-			Inventory->AddItem( Result );
+			// If result can't be collected, notify once, and drop it.
+			if ( !TryCollectItemCore( ResultCore ) )
+			{
+				if ( !bNotifiedInvFull )
+				{
+					Client_NotifyInvFull();
+					bNotifiedInvFull = true;
+				}
+
+				ResultCore->SpawnItem( GetWorld(), ItemDropSpot->GetComponentTransform() );
+			}
 		}
 	}
 
@@ -245,7 +271,7 @@ void AFMGInvSysCharacter::Server_Dismantle_Implementation( UFMGInvSysItemCore* I
 		EquippedItem->Destroy();
 	}
 
-	Inventory->RemoveItem( ItemCore, 1 );
+	Inventory->RemoveItemCore( ItemCore, 1 );
 }
 
 // For now, only support to equip one item at a time.
@@ -278,7 +304,7 @@ void AFMGInvSysCharacter::Server_Drop_Implementation( UFMGInvSysItemCore* ItemCo
 	AFMGInvSysItem* NewItem = NewItemCore->SpawnItem( GetWorld(), ItemDropSpot->GetComponentTransform() );
 	//NewItemCore->Rename( nullptr, NewItem );
 
-	Inventory->RemoveItem( ItemCore, Amount );
+	Inventory->RemoveItemCore( ItemCore, Amount );
 }
 
 void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore )
@@ -288,7 +314,63 @@ void AFMGInvSysCharacter::Server_Destroy_Implementation( UFMGInvSysItemCore* Ite
 		EquippedItem->Destroy();
 	}
 
-	Inventory->RemoveItem( ItemCore, 1 );
+	Inventory->RemoveItemCore( ItemCore, 1 );
+}
+
+bool AFMGInvSysCharacter::TryCollectItemCore_Implementation( UFMGInvSysItemCore* CollectingCore )
+{
+	// No room for more item stacks:
+	if ( Inventory->CountItemStacks() == InventoryCapacity )
+	{
+		if ( !CollectingCore->IsStackable() )
+			return false;
+		
+		// See if stacking is possible.
+		for ( UFMGInvSysItemCore* ExistingCore : Inventory->GetItemCores() )
+		{
+			// Found equivalent and stackable item core:
+			if ( *CollectingCore == *ExistingCore && ExistingCore->IsStackable() )
+			{
+				int MaxCollectible = ExistingCore->GetMaxPerStack() - ExistingCore->GetCount();
+
+				// Fully collectible:
+				if ( MaxCollectible >= CollectingCore->GetCount() )
+				{
+					AddItemCoreToInv( CollectingCore );
+					return true;
+				}
+				// Partially collectible:
+				else
+				{
+					ExistingCore->AddCount( MaxCollectible );
+					CollectingCore->AddCount( -MaxCollectible );
+					return false;
+				}
+			}
+		}
+		// Didn't find equivalent and stackable item core:
+		return false;
+	}
+	// Have room for more item stacks:
+	else
+	{
+		AddItemCoreToInv( CollectingCore );
+		return true;
+	}
+}
+
+void AFMGInvSysCharacter::AddItemCoreToInv_Implementation( UFMGInvSysItemCore* ItemCore )
+{
+	//ItemCore->Rename( nullptr, this );
+
+	Inventory->AddItemCore( ItemCore );
+}
+
+void AFMGInvSysCharacter::Client_NotifyInvFull_Implementation()
+{
+	// Plugin user should override this for their own UI notification when inventory's full.
+
+	UE_LOG( LogTemp, Warning, TEXT( "Character's inventory is full." ) );
 }
 
 // bool ABasicCharacter::ReplicateSubobjects( class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags )

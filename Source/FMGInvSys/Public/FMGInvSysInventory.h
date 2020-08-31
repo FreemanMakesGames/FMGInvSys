@@ -33,7 +33,7 @@ public:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TArray<UFMGInvSysItemCore*> GetItemCores() { return ItemCores; }
+	TArray<UFMGInvSysItemCore*> GetItemCores() const { return ItemCores; }
 
 protected:
 
@@ -46,10 +46,13 @@ protected:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void AddItem( UFMGInvSysItemCore* ItemToAdd );
+	void AddItemCore( UFMGInvSysItemCore* ItemToAdd );
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	void RemoveItem( UFMGInvSysItemCore* ItemToRemove, int Amount );
+	void RemoveItemCore( UFMGInvSysItemCore* ItemToRemove, int Amount );
+
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
+	int CountItemStacks() const { return ItemCores.Num(); }
 
 protected:
 

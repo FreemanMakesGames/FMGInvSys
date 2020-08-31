@@ -8,6 +8,8 @@
 
 UFMGInvSysItemCore::UFMGInvSysItemCore( const FObjectInitializer& ObjectInitializer ) : Super( ObjectInitializer )
 {
+	ensureAlways( !( !bStackable && MaxPerStack != 1 ) );
+	
 	// Add some common default EItemUsage, so the item designer doesn't have to add them manually for all kinds of UItemCore.
 	ItemUsages.Add( "Drop" );
 	ItemUsages.Add( "Destroy" );

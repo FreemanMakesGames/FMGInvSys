@@ -46,7 +46,7 @@ public:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	UFMGInvSysItemCore* GetItemCore() { return ItemCore; }
+	UFMGInvSysItemCore* GetItemCore() const { return ItemCore; }
 
 	/**
 	 * Override this method, either in C++ or BP,

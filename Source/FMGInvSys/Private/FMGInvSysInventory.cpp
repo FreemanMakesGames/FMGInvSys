@@ -14,7 +14,7 @@ UFMGInvSysInventory::UFMGInvSysInventory()
 	SetIsReplicatedByDefault( true );
 }
 
-void UFMGInvSysInventory::AddItem( UFMGInvSysItemCore* ItemToAdd )
+void UFMGInvSysInventory::AddItemCore( UFMGInvSysItemCore* ItemToAdd )
 {
 	ensureAlways( ItemToAdd );
 
@@ -44,7 +44,7 @@ void UFMGInvSysInventory::AddItem( UFMGInvSysItemCore* ItemToAdd )
 	}
 }
 
-void UFMGInvSysInventory::RemoveItem( UFMGInvSysItemCore* TargetItem, int Amount )
+void UFMGInvSysInventory::RemoveItemCore( UFMGInvSysItemCore* TargetItem, int Amount )
 {
 	ensureAlways( TargetItem );
 

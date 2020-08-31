@@ -79,12 +79,16 @@ public:
 
 protected:
 
+	/** How many item stacks can this character's inventory store. */
+	UPROPERTY( EditAnywhere, Category = "FMGInvSys" )
+	int InventoryCapacity = 30;
+
 	UPROPERTY( EditDefaultsOnly, Category = "FMGInvSys" )
 	float ItemCollectionRange = 150;
 
 public:
 
-	virtual UFMGInvSysInventory* GetInventory() override { return Inventory; }
+	virtual UFMGInvSysInventory* GetInventory() const override { return Inventory; }
 
 	// Note: Although each method called by ApplyItemUsage is RPC, probably don't make itself RPC.
 	//       What if there needs to be non-RPC code later?
@@ -129,6 +133,19 @@ protected:
 	void Server_Destroy( UFMGInvSysItemCore* ItemCore );
 	virtual void Server_Destroy_Implementation( UFMGInvSysItemCore* ItemCore );
 	virtual bool Server_Destroy_Validate( UFMGInvSysItemCore* ItemCore ) { return true; }
+	
+	/** @return Fully collected? */
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	bool TryCollectItemCore( UFMGInvSysItemCore* CollectingCore );
+	virtual bool TryCollectItemCore_Implementation( UFMGInvSysItemCore* CollectingCore );
+	
+	UFUNCTION( BlueprintNativeEvent, BlueprintCallable, Category = "FMGInvSys" )
+	void AddItemCoreToInv( UFMGInvSysItemCore* ItemCore );
+	virtual void AddItemCoreToInv_Implementation( UFMGInvSysItemCore* ItemCore );
+	
+	UFUNCTION( Client, Reliable )
+	void Client_NotifyInvFull();
+	virtual void Client_NotifyInvFull_Implementation();
 
 // public:
 // 

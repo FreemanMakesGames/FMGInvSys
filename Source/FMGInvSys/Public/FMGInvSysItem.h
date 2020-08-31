@@ -29,7 +29,7 @@ protected:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	UFMGInvSysItemCore* GetItemCore() { return ItemCore; }
+	UFMGInvSysItemCore* GetItemCore() const { return ItemCore; }
 
 	/**
 	 * This is supposed to always replace an item core,

@@ -21,7 +21,7 @@ FFMGInvSysCombineResult AFMGInvSysItemCombiner::CombineItems( TArray<UFMGInvSysI
 
 	// Gather UItemCore classes.
 	FFMGInvSysItemCoreClassArray SourceItemClassArray;
-	for ( UFMGInvSysItemCore* Item : SourceItems )
+	for ( UFMGInvSysItemCore const * Item : SourceItems )
 	{
 		SourceItemClassArray.ItemCoreClasses.Add( Item->GetClass() );
 	}

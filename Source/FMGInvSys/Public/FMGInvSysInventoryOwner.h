@@ -21,7 +21,7 @@ class FMGINVSYS_API IFMGInvSysInventoryOwner
 
 public:
 
-	virtual UFMGInvSysInventory* GetInventory() PURE_VIRTUAL( , return nullptr; );
+	virtual UFMGInvSysInventory* GetInventory() const PURE_VIRTUAL( , return nullptr; );
 
 	virtual void ApplyItemUsage( UFMGInvSysItemCore* ItemCore, FString ItemUsage ) PURE_VIRTUAL( , );
 
