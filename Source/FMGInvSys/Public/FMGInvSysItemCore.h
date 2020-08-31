@@ -38,24 +38,27 @@ public:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TSubclassOf<AFMGInvSysItem> GetItemClass() { return ItemClass; }
+	TSubclassOf<AFMGInvSysItem> GetItemClass() const { return ItemClass; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TSubclassOf<UFMGInvSysItemClicker> GetItemClickerClass() { return ItemClickerClass; }
+	TSubclassOf<UFMGInvSysItemClicker> GetItemClickerClass() const { return ItemClickerClass; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	UTexture2D* GetIcon() { return Icon; }
+	UTexture2D* GetIcon() const { return Icon; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TArray<FString> GetItemUsages() { return ItemUsages; }
+	TArray<FString> GetItemUsages() const { return ItemUsages; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TMap<TSubclassOf<UFMGInvSysItemCore>, int> GetDismantleResults()
+	TMap<TSubclassOf<UFMGInvSysItemCore>, int> GetDismantleResults() const
 	{
 		ensureAlwaysMsgf( DismantleResults.Num() > 0, TEXT( "This item core's dismantle results aren't setup, but it's being dismantled?" ) );
 
 		return DismantleResults;
 	}
+
+	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
+	bool IsStackable() const { return bStackable; }
 
 protected:
 
@@ -80,7 +83,7 @@ protected:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	int GetCount() { return Count; }
+	int GetCount() const { return Count; }
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void SetCount( int InCount )
@@ -92,9 +95,6 @@ public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
 	void AddCount( int Addition ) { SetCount( Count + Addition ); }
-
-	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	bool IsStackable() { return bStackable; }
 	
 protected:
 

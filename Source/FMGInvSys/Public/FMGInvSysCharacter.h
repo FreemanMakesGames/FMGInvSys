@@ -84,7 +84,7 @@ protected:
 
 public:
 
-	virtual UFMGInvSysInventory* GetInventory() override { return Inventory; }
+	virtual UFMGInvSysInventory* GetInventory() const override { return Inventory; }
 
 	// Note: Although each method called by ApplyItemUsage is RPC, probably don't make itself RPC.
 	//       What if there needs to be non-RPC code later?

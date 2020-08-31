@@ -33,7 +33,7 @@ public:
 public:
 
 	UFUNCTION( BlueprintCallable, Category = "FMGInvSys" )
-	TArray<UFMGInvSysItemCore*> GetItemCores() { return ItemCores; }
+	TArray<UFMGInvSysItemCore*> GetItemCores() const { return ItemCores; }
 
 protected:
 

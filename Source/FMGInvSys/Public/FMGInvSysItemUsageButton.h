@@ -52,7 +52,7 @@ protected:
 
 public:
 
-	FString GetItemUsage() { return ItemUsage; }
+	FString GetItemUsage() const { return ItemUsage; }
 
 	virtual void SetItemUsage( FString InItemUsage );
 
