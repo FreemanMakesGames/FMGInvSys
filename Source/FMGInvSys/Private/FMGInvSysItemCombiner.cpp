@@ -4,6 +4,7 @@
 #include "FMGInvSysItemCombiner.h"
 
 #include "FMGInvSysItemCore.h"
+#include "Pair.h"
 
 void AFMGInvSysItemCombiner::BeginPlay()
 {
@@ -27,45 +28,45 @@ FFMGInvSysCombineResult AFMGInvSysItemCombiner::CombineItems( TArray<UFMGInvSysI
 	}
 
 	// Search in ClassMap
-	TSubclassOf<UFMGInvSysItemCore>* pOutputClass = ClassMap.Find( SourceItemClassArray );
-	if ( pOutputClass )
+	for ( auto Pair : ClassMap )
 	{
-		UFMGInvSysItemCore* Output = NewObject<UFMGInvSysItemCore>( this, *pOutputClass );
+		if ( Pair.Key == SourceItemClassArray )
+		{
+			UFMGInvSysItemCore* Output = NewObject<UFMGInvSysItemCore>( this, Pair.Value );
 
-		Result.ResultItems.Add( Output );
-		Result.Successful = true;
-
-		return Result;
+			Result.ResultItems.Add( Output );
+			Result.Successful = true;
+			return Result;
+		}
 	}
 
 	// Search in ClassMap_Multiple
-	FFMGInvSysItemCoreClassArray* pOutputClassArray = ClassMap_Multiple.Find( SourceItemClassArray );
-	if ( pOutputClassArray )
+	for ( auto Pair : ClassMap_Multiple )
 	{
-		for ( TSubclassOf<UFMGInvSysItemCore> OutputClass : ( *pOutputClassArray ).ItemCoreClasses )
+		if ( Pair.Key == SourceItemClassArray )
 		{
-			UFMGInvSysItemCore* Output = NewObject<UFMGInvSysItemCore>( this, OutputClass );
-
-			Result.ResultItems.Add( Output );
+			for ( TSubclassOf<UFMGInvSysItemCore> OutputClass : Pair.Value.ItemCoreClasses )
+			{
+				UFMGInvSysItemCore* Output = NewObject<UFMGInvSysItemCore>( this, OutputClass );
+				
+				Result.ResultItems.Add( Output );
+			}
+			Result.Successful = true;
+			return Result;
 		}
-
-		Result.Successful = true;
-
-		return Result;
 	}
 
 	// Search in FunctionMap
-	FFMGInvSysCombineDelegate* pCombineDelegate = FunctionMap.Find( SourceItemClassArray );
-	if ( pCombineDelegate )
+	for ( auto Pair : FunctionMap )
 	{
-		FFMGInvSysCombineDelegate CombineDelegate = *pCombineDelegate;
-
-		Result = CombineDelegate.Execute( SourceItems );
-
-		return Result;
+		if ( Pair.Key == SourceItemClassArray )
+		{
+			return Pair.Value.Execute( SourceItems );
+		}
 	}
-	else
-		return Result; // Empty unsuccessful result.
+
+	// Empty unsuccessful result.
+	return Result;
 
 // 	if ( !pCombineFunction )
 // 	{
