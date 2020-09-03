@@ -4,7 +4,6 @@
 #include "FMGInvSysItemCombiner.h"
 
 #include "FMGInvSysItemCore.h"
-#include "Pair.h"
 
 void AFMGInvSysItemCombiner::BeginPlay()
 {
