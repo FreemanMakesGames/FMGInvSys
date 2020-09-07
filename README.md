@@ -13,4 +13,4 @@ You may need to re-generate Visual Studio project files, for it to show up in yo
 The docs are in the [Wiki](https://github.com/FreemanMakesGames/FMGInvSys/wiki).
 
 # Support
-When the project's first published, there's likely going to be a lot of issues and needs for improvement. So more support may be offered at this point. As the project gains more audience, and meanwhile becomes more robust, the amount of support provided per user may gradually decline.
+More support may be offered when the project's first published, as there's likely going to be a lot of issues and needs for improvement. As the project gains more audience, and meanwhile grows to be more robust, the amount of support provided per user may gradually decline.
