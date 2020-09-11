@@ -9,6 +9,8 @@ Either download or git-clone the repository. You'll get a directory named `FMGIn
 
 You may need to re-generate Visual Studio project files, for it to show up in your source code editor.
 
+Currently the plugin supports UE 4.25.
+
 # Usage
 The docs are in the [Wiki](https://github.com/FreemanMakesGames/FMGInvSys/wiki).
 
