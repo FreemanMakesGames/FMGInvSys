@@ -20,7 +20,7 @@ Currently the plugin supports UE 4.25.
 # Usage
 The docs are in the [Wiki](https://github.com/FreemanMakesGames/FMGInvSys/wiki).
 
-# Support
+# Getting Help
 For now, GitHub Issues seems to be a good place to ask your questions, in addition to submitting bug reports and suggestions.
 
 More support may be offered when the project's first published, as there's likely going to be a lot of issues and needs for improvement. As the project gains more audience, and meanwhile grows to be more robust, the amount of support provided per user may gradually decline.
