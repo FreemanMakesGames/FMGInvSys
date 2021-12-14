@@ -4,10 +4,9 @@ FMG Inventory System, or FMGInvSys, is an Unreal Engine plugin, that features un
 # Demo Videos
 Overview demo: https://vimeo.com/399060431
 
-Customized item widgets demo: https://vimeo.com/399406717
-
 Custom logic demo: https://vimeo.com/399417379
 
+Customized item widgets demo: https://vimeo.com/399406717
 
 # Installation
 Either download or git-clone the repository. You'll get a directory named `FMGInvSys-master`. Then at the root directory of your project, create a new directory named `Plugins`, if it's not already there. Put `FMGInvSys-master` under the `Plugins` directory. The path to the plugin should be: `X:/.../<ProjectName>/Plugins/FMGInvSys-master`.
